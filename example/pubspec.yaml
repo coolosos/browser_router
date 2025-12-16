@@ -1,0 +1,21 @@
+name: browser_example
+description: Demonstrates how to use the browser package.
+publish_to: "none"
+
+environment:
+  sdk: ">=3.3.1 <4.0.0"
+  flutter: ">=3.22.2"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  browser:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  coolint: 2.1.2
+
+flutter:
+  uses-material-design: false
