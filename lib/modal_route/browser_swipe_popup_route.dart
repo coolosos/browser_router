@@ -3,10 +3,12 @@ import 'package:flutter/widgets.dart';
 import '../browser.dart';
 import '../gestures/swipe/swipe.dart';
 import 'browser_popup_route.dart';
+import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show SwipeTraceRoute;
 
-class BrowserSwipePopupRoute<T> extends BrowserPopupRoute<T, SwipeTraceRoute> {
+class BrowserSwipePopupRoute<T> extends BrowserPopupRoute<T, SwipeTraceRoute>
+    with BrowserModalBarrierMixin<T> {
   /// A modal bottom sheet route.
   BrowserSwipePopupRoute({
     required super.traceRoute,
@@ -59,62 +61,5 @@ class BrowserSwipePopupRoute<T> extends BrowserPopupRoute<T, SwipeTraceRoute> {
           );
 
     return bottomSheet;
-  }
-
-  @override
-  Widget buildModalBarrier() {
-    Widget barrier;
-    if (barrierColor != null && barrierColor?.a != 0.0 && !offstage) {
-      assert(
-        barrierColor != barrierColor?.withValues(alpha: 0),
-        'changedInternalState is called if barrierColor or offstage updates',
-      );
-      final color = animation!.drive(
-        ColorTween(
-          begin: barrierColor?.withValues(alpha: 0),
-          end: barrierColor,
-        ).chain(
-          CurveTween(
-            curve: barrierCurve,
-          ),
-        ), // changedInternalState is called if barrierCurve updates
-      );
-      barrier = Builder(
-        builder: (context) {
-          return AnimatedModalBarrier(
-            color: color,
-            dismissible:
-                barrierDismissible, // changedInternalState is called if barrierDismissible updates
-            semanticsLabel:
-                barrierLabel, // changedInternalState is called if barrierLabel updates
-            barrierSemanticsDismissible: semanticsDismissible,
-            onDismiss: () {
-              if (isCurrent) {
-                context.pop(settings: settings);
-              }
-            },
-          );
-        },
-      );
-    } else {
-      barrier = Builder(
-        builder: (context) {
-          return ModalBarrier(
-            dismissible:
-                barrierDismissible, // changedInternalState is called if barrierDismissible updates
-            semanticsLabel:
-                barrierLabel, // changedInternalState is called if barrierLabel updates
-            barrierSemanticsDismissible: semanticsDismissible,
-            onDismiss: () {
-              if (isCurrent) {
-                context.pop(settings: settings);
-              }
-            },
-          );
-        },
-      );
-    }
-
-    return barrier;
   }
 }
