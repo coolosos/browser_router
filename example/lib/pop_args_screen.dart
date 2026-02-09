@@ -43,7 +43,8 @@ class PopArgsScreen extends StatelessWidget {
                 // Example 2: Stage arguments with setPopArgument() then pop
                 context
                   ..setPopArgument(
-                      PopResultArgs(result: 'Result from setPopArgument()'),)
+                    PopResultArgs(result: 'Result from setPopArgument()'),
+                  )
                   ..pop();
               },
               child: Container(

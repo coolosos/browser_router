@@ -60,8 +60,7 @@ abstract class SheetBase<T extends ModalBaseParams> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final draggableController =
-        DraggableScrollableController();
+    final draggableController = DraggableScrollableController();
 
     final buttonBar = modal.bottomBar(context);
     final parameters = modal.contextParameters(context: context);

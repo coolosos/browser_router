@@ -133,8 +133,7 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final transitions =
-        traceRoute.routeTransition ?? appRoute.routeTransition;
+    final transitions = traceRoute.routeTransition ?? appRoute.routeTransition;
     return transitions.build(
       animation: animation,
       secondaryAnimation: secondaryAnimation,

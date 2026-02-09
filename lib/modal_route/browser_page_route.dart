@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart' show CupertinoRouteTransitionMixin;
 import 'package:flutter/foundation.dart'; // Import for debugPrint
-
 import 'package:flutter/material.dart' show MaterialRouteTransitionMixin;
 import 'package:flutter/widgets.dart';
 
 import '../browser.dart';
+
 export 'params/trace_route.dart' show PageTraceRoute;
 
 class BrowserPageRoute<T> extends PageRoute<T> {
@@ -92,7 +92,9 @@ class BrowserPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    debugPrint('BrowserPageRoute: buildTransitions called for ${settings.name}');
+    debugPrint(
+      'BrowserPageRoute: buildTransitions called for ${settings.name}',
+    );
     if (defaultTargetPlatform == TargetPlatform.iOS &&
         appRoute.routeTransition == RouteTransition.slide_right &&
         traceRoute.popGestureEnabled) {

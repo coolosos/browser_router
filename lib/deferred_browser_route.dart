@@ -1,5 +1,6 @@
-import 'package:browser/browser.dart';
 import 'package:flutter/widgets.dart';
+
+import 'browser.dart';
 
 class DeferredBrowserRoute extends BrowserRoute {
   DeferredBrowserRoute({
