@@ -44,7 +44,7 @@ class BrowserPageRoute<T> extends PageRoute<T> {
   final String? barrierLabel;
 
   @override
-  final Color barrierColor;
+  final Color? barrierColor;
 
   @override
   final Duration transitionDuration;

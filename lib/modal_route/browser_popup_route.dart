@@ -33,7 +33,7 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
   final String? barrierLabel;
 
   @override
-  final Color barrierColor;
+  final Color? barrierColor;
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
@@ -56,14 +56,15 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
   @override
   Widget buildModalBarrier() {
     Widget barrier;
-    if (barrierColor.alpha != 0 && !offstage) {
-      // changedInternalState is called if barrierColor or offstage updates
-      assert(barrierColor != barrierColor.withOpacity(0));
+    if (barrierColor != null && barrierColor?.a != 0.0 && !offstage) {
+      assert(
+        barrierColor != barrierColor?.withValues(alpha: 0),
+        'changedInternalState is called if barrierColor or offstage updates',
+      );
       final color = animation!.drive(
         ColorTween(
-          begin: barrierColor.withOpacity(0),
-          end:
-              barrierColor, // changedInternalState is called if barrierColor updates
+          begin: barrierColor?.withValues(alpha: 0),
+          end: barrierColor,
         ).chain(
           CurveTween(
             curve: barrierCurve,
@@ -79,6 +80,7 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
             semanticsLabel:
                 barrierLabel, // changedInternalState is called if barrierLabel updates
             barrierSemanticsDismissible: semanticsDismissible,
+
             onDismiss: () {
               if (isCurrent) {
                 context.pop(settings: settings);
@@ -120,8 +122,8 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
     return Semantics(
       scopesRoute: true,
       namesRoute: true,
-      label: traceRoute.semanticsLabel,
       explicitChildNodes: true,
+      label: traceRoute.semanticsLabel,
       child: appRoute.page,
     );
   }

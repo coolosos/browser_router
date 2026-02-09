@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
 import 'package:nested/nested.dart';
 
@@ -289,7 +288,7 @@ class Browser extends StatelessWidget {
           traceRoute: SwipeTraceRoute(
             useSafeArea: useSafeAre,
             enableDrag: enableDrag,
-            barrierColor: modalBarrierColor ?? Colors.black54,
+            barrierColor: modalBarrierColor,
             barrierDismissible: isDismissible,
             screenMaximumPercentage: heightFactor,
             animationDirection: animationDirection,
