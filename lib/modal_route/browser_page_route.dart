@@ -69,16 +69,73 @@ class BrowserPageRoute<T> extends PageRoute<T> {
   }
 
   @override
+  Widget buildModalBarrier() {
+    Widget barrier;
+    if (barrierColor != null && barrierColor?.a != 0.0 && !offstage) {
+      assert(
+        barrierColor != barrierColor?.withValues(alpha: 0),
+        'changedInternalState is called if barrierColor or offstage updates',
+      );
+      final color = animation!.drive(
+        ColorTween(
+          begin: barrierColor?.withValues(alpha: 0),
+          end: barrierColor,
+        ).chain(
+          CurveTween(
+            curve: barrierCurve,
+          ),
+        ), // changedInternalState is called if barrierCurve updates
+      );
+      barrier = Builder(
+        builder: (context) {
+          return AnimatedModalBarrier(
+            color: color,
+            dismissible:
+                barrierDismissible, // changedInternalState is called if barrierDismissible updates
+            semanticsLabel:
+                barrierLabel, // changedInternalState is called if barrierLabel updates
+            barrierSemanticsDismissible: semanticsDismissible,
+            onDismiss: () {
+              if (isCurrent) {
+                context.pop(settings: settings);
+              }
+            },
+          );
+        },
+      );
+    } else {
+      barrier = Builder(
+        builder: (context) {
+          return ModalBarrier(
+            dismissible:
+                barrierDismissible, // changedInternalState is called if barrierDismissible updates
+            semanticsLabel:
+                barrierLabel, // changedInternalState is called if barrierLabel updates
+            barrierSemanticsDismissible: semanticsDismissible,
+            onDismiss: () {
+              if (isCurrent) {
+                context.pop(settings: settings);
+              }
+            },
+          );
+        },
+      );
+    }
+
+    return barrier;
+  }
+
+  @override
   Widget buildPage(
     BuildContext context,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    debugPrint('BrowserPageRoute: buildPage called for ${settings.name}');
     appRoute.builderTrigger?.call(context);
 
     return Semantics(
       scopesRoute: true,
+      namesRoute: true,
       explicitChildNodes: true,
       label: traceRoute.semanticsLabel,
       child: appRoute.page,
@@ -92,9 +149,6 @@ class BrowserPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    debugPrint(
-      'BrowserPageRoute: buildTransitions called for ${settings.name}',
-    );
     if (defaultTargetPlatform == TargetPlatform.iOS &&
         appRoute.routeTransition == RouteTransition.slide_right &&
         traceRoute.popGestureEnabled) {
