@@ -10,8 +10,8 @@ import '../modal_route/params/trace_route.dart';
 import '../modal_route/transitions/route_transition.dart';
 
 part 'banner.dart';
-part 'overlay_modal.dart';
 part 'modal.dart';
+part 'overlay_modal.dart';
 
 class OverlayManager extends StatefulWidget {
   const OverlayManager({
