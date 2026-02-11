@@ -1,3 +1,4 @@
+import 'package:browser_router/gestures/swipe/swipe.dart';
 import 'package:flutter/cupertino.dart' show CupertinoRouteTransitionMixin;
 import 'package:flutter/foundation.dart'; // Import for debugPrint
 import 'package:flutter/material.dart' show MaterialRouteTransitionMixin;
@@ -8,7 +9,8 @@ import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show PageTraceRoute;
 
-class BrowserPageRoute<T> extends PageRoute<T> with BrowserModalBarrierMixin<T> {
+class BrowserPageRoute<T> extends PageRoute<T>
+    with BrowserModalBarrierMixin<T> {
   BrowserPageRoute({
     required this.appRoute,
     required this.traceRoute,
@@ -96,12 +98,29 @@ class BrowserPageRoute<T> extends PageRoute<T> with BrowserModalBarrierMixin<T> 
     if (defaultTargetPlatform == TargetPlatform.iOS &&
         appRoute.routeTransition == RouteTransition.slide_right &&
         traceRoute.popGestureEnabled) {
-      return CupertinoRouteTransitionMixin.buildPageTransitions(
-        this,
-        context,
-        animation,
-        secondaryAnimation,
-        child,
+      final swipeGestures = SwipeDownRightGestures(
+        animationController: controller!,
+        obtainSize: () => context.size?.width ?? 0,
+        canDragDone: () => controller?.status == AnimationStatus.reverse,
+        onClosing: () {
+          context.pop();
+        },
+        closePercentage: 0.8,
+      );
+
+      return Swipe(
+        direction: AxisDirection.left,
+        animation: animation,
+        screenMaximumPercentage: 1,
+        hasEnableGestures: true,
+        gestures: swipeGestures,
+        disableAnimations: MediaQuery.disableAnimationsOf(context),
+        animateChild: false,
+        child: appRoute.routeTransition.build(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          child: child,
+        ),
       );
     }
 
