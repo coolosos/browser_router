@@ -1,4 +1,4 @@
-import 'package:browser/browser.dart';
+import 'package:browser_router/browser.dart';
 
 import 'push_args.dart';
 
@@ -8,6 +8,7 @@ enum AppPath {
   home('/home'),
   pushArgs('/push_args'),
   popArgs('/pop_args'),
+  toSetPopArgs('/toSetPopArgs'),
   popupContent('/popup_content'),
   intermediate('/intermediate'),
   deep('/deep');
@@ -45,6 +46,8 @@ class AppTrace extends Trace {
 
   /// Navigates to the screen that demonstrates returning arguments via pop.
   factory AppTrace.toPopArgs() => AppTrace._(path: AppPath.popArgs.path);
+  factory AppTrace.toSetPopArgs() =>
+      AppTrace._(path: AppPath.toSetPopArgs.path);
 
   /// Navigates to the intermediate screen for the multi-level pop example.
   factory AppTrace.toIntermediate() =>

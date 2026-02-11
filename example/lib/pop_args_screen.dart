@@ -1,4 +1,4 @@
-import 'package:browser/browser.dart';
+import 'package:browser_router/browser.dart';
 import 'package:flutter/widgets.dart';
 
 import 'pop_result_args.dart';

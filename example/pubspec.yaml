@@ -1,6 +1,7 @@
 name: browser_example
 description: Demonstrates how to use the browser package.
 publish_to: "none"
+version: 0.0.1
 
 environment:
   sdk: ">=3.3.1 <4.0.0"
@@ -9,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  browser:
+  browser_router:
     path: ../
 
 dev_dependencies:
