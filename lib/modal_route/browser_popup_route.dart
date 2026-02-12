@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 
 import '../browser.dart';
+import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show PopupTraceRoute;
 
-class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
+class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
+    with BrowserModalBarrierMixin<T> {
   /// A modal bottom sheet route.
   BrowserPopupRoute({
     required this.traceRoute,
@@ -33,7 +35,7 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
   final String? barrierLabel;
 
   @override
-  final Color barrierColor;
+  final Color? barrierColor;
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
@@ -54,62 +56,6 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
   bool allowSnapshotting;
 
   @override
-  Widget buildModalBarrier() {
-    Widget barrier;
-    if (barrierColor.alpha != 0 && !offstage) {
-      // changedInternalState is called if barrierColor or offstage updates
-      assert(barrierColor != barrierColor.withOpacity(0));
-      final color = animation!.drive(
-        ColorTween(
-          begin: barrierColor.withOpacity(0),
-          end:
-              barrierColor, // changedInternalState is called if barrierColor updates
-        ).chain(
-          CurveTween(
-            curve: barrierCurve,
-          ),
-        ), // changedInternalState is called if barrierCurve updates
-      );
-      barrier = Builder(
-        builder: (context) {
-          return AnimatedModalBarrier(
-            color: color,
-            dismissible:
-                barrierDismissible, // changedInternalState is called if barrierDismissible updates
-            semanticsLabel:
-                barrierLabel, // changedInternalState is called if barrierLabel updates
-            barrierSemanticsDismissible: semanticsDismissible,
-            onDismiss: () {
-              if (isCurrent) {
-                context.pop(settings: settings);
-              }
-            },
-          );
-        },
-      );
-    } else {
-      barrier = Builder(
-        builder: (context) {
-          return ModalBarrier(
-            dismissible:
-                barrierDismissible, // changedInternalState is called if barrierDismissible updates
-            semanticsLabel:
-                barrierLabel, // changedInternalState is called if barrierLabel updates
-            barrierSemanticsDismissible: semanticsDismissible,
-            onDismiss: () {
-              if (isCurrent) {
-                context.pop(settings: settings);
-              }
-            },
-          );
-        },
-      );
-    }
-
-    return barrier;
-  }
-
-  @override
   Widget buildPage(
     BuildContext context,
     Animation<double> animation,
@@ -120,8 +66,8 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
     return Semantics(
       scopesRoute: true,
       namesRoute: true,
-      label: traceRoute.semanticsLabel,
       explicitChildNodes: true,
+      label: traceRoute.semanticsLabel,
       child: appRoute.page,
     );
   }
@@ -133,8 +79,7 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final transitions =
-        traceRoute.routeTransition ?? appRoute.routeTransition;
+    final transitions = traceRoute.routeTransition ?? appRoute.routeTransition;
     return transitions.build(
       animation: animation,
       secondaryAnimation: secondaryAnimation,

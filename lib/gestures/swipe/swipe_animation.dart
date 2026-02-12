@@ -31,42 +31,21 @@ class SwipeAnimation extends StatefulWidget {
 class _SwipeAnimationState extends State<SwipeAnimation> {
   final GlobalKey _childKey = GlobalKey(debugLabel: 'BottomSheet child');
 
-  double get _childHeight {
-    final keyContext = _childKey.currentContext;
-    if (keyContext == null) {
-      assert(
-        keyContext != null,
-        'Function call before child was show in screen',
-      );
-      return 0;
-    }
-    final keyRender = keyContext.findRenderObject();
-    if (keyRender == null) {
-      assert(
-        keyRender != null,
-        'Function in time with render object missing',
-      );
-
-      return 0;
-    }
-    return (keyRender as RenderBox).size.height;
-  }
-
   SwipeGestures _generateSwipeGestures({required AxisDirection direction}) {
     switch (direction) {
       case AxisDirection.up:
         return SwipeDownRightGestures(
           animationController: widget.animationController!,
-          obtainChildHeight: () => _childHeight,
-          canDragDone:
+          obtainSize: () => context.size?.height ?? 0,
+          canDragDone: () =>
               widget.animationController?.status == AnimationStatus.reverse,
           onClosing: widget.onClosing,
         );
       case AxisDirection.left:
         return SwipeDownRightGestures(
           animationController: widget.animationController!,
-          obtainChildHeight: () => _childHeight,
-          canDragDone:
+          obtainSize: () => context.size?.width ?? 0,
+          canDragDone: () =>
               widget.animationController?.status == AnimationStatus.reverse,
           onClosing: widget.onClosing,
           closePercentage: 0.8,
@@ -74,8 +53,8 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
       case AxisDirection.down:
         return SwipeUpLeftGestures(
           animationController: widget.animationController!,
-          obtainChildHeight: () => _childHeight,
-          canDragDone:
+          obtainSize: () => context.size?.height ?? 0,
+          canDragDone: () =>
               widget.animationController?.status == AnimationStatus.reverse,
           onClosing: widget.onClosing,
         );
@@ -83,8 +62,8 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
       case AxisDirection.right:
         return SwipeUpLeftGestures(
           animationController: widget.animationController!,
-          obtainChildHeight: () => _childHeight,
-          canDragDone:
+          obtainSize: () => context.size?.width ?? 0,
+          canDragDone: () =>
               widget.animationController?.status == AnimationStatus.reverse,
           onClosing: widget.onClosing,
           closePercentage: 0.8,
@@ -103,6 +82,7 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
       screenMaximumPercentage: widget.screenMaximumPercentage,
       hasEnableGestures: widget.enableDrag,
       direction: widget.animationDirection,
+      animateChild: true,
       gestures: _generateSwipeGestures(
         direction: widget.animationDirection,
       ),
@@ -112,7 +92,7 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
         }
         return false;
       },
-      disableAnimations: MediaQuery.of(context).disableAnimations,
+      disableAnimations: MediaQuery.disableAnimationsOf(context),
       child: KeyedSubtree(
         key: _childKey,
         child: widget.builder(context),

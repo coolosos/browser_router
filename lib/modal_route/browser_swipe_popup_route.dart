@@ -3,10 +3,12 @@ import 'package:flutter/widgets.dart';
 import '../browser.dart';
 import '../gestures/swipe/swipe.dart';
 import 'browser_popup_route.dart';
+import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show SwipeTraceRoute;
 
-class BrowserSwipePopupRoute<T> extends BrowserPopupRoute<T, SwipeTraceRoute> {
+class BrowserSwipePopupRoute<T> extends BrowserPopupRoute<T, SwipeTraceRoute>
+    with BrowserModalBarrierMixin<T> {
   /// A modal bottom sheet route.
   BrowserSwipePopupRoute({
     required super.traceRoute,

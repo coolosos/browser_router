@@ -1,4 +1,4 @@
-import 'package:browser/browser.dart';
+import 'package:browser_router/browser.dart';
 import 'package:flutter/widgets.dart';
 
 import 'push_args.dart';
@@ -48,7 +48,9 @@ class PushArgsScreen extends StatelessWidget {
               ),
             const SizedBox(height: 20),
             GestureDetector(
-              onTap: () => context.pop(),
+              onTap: () {
+                context.pop();
+              },
               child: Container(
                 color: const Color(0xFFFFFFFF),
                 padding: const EdgeInsets.all(12),

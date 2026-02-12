@@ -1,4 +1,4 @@
-import 'package:browser/browser.dart';
+import 'package:browser_router/browser.dart';
 import 'package:flutter/widgets.dart';
 
 import 'pop_result_args.dart';
@@ -43,7 +43,8 @@ class PopArgsScreen extends StatelessWidget {
                 // Example 2: Stage arguments with setPopArgument() then pop
                 context
                   ..setPopArgument(
-                      PopResultArgs(result: 'Result from setPopArgument()'),)
+                    PopResultArgs(result: 'Result from setPopArgument()'),
+                  )
                   ..pop();
               },
               child: Container(

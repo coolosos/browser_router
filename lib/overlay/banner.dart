@@ -33,19 +33,22 @@ class Banner extends OverlayModal {
   OverlayEntry _createModal(Widget child) {
     return OverlayEntry(
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Dismissible(
-                onDismissed: (direction) {
-                  // animationController?.reverse();
-                  remove();
-                },
-                key: UniqueKey(),
-                direction: DismissDirection.up,
-                child: child,
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(top: topPadding),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Dismissible(
+                  onDismissed: (direction) {
+                    // animationController?.reverse();
+                    remove();
+                  },
+                  key: UniqueKey(),
+                  direction: DismissDirection.up,
+                  child: child,
+                ),
               ),
             ),
           ),

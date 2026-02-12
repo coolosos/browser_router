@@ -18,7 +18,84 @@ An advanced navigation system for Flutter that enables typed routes, custom tran
 
 ## Installation
 
-...
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  browser: ^0.0.1 # Replace with the latest version
+```
+
+Then, run `flutter pub get` in your terminal.
+
+---
+
+## Getting Started
+
+1.  **Define your routes**
+
+Create a list of `BrowserRoute` objects.
+
+```dart
+final routes = [
+  BrowserRoute(
+    path: '/',
+    page: const HomeScreen(),
+  ),
+  BrowserRoute(
+    path: '/profile',
+    page: const ProfileScreen(),
+  ),
+];
+```
+
+2.  **Wrap your app with `Browser`**
+
+Use the `Browser` widget at the root of your application.
+
+```dart
+import 'package:browser/browser.dart';
+import 'package:flutter/widgets.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Browser(
+      routes: routes,
+      defaultRoute: routes.first,
+      builder: (context, routeObserver, generate) {
+        return WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          navigatorObservers: [routeObserver],
+          onGenerateRoute: generate,
+          onGenerateInitialRoutes: (routePath) => [
+            generate(
+              RouteSettings(name: routePath, arguments: Map.from({})),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+3.  **Navigate**
+
+You can now navigate between screens using `context.pushNamed`.
+
+```dart
+// Navigate to the profile screen
+context.pushNamed('/profile');
+
+// Go back
+context.pop();
+```
 
 ---
 
@@ -215,6 +292,12 @@ By following these steps, `browser` will work perfectly with the routing strateg
 
 ---
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
 ## Maintainers & Contributors ✨
 
 Big thanks go to these wonderful people who have contributed to the project:
@@ -233,5 +316,4 @@ Big thanks go to these wonderful people who have contributed to the project:
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
-
  

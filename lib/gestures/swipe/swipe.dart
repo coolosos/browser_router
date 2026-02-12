@@ -1,9 +1,10 @@
 library;
 
 import 'package:flutter/widgets.dart';
+
+part 'swipe_animation.dart';
 part 'swipe_gestures.dart';
 part 'swipe_transition_builder.dart';
-part 'swipe_animation.dart';
 
 extension GenericAxis on AxisDirection {
   Axis generic() {
@@ -26,6 +27,7 @@ class Swipe extends StatelessWidget {
     required bool hasEnableGestures,
     required this.disableAnimations,
     this.gestures,
+    this.animateChild = true,
     bool Function(DraggableScrollableNotification)? onNotification,
     this.direction = AxisDirection.up,
     super.key,
@@ -63,31 +65,32 @@ class Swipe extends StatelessWidget {
   final bool disableAnimations;
   final SwipeGestures? gestures;
   final AxisDirection direction;
+  final bool animateChild;
 
   @override
   Widget build(BuildContext context) {
-    return disableAnimations
-        ? _child
-        : AnimatedBuilder(
-            animation: animation,
-            child: _child,
-            builder: (context, child) {
-              // Disable the initial animation when accessible navigation is on so
-              // that the semantics are added to the tree at the correct time.
-              final animationValue = MediaQuery.of(context).accessibleNavigation
-                  ? 1.0
-                  : animation.value;
-              return ClipRRect(
-                child: CustomSingleChildLayout(
-                  delegate: SwipeChildLayoutDelegate(
-                    animationValue,
-                    screenMaximumPercentage,
-                    direction,
-                  ),
-                  child: child,
-                ),
-              );
-            },
+    if (disableAnimations || !animateChild) {
+      return _child;
+    } else {
+      return AnimatedBuilder(
+        animation: animation,
+        child: _child,
+        builder: (context, child) {
+          final animationValue = MediaQuery.accessibleNavigationOf(context)
+              ? 1.0
+              : animation.value;
+          return ClipRRect(
+            child: CustomSingleChildLayout(
+              delegate: SwipeChildLayoutDelegate(
+                animationValue,
+                screenMaximumPercentage,
+                direction,
+              ),
+              child: child,
+            ),
           );
+        },
+      );
+    }
   }
 }

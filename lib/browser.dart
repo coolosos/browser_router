@@ -1,11 +1,9 @@
 library;
 
 import 'dart:async';
-import 'package:flutter/foundation.dart'; // Import for debugPrint
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
 import 'package:nested/nested.dart';
 
@@ -170,7 +168,9 @@ class Browser extends StatelessWidget {
 
     final browserRouteWithCustomTransition =
         _browserRouteTransition(traceRoute, appRoute);
-    debugPrint('Browser.generate: browserRouteWithCustomTransition: ${browserRouteWithCustomTransition.path}');
+    debugPrint(
+      'Browser.generate: browserRouteWithCustomTransition: ${browserRouteWithCustomTransition.path}',
+    );
 
     final newSettings = RouteSettings(
       name: name,
@@ -213,7 +213,9 @@ class Browser extends StatelessWidget {
     String? name,
     Map<dynamic, dynamic> arguments,
   ) {
-    debugPrint('Browser._obtainMainRoute: Called with name: $name, arguments: $arguments');
+    debugPrint(
+      'Browser._obtainMainRoute: Called with name: $name, arguments: $arguments',
+    );
     final appRoute =
         routes.firstWhereOrNull((appRoute) => appRoute.path == name);
     debugPrint('Browser._obtainMainRoute: Found appRoute: ${appRoute?.path}');
@@ -229,7 +231,9 @@ class Browser extends StatelessWidget {
     debugPrint('Browser._obtainMainRoute: isValid: $isValid');
 
     if (isValid case final bool validArguments when !validArguments) {
-      debugPrint('Browser._obtainMainRoute: Returning defaultRoute due to invalid arguments.');
+      debugPrint(
+        'Browser._obtainMainRoute: Returning defaultRoute due to invalid arguments.',
+      );
       return defaultRoute;
     }
 
@@ -242,14 +246,20 @@ class Browser extends StatelessWidget {
     TraceRoute traceRoute,
     BrowserRoute appRoute,
   ) {
-    debugPrint('Browser._browserRouteTransition: Called with traceRoute: $traceRoute, appRoute: ${appRoute.path}');
+    debugPrint(
+      'Browser._browserRouteTransition: Called with traceRoute: $traceRoute, appRoute: ${appRoute.path}',
+    );
     final internalTransition =
         traceRoute.routeTransition ?? appRoute.routeTransition;
-    debugPrint('Browser._browserRouteTransition: internalTransition: $internalTransition');
+    debugPrint(
+      'Browser._browserRouteTransition: internalTransition: $internalTransition',
+    );
 
     final route = appRoute.copyWith(routeTransition: internalTransition);
     final transition = adaptiveTransition?.call(route) ?? internalTransition;
-    debugPrint('Browser._browserRouteTransition: final transition: $transition');
+    debugPrint(
+      'Browser._browserRouteTransition: final transition: $transition',
+    );
 
     return route.copyWith(routeTransition: transition);
   }
@@ -278,7 +288,7 @@ class Browser extends StatelessWidget {
           traceRoute: SwipeTraceRoute(
             useSafeArea: useSafeAre,
             enableDrag: enableDrag,
-            barrierColor: modalBarrierColor ?? Colors.black54,
+            barrierColor: modalBarrierColor,
             barrierDismissible: isDismissible,
             screenMaximumPercentage: heightFactor,
             animationDirection: animationDirection,

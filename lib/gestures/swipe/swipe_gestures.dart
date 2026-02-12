@@ -1,8 +1,8 @@
 part of 'swipe.dart';
 
 abstract base class SwipeGestures {
-  const SwipeGestures({
-    required this.obtainChildHeight,
+  SwipeGestures({
+    required this.obtainSize,
     required this.animationController,
     required this.canDragDone,
     required this.onClosing,
@@ -13,50 +13,52 @@ abstract base class SwipeGestures {
 
   final void Function(DragStartDetails)? dragStart;
   final void Function(DragEndDetails)? dragEnd;
-  final double Function() obtainChildHeight;
+  final double Function() obtainSize;
   final AnimationController animationController;
-  final bool canDragDone;
+  final bool Function() canDragDone;
   final VoidCallback onClosing;
   final double closePercentage;
 
+  // final ValueNotifier<bool> isDragging = ValueNotifier<bool>(false);
+
   void handleDragStart(DragStartDetails details) {
+    // isDragging.value = true;
     dragStart?.call(details);
   }
 
   void handleDragEnd(DragEndDetails details) {
-    if (canDragDone) {
+    // isDragging.value = false;
+    if (canDragDone()) {
       return;
     }
-    var isClosing = false;
-    if (details.velocity.pixelsPerSecond.dy > 700.0) {
-      final flingVelocity =
-          -details.velocity.pixelsPerSecond.dy / (obtainChildHeight());
-      if (animationController.value > 0.0) {
-        animationController.fling(velocity: flingVelocity);
-      }
-      if (flingVelocity < 0.0) {
-        isClosing = true;
-      }
-    } else if (animationController.value < closePercentage) {
-      if (animationController.value > 0.0) {
+
+    final bool willPop;
+    if (details.primaryVelocity != null &&
+        details.primaryVelocity!.abs() >= _kMinFlingVelocity) {
+      willPop = details.primaryVelocity! < 0; //Negative for pop Left
+    } else {
+      willPop = animationController.value <= closePercentage;
+    }
+
+    if (willPop) {
+      if (animationController.value < 1.0) {
         animationController.fling(velocity: -1);
       }
-      isClosing = true;
+      onClosing.call();
     } else {
       animationController.forward();
     }
     dragEnd?.call(details);
-    if (isClosing) {
-      onClosing.call();
-    }
   }
 
   void handleDragUpdate(DragUpdateDetails details);
 }
 
+const double _kMinFlingVelocity = 1;
+
 final class SwipeDownRightGestures extends SwipeGestures {
-  const SwipeDownRightGestures({
-    required super.obtainChildHeight,
+  SwipeDownRightGestures({
+    required super.obtainSize,
     required super.animationController,
     required super.canDragDone,
     required super.onClosing,
@@ -67,17 +69,47 @@ final class SwipeDownRightGestures extends SwipeGestures {
 
   @override
   void handleDragUpdate(DragUpdateDetails details) {
-    final primaryDelta = details.primaryDelta;
-    if (canDragDone || primaryDelta == null) {
+    if (canDragDone()) {
       return;
     }
-    animationController.value -= primaryDelta / (obtainChildHeight());
+
+    if (details.primaryDelta! > 0 || animationController.value > 0) {
+      animationController.value =
+          (animationController.value - details.primaryDelta! / obtainSize())
+              .clamp(0.0, 1.0);
+    }
+  }
+
+  @override
+  void handleDragEnd(DragEndDetails details) {
+    // isDragging.value = false;
+    if (canDragDone()) {
+      return;
+    }
+
+    final bool willPop;
+    if (details.primaryVelocity != null &&
+        details.primaryVelocity!.abs() >= _kMinFlingVelocity) {
+      willPop = details.primaryVelocity! > 0; // Positive   for pop right
+    } else {
+      willPop = animationController.value <= closePercentage;
+    }
+
+    if (willPop) {
+      if (animationController.value < 1.0) {
+        animationController.fling(velocity: -1);
+      }
+      onClosing.call();
+    } else {
+      animationController.forward();
+    }
+    dragEnd?.call(details);
   }
 }
 
 final class SwipeUpLeftGestures extends SwipeGestures {
-  const SwipeUpLeftGestures({
-    required super.obtainChildHeight,
+  SwipeUpLeftGestures({
+    required super.obtainSize,
     required super.animationController,
     required super.canDragDone,
     required super.onClosing,
@@ -88,11 +120,14 @@ final class SwipeUpLeftGestures extends SwipeGestures {
 
   @override
   void handleDragUpdate(DragUpdateDetails details) {
-    final primaryDelta = details.primaryDelta;
-    if (canDragDone || primaryDelta == null) {
+    if (canDragDone()) {
       return;
     }
-
-    animationController.value += primaryDelta / (obtainChildHeight());
+    animationController.value -= details.primaryDelta! / obtainSize();
+    //     if (details.primaryDelta! > 0 || animationController.value > 0) {
+    //   animationController.value =
+    //       (animationController.value + details.primaryDelta! / obtainSize())
+    //           .clamp(0.0, 1.0);
+    // }
   }
 }

@@ -2,7 +2,6 @@ library;
 
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart' show AxisDirection, Offset;
 import 'package:flutter/widgets.dart' show Color, TraversalEdgeBehavior;
 
@@ -32,7 +31,7 @@ sealed class TraceRoute {
     this.traversalEdgeBehavior,
     this.transitionDuration = const Duration(milliseconds: 300),
     this.reverseTransitionDuration = const Duration(milliseconds: 300),
-    this.barrierColor = Colors.black54,
+    this.barrierColor = const Color(0x8A000000),
     this.barrierLabel = '',
     this.semanticsLabel = '',
     this.barrierDismissible = true,
@@ -47,7 +46,7 @@ sealed class TraceRoute {
     bool allowSnapshotting = true,
     ui.ImageFilter? filter,
     TraversalEdgeBehavior? traversalEdgeBehavior,
-    Color barrierColor = Colors.black54,
+    Color? barrierColor = const Color(0x8A000000),
     Duration reverseTransitionDuration = const Duration(milliseconds: 300),
     Duration transitionDuration = const Duration(milliseconds: 300),
     bool barrierDismissible = false,
@@ -82,7 +81,7 @@ sealed class TraceRoute {
     bool allowSnapshotting = false,
     ui.ImageFilter? filter,
     TraversalEdgeBehavior? traversalEdgeBehavior,
-    Color barrierColor = Colors.black54,
+    Color? barrierColor = const Color(0x8A000000),
     Duration reverseTransitionDuration = const Duration(milliseconds: 300),
     Duration transitionDuration = const Duration(milliseconds: 300),
     bool barrierDismissible = true,
@@ -113,7 +112,7 @@ sealed class TraceRoute {
     bool allowSnapshotting = false,
     ui.ImageFilter? filter,
     TraversalEdgeBehavior? traversalEdgeBehavior,
-    Color barrierColor = Colors.black54,
+    Color? barrierColor = const Color(0x8A000000),
     Duration reverseTransitionDuration = const Duration(milliseconds: 300),
     Duration transitionDuration = const Duration(milliseconds: 300),
     bool barrierDismissible = true,
@@ -197,7 +196,7 @@ sealed class TraceRoute {
   /// modal.
   ///
   /// Defaults to `Colors.black54`.
-  final Color barrierColor;
+  final Color? barrierColor;
 
   /// {@template flutter.widgets.ModalRoute.barrierLabel}
   /// The semantic label for the modal barrier.
