@@ -1,4 +1,4 @@
-# Browser - Advanced Navigation for Flutter
+# Browser Router - Advanced Navigation for Flutter
 
 [![pub version](https://img.shields.io/pub/v/browser.svg)](https://pub.dev/packages/browser)
 
