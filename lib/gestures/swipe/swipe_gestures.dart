@@ -123,11 +123,10 @@ final class SwipeUpLeftGestures extends SwipeGestures {
     if (canDragDone()) {
       return;
     }
-    animationController.value -= details.primaryDelta! / obtainSize();
-    //     if (details.primaryDelta! > 0 || animationController.value > 0) {
-    //   animationController.value =
-    //       (animationController.value + details.primaryDelta! / obtainSize())
-    //           .clamp(0.0, 1.0);
-    // }
+    if (details.primaryDelta! > 0 || animationController.value > 0) {
+      animationController.value =
+          (animationController.value + details.primaryDelta! / obtainSize())
+              .clamp(0.0, 1.0);
+    }
   }
 }
