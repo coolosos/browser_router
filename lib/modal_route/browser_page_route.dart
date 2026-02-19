@@ -103,7 +103,9 @@ class BrowserPageRoute<T> extends PageRoute<T>
         obtainSize: () => context.size?.width ?? 0,
         canDragDone: () => controller?.status == AnimationStatus.reverse,
         onClosing: () {
-          context.pop();
+          if (context.navigate.canPop()) {
+            context.pop();
+          }
         },
         closePercentage: 0.8,
       );
