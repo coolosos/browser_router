@@ -1,3 +1,7 @@
+## 0.0.2
+
+* Update repository, homepage, and issue_tracker fields.
+
 ## 0.0.1
 
 * **Initial release** of the `browser` package.
