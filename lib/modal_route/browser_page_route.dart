@@ -97,13 +97,16 @@ class BrowserPageRoute<T> extends PageRoute<T>
   ) {
     if (defaultTargetPlatform == TargetPlatform.iOS &&
         appRoute.routeTransition == RouteTransition.slide_right &&
-        traceRoute.popGestureEnabled) {
+        traceRoute.popGestureEnabled &&
+        context.navigate.canPop()) {
       final swipeGestures = SwipeDownRightGestures(
         animationController: controller!,
         obtainSize: () => context.size?.width ?? 0,
         canDragDone: () => controller?.status == AnimationStatus.reverse,
         onClosing: () {
-          context.pop();
+          if (context.navigate.canPop()) {
+            context.pop();
+          }
         },
         closePercentage: 0.8,
       );
