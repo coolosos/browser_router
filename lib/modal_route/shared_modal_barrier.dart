@@ -28,7 +28,7 @@ mixin BrowserModalBarrierMixin<T> on ModalRoute<T> {
             semanticsLabel: barrierLabel,
             barrierSemanticsDismissible: semanticsDismissible,
             onDismiss: () {
-              if (isCurrent && context.navigate.canPop()) {
+              if (isCurrent) {
                 context.pop(settings: settings);
               }
             },
@@ -43,7 +43,7 @@ mixin BrowserModalBarrierMixin<T> on ModalRoute<T> {
             semanticsLabel: barrierLabel,
             barrierSemanticsDismissible: semanticsDismissible,
             onDismiss: () {
-              if (isCurrent && context.navigate.canPop()) {
+              if (isCurrent) {
                 context.pop(settings: settings);
               }
             },
