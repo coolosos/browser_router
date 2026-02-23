@@ -110,9 +110,8 @@ class _RouteObserverProviderState
       widget.didPopNext?.call(context);
       if (widget.didPopNextWithArguments != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final deepLink = context.getArgument<DeepLinkParam>();
-
           if (mounted) {
+            final deepLink = context.getArgument<DeepLinkParam>();
             widget.didPopNextWithArguments?.call(context, deepLink);
           }
         });

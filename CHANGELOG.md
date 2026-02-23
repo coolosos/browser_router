@@ -1,3 +1,8 @@
+## 0.0.3
+
+*   **Fix**: Prevent popping when no routes are available in `BrowserPageRoute` swipe gestures.
+*   **Fix**: Ensure `DeepLinkParam` argument retrieval is mounted in `_RouteObserverProviderState`.
+
 ## 0.0.2
 
 * Update repository, homepage, and issue_tracker fields.

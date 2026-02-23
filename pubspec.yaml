@@ -1,6 +1,6 @@
 name: browser_router
 description: An advanced navigation system for Flutter that enables typed routes, custom transitions, and robust overlay management.
-version: 0.0.1
+version: 0.0.3
 repository: https://github.com/coolosos/browser_router
 homepage: https://github.com/coolosos/browser_router
 issue_tracker: https://github.com/coolosos/browser_router/issues
