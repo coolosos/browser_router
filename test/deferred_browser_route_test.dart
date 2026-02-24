@@ -45,7 +45,7 @@ void main() {
       return DeferredBrowserRoute(
         path: '/deferred',
         loadPageLibrary: loadPageLibrary,
-        page: page,
+        pageBuilder: () => page,
         initializeServiceLocator: initializeServiceLocator,
         onLoading: onLoading,
         onError: onError,
@@ -197,7 +197,7 @@ void main() {
           );
           libraryLoaded = true;
         },
-        page: const Text(
+        pageBuilder: () => const Text(
           'Synchronous Page Content',
           textDirection: TextDirection.ltr,
         ),
