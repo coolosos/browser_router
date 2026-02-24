@@ -1,3 +1,8 @@
+## 0.0.5
+
+*   **Feat**: Changed `DeferredBrowserRoute` to use `pageBuilder` instead of `page` in its constructor, ensuring the page is built only after the deferred library is loaded, preventing potential issues.
+*   **Fix**: Updated `DeferredBrowserRoute` test cases to align with the new `pageBuilder` constructor parameter.
+
 ## 0.0.4
 
 *   **Feat**: Add `toCompletedBrowserRoute` method to `DeferredBrowserRoute` to allow synchronous route creation after deferred content loading.

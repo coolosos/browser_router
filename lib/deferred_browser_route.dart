@@ -6,7 +6,7 @@ class DeferredBrowserRoute extends BrowserRoute {
   DeferredBrowserRoute({
     required super.path,
     required Future Function() loadPageLibrary,
-    required Widget page,
+    required Widget Function() pageBuilder,
     Future<void> Function()? initializeServiceLocator,
     Widget? onLoading,
     Widget? Function(Object? error)? onError,
@@ -15,7 +15,7 @@ class DeferredBrowserRoute extends BrowserRoute {
     super.routeTransition,
   })  : _initializeServiceLocator = initializeServiceLocator,
         _loadPageLibrary = loadPageLibrary,
-        _page = page,
+        _page = pageBuilder,
         super(
           page: _DeferredPageLoader(
             loadDeferredContent: _loadDeferred(
@@ -24,13 +24,13 @@ class DeferredBrowserRoute extends BrowserRoute {
             ),
             onLoading: onLoading,
             onError: onError,
-            page: page,
+            page: pageBuilder,
           ),
         );
 
   final Future Function() _loadPageLibrary;
   final Future Function()? _initializeServiceLocator;
-  final Widget _page;
+  final Widget Function() _page;
 
   static Future _loadDeferred({
     required Future Function() loadPageLibrary,
@@ -59,7 +59,7 @@ class DeferredBrowserRoute extends BrowserRoute {
 
     return BrowserRoute(
       path: path,
-      page: _page,
+      page: _page(),
       builderTrigger: builderTrigger,
       validateArguments: validateArguments,
       routeTransition: routeTransition,
@@ -76,7 +76,7 @@ class _DeferredPageLoader extends StatefulWidget {
   });
 
   final Future<dynamic> loadDeferredContent;
-  final Widget page;
+  final Widget Function() page;
   final Widget? onLoading;
   final Widget? Function(Object? error)? onError;
 
@@ -103,7 +103,7 @@ class _DeferredPageLoaderState extends State<_DeferredPageLoader> {
             return widget.onError?.call(snapshot.error) ??
                 const SizedBox.shrink();
           }
-          return widget.page;
+          return widget.page();
         }
         return widget.onLoading ?? const SizedBox.shrink();
       },
