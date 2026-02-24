@@ -1,3 +1,9 @@
+## 0.0.4
+
+*   **Feat**: Add `toCompletedBrowserRoute` method to `DeferredBrowserRoute` to allow synchronous route creation after deferred content loading.
+*   **Refactor**: Improve `DeferredBrowserRoute` internal logic for future handling and error display.
+*   **Test**: Enhance test coverage for `DeferredBrowserRoute` with `WidgetsApp` and custom `PageRoute` to minimize Material Design dependencies.
+
 ## 0.0.3
 
 *   **Fix**: Prevent popping when no routes are available in `BrowserPageRoute` swipe gestures.
