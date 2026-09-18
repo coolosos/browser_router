@@ -279,14 +279,14 @@ class Browser extends StatelessWidget {
     bool isDismissible = true,
     Color? modalBarrierColor,
     bool enableDrag = true,
-    bool useSafeAre = false,
+    bool useSafeArea = false,
     List<BoxShadow>? boxShadow,
   }) =>
       Navigator.of(context).push<T>(
         BrowserSwipePopupRoute<T>(
           settings: routeSettings,
           traceRoute: SwipeTraceRoute(
-            useSafeArea: useSafeAre,
+            useSafeArea: useSafeArea,
             enableDrag: enableDrag,
             barrierColor: modalBarrierColor,
             barrierDismissible: isDismissible,
