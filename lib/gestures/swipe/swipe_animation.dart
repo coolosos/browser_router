@@ -86,7 +86,7 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
       gestures: _generateSwipeGestures(
         direction: widget.animationDirection,
       ),
-      onNotification: (DraggableScrollableNotification notification) {
+      onNotification: (notification) {
         if (notification.extent == notification.minExtent) {
           widget.onClosing();
         }

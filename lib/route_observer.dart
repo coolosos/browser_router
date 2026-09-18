@@ -92,8 +92,8 @@ class _RouteObserverProviderState
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final ModalRoute? modalRoute = ModalRoute.of(context);
-    if (modalRoute is ModalRoute) {
+    final modalRoute = ModalRoute.of<void>(context);
+    if (modalRoute != null) {
       widget.routeObserver.subscribe(this, modalRoute);
     }
   }

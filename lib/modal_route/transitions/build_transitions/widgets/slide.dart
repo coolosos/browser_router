@@ -19,7 +19,7 @@ enum Positions {
   // Offset(0, -1 / 3),
   up(
     primaryOffset: Offset(0, 1),
-    secondaryOffset: Offset(0, 0),
+    secondaryOffset: Offset.zero,
   ),
   down(
     primaryOffset: Offset(0, -1),

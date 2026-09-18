@@ -32,7 +32,7 @@ class Banner extends OverlayModal {
   @override
   OverlayEntry _createModal(Widget child) {
     return OverlayEntry(
-      builder: (BuildContext context) {
+      builder: (context) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           child: SafeArea(

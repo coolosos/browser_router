@@ -2,8 +2,7 @@ library;
 
 import 'dart:ui' as ui;
 
-import 'package:flutter/widgets.dart' show AxisDirection, Offset;
-import 'package:flutter/widgets.dart' show Color, TraversalEdgeBehavior;
+import 'package:flutter/widgets.dart';
 
 import '../transitions/route_transition.dart';
 
@@ -19,8 +18,8 @@ part 'swipe_trace_route.dart';
 /// presented on the screen. This includes its transition animation, modality
 /// (e.g., fullscreen, popup), barrier color, and other visual properties.
 ///
-/// It can be provided directly to a [Trace] object to override the default
-/// presentation style defined in the [BrowserRoute].
+/// It can be provided directly to a `Trace` object to override the default
+/// presentation style defined in the `BrowserRoute`.
 sealed class TraceRoute {
   const TraceRoute({
     this.routeTransition,
@@ -145,7 +144,7 @@ sealed class TraceRoute {
       );
 
   /// The transition animation to use when the route is pushed or popped.
-  /// If null, the default transition from [BrowserRoute] is used.
+  /// If null, the default transition from `BrowserRoute` is used.
   final RouteTransition? routeTransition;
 
   /// {@template flutter.widgets.ModalRoute.opaque}

@@ -29,7 +29,7 @@ abstract class OverlayModal {
   // fields needed for job
   OverlayEntry? _overlayEntry;
   Timer? timer;
-  Completer? completer;
+  Completer<void>? completer;
 
   /// the child widget is a content wrapped with transition animation
   OverlayEntry _createModal(Widget child);
@@ -37,7 +37,7 @@ abstract class OverlayModal {
   Animation<double> _createSecondaryAnimation() => _animationController.view;
 
   /// create animation and overlayEntry an insert to overlayState
-  Future insert() async {
+  Future<void> insert() async {
     _overlayEntry = _createModal(
       (transition.routeTransition ?? RouteTransition.slide_down).build(
         child: _content(remove),
@@ -49,7 +49,7 @@ abstract class OverlayModal {
     _overlayState.insert(_overlayEntry!);
     await _animationController.forward();
     //wait, if the duration is null, de content have a responsibility to cause
-    completer = Completer();
+    completer = Completer<void>();
 
     if (duration is Duration) {
       timer = Timer(
@@ -58,7 +58,7 @@ abstract class OverlayModal {
       );
     }
 
-    return completer!.future;
+    await completer!.future;
   }
 
   /// remove overlayEntry

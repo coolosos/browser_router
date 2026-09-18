@@ -149,18 +149,18 @@ class Browser extends StatelessWidget {
 
     final name = uri?.path;
     final deepLinkParameter = uri?.queryParameters;
-    final traceParameter = settings.arguments as Map?;
+    final traceParameter = settings.arguments as Map<dynamic, dynamic>?;
 
     final traceRoute = adaptiveTrace?.call(name) ??
         traceParameter?.getAndClean<TraceRoute>() ??
         PageTraceRoute();
     debugPrint('Browser.generate: traceRoute: $traceRoute');
 
-    final arguments = Map.from({
+    final arguments = <dynamic, dynamic>{
       if (traceParameter != null) ...traceParameter,
       if (deepLinkParameter != null)
         DeepLinkParam: DeepLinkParam(deepLinkParameter),
-    });
+    };
     debugPrint('Browser.generate: arguments: $arguments');
 
     final appRoute = _obtainMainRoute(name, arguments);
@@ -178,22 +178,22 @@ class Browser extends StatelessWidget {
     );
 
     final route = switch (traceRoute) {
-      PageTraceRoute() => BrowserPageRoute(
+      PageTraceRoute() => BrowserPageRoute<dynamic>(
           traceRoute: traceRoute,
           appRoute: browserRouteWithCustomTransition,
           settings: newSettings,
         ),
-      SwipeTraceRoute() => BrowserSwipePopupRoute(
+      SwipeTraceRoute() => BrowserSwipePopupRoute<dynamic>(
           traceRoute: traceRoute,
           appRoute: browserRouteWithCustomTransition,
           settings: newSettings,
         ),
-      PopupTraceRoute() => BrowserPopupRoute(
+      PopupTraceRoute() => BrowserPopupRoute<dynamic, PopupTraceRoute>(
           traceRoute: traceRoute,
           appRoute: browserRouteWithCustomTransition,
           settings: newSettings,
         ),
-      OverlayTraceRoute() => BrowserPageRoute(
+      OverlayTraceRoute() => BrowserPageRoute<dynamic>(
           appRoute: browserRouteWithCustomTransition,
           traceRoute: PageTraceRoute(),
           settings: newSettings,

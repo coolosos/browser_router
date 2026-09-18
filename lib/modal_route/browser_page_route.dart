@@ -16,11 +16,11 @@ class BrowserPageRoute<T> extends PageRoute<T>
     required this.traceRoute,
     super.settings,
   })  : transitionDuration = appRoute.routeTransition == RouteTransition.none
-            ? const Duration(milliseconds: 0)
+            ? Duration.zero
             : traceRoute.transitionDuration,
         reverseTransitionDuration =
             appRoute.routeTransition == RouteTransition.none
-                ? const Duration(milliseconds: 0)
+                ? Duration.zero
                 : traceRoute.reverseTransitionDuration,
         barrierLabel = traceRoute.barrierLabel,
         maintainState = traceRoute.maintainState,
