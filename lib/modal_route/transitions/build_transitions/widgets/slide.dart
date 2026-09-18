@@ -35,23 +35,16 @@ enum Positions {
   final Offset secondaryOffset;
 }
 
-class Slide extends StatelessWidget {
+final class Slide extends StatelessWidget {
   Slide({
     required this.primaryRouteAnimation,
     required Animation<double> secondaryRouteAnimation,
     required Positions drive,
     required this.child,
     super.key,
-  })  : _primaryPositionAnimation = CurvedAnimation(
-          // The curves below have been rigorously derived from plots of native
-          // iOS animation frames. Specifically, a video was taken of a page
-          // transition animation and the distance in each frame that the page
-          // moved was measured. A best fit bezier curve was the fitted to the
-          // point set, which is linearToEaseIn. Conversely, easeInToLinear is the
-          // reflection over the origin of linearToEaseIn.
+  })  : _drive = drive,
+        _primaryPositionAnimation = CurvedAnimation(
           parent: primaryRouteAnimation,
-          // curve: Curves.linearToEaseOut,
-          // reverseCurve: Curves.easeInToLinear,
           curve: Curves.fastEaseInToSlowEaseOut,
           reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
         ).drive(
@@ -69,54 +62,93 @@ class Slide extends StatelessWidget {
             begin: Offset.zero,
             end: drive.secondaryOffset,
           ),
+        ),
+        _scrimAnimation = CurvedAnimation(
+          parent: secondaryRouteAnimation,
+          curve: Curves.linearToEaseOut,
+          reverseCurve: Curves.easeInToLinear,
+        ),
+        decorationTween = DecorationTween(
+          begin: drive == Positions.right
+              ? const BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Color(0x33000000),
+                      blurRadius: 16,
+                      offset: Offset(-4, 0),
+                    ),
+                  ],
+                )
+              : drive == Positions.left
+                  ? const BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Color(0x33000000),
+                          blurRadius: 16,
+                          offset: Offset(4, 0),
+                        ),
+                      ],
+                    )
+                  : const BoxDecoration(),
+          end: const BoxDecoration(),
         );
+
+  final Positions _drive;
   final Animation<double> primaryRouteAnimation;
 
   // When this page is coming in to cover another page.
   final Animation<Offset> _primaryPositionAnimation;
   // When this page is becoming covered by another page.
   final Animation<Offset> _secondaryPositionAnimation;
+  // Dimming scrim when covered by another page.
+  final Animation<double> _scrimAnimation;
 
   final Widget child;
-
-  final DecorationTween decorationTween = DecorationTween(
-    begin: BoxDecoration(
-      color: const Color.fromARGB(0, 255, 255, 255),
-      border: Border.all(style: BorderStyle.none),
-      borderRadius: BorderRadius.circular(60),
-      boxShadow: const <BoxShadow>[
-        BoxShadow(
-          color: Color(0x66666666),
-          blurRadius: 10,
-          spreadRadius: 3,
-          offset: Offset(0, 6),
-        ),
-      ],
-    ),
-    end: BoxDecoration(
-      color: const Color.fromARGB(0, 255, 255, 255),
-      border: Border.all(
-        style: BorderStyle.none,
-      ),
-      borderRadius: BorderRadius.zero,
-      // No shadow.
-    ),
-  );
+  final DecorationTween decorationTween;
 
   @override
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
+    final isHorizontal =
+        _drive == Positions.right || _drive == Positions.left;
+
     return SlideTransition(
       position: _secondaryPositionAnimation,
       textDirection: textDirection,
       transformHitTests: false,
-      child: SlideTransition(
-        position: _primaryPositionAnimation,
-        textDirection: textDirection,
-        child: DecoratedBoxTransition(
-          decoration: decorationTween.animate(primaryRouteAnimation),
-          child: child,
-        ),
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          SlideTransition(
+            position: _primaryPositionAnimation,
+            textDirection: textDirection,
+            child: DecoratedBoxTransition(
+              decoration: decorationTween.animate(primaryRouteAnimation),
+              child: child,
+            ),
+          ),
+          if (isHorizontal)
+            AnimatedBuilder(
+              animation: _scrimAnimation,
+              builder: (context, child) {
+                if (_scrimAnimation.value <= 0) {
+                  return const SizedBox.shrink();
+                }
+                return Positioned.fill(
+                  child: IgnorePointer(
+                    child: ColoredBox(
+                      color: Color.fromRGBO(
+                        0,
+                        0,
+                        0,
+                        _scrimAnimation.value * 0.25,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
     );
   }

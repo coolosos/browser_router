@@ -1,5 +1,5 @@
-import 'package:browser_router/gestures/swipe/swipe.dart';
-import 'package:flutter/foundation.dart'; // Import for debugPrint
+import 'package:browser_router/gestures/back_gesture/cupertino_back_gesture_detector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../browser.dart';
@@ -7,7 +7,7 @@ import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show PageTraceRoute;
 
-class BrowserPageRoute<T> extends PageRoute<T>
+final class BrowserPageRoute<T> extends PageRoute<T>
     with BrowserModalBarrierMixin<T> {
   BrowserPageRoute({
     required this.appRoute,
@@ -89,30 +89,26 @@ class BrowserPageRoute<T> extends PageRoute<T>
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    if (defaultTargetPlatform == TargetPlatform.iOS &&
-        appRoute.routeTransition == RouteTransition.slide_right &&
-        traceRoute.popGestureEnabled &&
-        context.navigate.canPop()) {
-      final swipeGestures = SwipeDownRightGestures(
-        animationController: controller!,
-        obtainSize: () => context.size?.width ?? 0,
-        canDragDone: () => controller?.status == AnimationStatus.reverse,
-        onClosing: () {
-          if (context.navigate.canPop()) {
-            context.pop();
-          }
-        },
-        closePercentage: 0.8,
-      );
+    final isApple = !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS);
+    final isSlideOrAdaptive =
+        appRoute.routeTransition == RouteTransition.slide_right ||
+            appRoute.routeTransition == RouteTransition.adaptive;
 
-      return Swipe(
-        direction: AxisDirection.left,
-        animation: animation,
-        screenMaximumPercentage: 1,
-        hasEnableGestures: true,
-        gestures: swipeGestures,
-        disableAnimations: MediaQuery.disableAnimationsOf(context),
-        animateChild: false,
+    if (isApple &&
+        isSlideOrAdaptive &&
+        traceRoute.popGestureEnabled &&
+        !fullscreenDialog &&
+        controller != null &&
+        navigator != null) {
+      return CupertinoBackGestureDetector(
+        navigator: navigator!,
+        controller: controller!,
+        backGestureWidth: traceRoute.backGestureWidth,
+        closePercentage: traceRoute.popClosePercentage,
+        enabled: traceRoute.popGestureEnabled &&
+            (navigator?.canPop() ?? false),
         child: appRoute.routeTransition.build(
           animation: animation,
           secondaryAnimation: secondaryAnimation,

@@ -1,6 +1,6 @@
 part of 'browser.dart';
 
-extension _Args on Map<dynamic, dynamic> {
+extension _Args on Map<Object?, Object?> {
   T? getArgument<T>() {
     if (containsKey(T)) {
       return this[T] as T?;
@@ -22,16 +22,18 @@ extension _Args on Map<dynamic, dynamic> {
       // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
       // is called when the stored argument is an instance of `SubClass`.
       final arg = values.firstWhereOrNull((value) => value is T) as T?;
-      removeWhere((key, value) => value is T);
+      if (arg != null) {
+        removeWhere((key, value) => value is T);
+      }
       return arg;
     }
   }
 }
 
 extension NavigatorX on BuildContext {
-  Map<dynamic, dynamic> _createArguments(List<dynamic>? args) {
-    final arguments = <dynamic, dynamic>{
-      for (final argument in (args ?? []))
+  Map<Object, Object?> _createArguments(List<Object?>? args) {
+    final arguments = <Object, Object?>{
+      for (final argument in (args ?? <Object?>[]))
         if (argument != null) argument.runtimeType: argument,
     };
     return arguments;
@@ -48,7 +50,7 @@ extension NavigatorX on BuildContext {
   ///  * [getArgumentAndClean], for reading an argument and consuming it immediately.
   T? getArgument<T extends RouteParams?>() {
     final arguments = ModalRoute.of(this)?.settings.arguments;
-    if (arguments is Map) {
+    if (arguments is Map<Object?, Object?>) {
       return arguments.getArgument<T>();
     }
     return null;
@@ -73,7 +75,7 @@ extension NavigatorX on BuildContext {
     final arguments =
         settings?.arguments ?? ModalRoute.of(this)?.settings.arguments;
 
-    if (arguments is! Map) return null;
+    if (arguments is! Map<Object?, Object?>) return null;
 
     return arguments.getAndClean<T>();
   }
@@ -84,7 +86,7 @@ extension NavigatorX on BuildContext {
     final arguments =
         settings?.arguments ?? ModalRoute.of(this)?.settings.arguments;
 
-    if (arguments is! Map) return;
+    if (arguments is! Map<Object?, Object?>) return;
     arguments.clear();
   }
 
@@ -99,9 +101,9 @@ extension NavigatorX on BuildContext {
   /// - [args]: A list of [RouteParams] to pass to the new route.
   /// - [traceRoute]: An optional [TraceRoute] to override the default
   ///   presentation style (e.g., to present as a popup).
-  Future<dynamic> pushNamed<T extends RouteParams?>(
+  Future<T?> pushNamed<T extends Object?>(
     String path, {
-    List<T> args = const [],
+    List<RouteParams?> args = const [],
     TraceRoute? traceRoute,
     RouteSettings? settings,
     NavigatorState? navigator,
@@ -115,15 +117,16 @@ extension NavigatorX on BuildContext {
       pushParams,
       if (traceRoute != null) traceRoute,
     ]);
-    return (navigator ?? navigate).pushNamed(path, arguments: argsMap);
+    return (navigator ?? navigate).pushNamed<T>(path, arguments: argsMap);
   }
 
-  Future<void> pushReplacementNamed<T extends RouteParams?>(
+  Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(
     String path, {
-    List<T> args = const [],
+    List<RouteParams?> args = const [],
     TraceRoute? traceRoute,
     RouteSettings? settings,
     NavigatorState? navigator,
+    TO? result,
   }) {
     final pushParams = getArgumentAndClean<_PushParam>(
       settings: settings,
@@ -133,8 +136,11 @@ extension NavigatorX on BuildContext {
       pushParams,
       if (traceRoute != null) traceRoute,
     ]);
-    return (navigator ?? navigate)
-        .pushReplacementNamed(path, arguments: argsMap);
+    return (navigator ?? navigate).pushReplacementNamed<T, TO>(
+      path,
+      arguments: argsMap,
+      result: result,
+    );
   }
 
   /// Pops the current route off the navigator.
@@ -143,8 +149,8 @@ extension NavigatorX on BuildContext {
   ///   that will become visible after this one is popped. The receiving
   ///   route can get this argument via `context.getArgumentAndClean()` in its
   ///   `onAppear` callback.
-  Future<void> pop<T extends RouteParams?>({
-    T? args,
+  Future<void> pop({
+    RouteParams? args,
     RouteSettings? settings,
   }) async {
     final popParams = getArgumentAndClean<_PopParam>(
@@ -158,10 +164,10 @@ extension NavigatorX on BuildContext {
         if (route.settings.name == name) {
           return false;
         }
-        if (route.settings.arguments is Map) {
+        if (route.settings.arguments is Map<Object?, Object?>) {
           _createArguments([args, popParams]).forEach(
             (key, value) {
-              ((route.settings.arguments as Map?) ?? {}).update(
+              ((route.settings.arguments as Map<Object?, Object?>?) ?? {}).update(
                 key,
                 (value) => value,
                 ifAbsent: () => value,
@@ -172,7 +178,7 @@ extension NavigatorX on BuildContext {
         return true;
       });
     } else {
-      await pushNamed(
+      await pushNamed<void>(
         BrowserConfig.of(this).defaultRoute.path,
         args: [args, popParams],
         navigator: navigator,
@@ -180,9 +186,9 @@ extension NavigatorX on BuildContext {
     }
   }
 
-  Future<void> popToFirstAndPushNamed<T extends RouteParams?>(
+  Future<void> popToFirstAndPushNamed(
     String path, {
-    List<T> args = const [],
+    List<RouteParams?> args = const [],
   }) async {
     final popParams = getArgumentAndClean<_PopParam>()?.popParams;
 
@@ -191,12 +197,12 @@ extension NavigatorX on BuildContext {
         return route.isFirst;
       });
 
-    await pushNamed(path, args: [...args, popParams], navigator: navigator);
+    await pushNamed<void>(path, args: [...args, popParams], navigator: navigator);
   }
 
-  Future<void> popToSelectOrFirstAndPushNamed<T extends RouteParams?>(
+  Future<void> popToSelectOrFirstAndPushNamed(
     String path, {
-    List<T> args = const [],
+    List<RouteParams?> args = const [],
   }) async {
     final popParams = getArgumentAndClean<_PopParam>()?.popParams;
 
@@ -211,13 +217,13 @@ extension NavigatorX on BuildContext {
       return route.isFirst;
     });
     if (!returnAsExpected) {
-      await pushNamed(path, args: [...args, popParams], navigator: navigator);
+      await pushNamed<void>(path, args: [...args, popParams], navigator: navigator);
     }
   }
 
-  Future<void> popToFirstAndPushReplacementNamed<T extends RouteParams?>(
+  Future<void> popToFirstAndPushReplacementNamed(
     String path, {
-    List<T> args = const [],
+    List<RouteParams?> args = const [],
   }) async {
     final popParams = getArgumentAndClean<_PopParam>()?.popParams;
     final navigator = navigate
@@ -225,15 +231,15 @@ extension NavigatorX on BuildContext {
         return route.isFirst;
       });
 
-    await pushReplacementNamed(
+    await pushReplacementNamed<void, void>(
       path,
       args: [...args, popParams],
       navigator: navigator,
     );
   }
 
-  Future<void> popToFirst<T extends RouteParams?>({
-    List<T> args = const [],
+  Future<void> popToFirst({
+    List<RouteParams?> args = const [],
     RouteSettings? settings,
   }) async {
     final popParams = getArgumentAndClean<_PopParam>(
@@ -241,11 +247,11 @@ extension NavigatorX on BuildContext {
     )?.popParams;
 
     if (!navigate.canPop()) {
-      await pushNamed<T>(
+      await pushNamed<void>(
         BrowserConfig.of(this).defaultRoute.path,
         args: [
           ...args,
-          if (popParams is T) popParams,
+          if (popParams != null) popParams,
         ],
       );
       return;
@@ -253,10 +259,10 @@ extension NavigatorX on BuildContext {
 
     return navigate.popUntil((route) {
       if (route.isFirst) {
-        if (route.settings.arguments is Map) {
+        if (route.settings.arguments is Map<Object?, Object?>) {
           _createArguments([...args, popParams]).forEach(
             (key, value) {
-              (route.settings.arguments! as Map).update(
+              (route.settings.arguments! as Map<Object?, Object?>).update(
                 key,
                 (value) => value,
                 ifAbsent: () => value,
@@ -274,7 +280,7 @@ extension NavigatorX on BuildContext {
   void setPopArgument(RouteParams routeParams) {
     final arguments = ModalRoute.of(this)?.settings.arguments;
 
-    if (arguments is! Map) return;
+    if (arguments is! Map<Object?, Object?>) return;
 
     final argument = _PopParam(routeParams);
 
@@ -288,7 +294,7 @@ extension NavigatorX on BuildContext {
   void setPushArgument(RouteParams routeParams) {
     final arguments = ModalRoute.of(this)?.settings.arguments;
 
-    if (arguments is! Map) return;
+    if (arguments is! Map<Object?, Object?>) return;
 
     final argument = _PushParam(routeParams);
 
@@ -350,10 +356,13 @@ extension NavigatorX on BuildContext {
         popToFirstAndPushNamed(uri.toString(), args: args ?? <RouteParams>[]);
         return;
       case 'pushreplacement':
-        pushReplacementNamed(uri.toString(), args: args ?? <RouteParams>[]);
+        pushReplacementNamed<void, void>(
+          uri.toString(),
+          args: args ?? <RouteParams>[],
+        );
         return;
       default:
-        pushNamed(uri.toString(), args: args ?? <RouteParams>[]);
+        pushNamed<void>(uri.toString(), args: args ?? <RouteParams>[]);
         return;
     }
   }

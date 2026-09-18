@@ -5,7 +5,7 @@ typedef ContentBuilder = Widget Function(
   FutureOr<void> Function() removableCallback,
 );
 
-abstract class OverlayModal {
+abstract base class OverlayModal {
   OverlayModal({
     required this.duration,
     required ContentBuilder content,

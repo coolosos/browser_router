@@ -8,7 +8,7 @@ typedef GetArguments = T? Function<T extends RouteParams>();
 /// Each [BrowserRoute] associates a [path] (like '/home' or '/profile/:id')
 /// with a [page] widget that should be displayed. It also allows for defining
 /// a default [routeTransition] and argument validation logic.
-class BrowserRoute extends Equatable {
+base class BrowserRoute extends Equatable {
   const BrowserRoute({
     required this.path,
     required this.page,

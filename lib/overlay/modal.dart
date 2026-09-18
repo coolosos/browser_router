@@ -1,6 +1,6 @@
 part of 'overlay_manager.dart';
 
-class Modal extends OverlayModal {
+final class Modal extends OverlayModal {
   Modal({
     required super.content,
     required super.transition,

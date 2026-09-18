@@ -1,6 +1,6 @@
 part of 'trace_route.dart';
 
-class OverlayTraceRoute extends TraceRoute {
+final class OverlayTraceRoute extends TraceRoute {
   OverlayTraceRoute({
     super.routeTransition,
     super.opaque,

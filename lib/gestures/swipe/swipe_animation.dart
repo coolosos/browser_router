@@ -1,6 +1,6 @@
 part of 'swipe.dart';
 
-class SwipeAnimation extends StatefulWidget {
+final class SwipeAnimation extends StatefulWidget {
   const SwipeAnimation({
     required this.animation,
     required this.builder,
@@ -28,7 +28,7 @@ class SwipeAnimation extends StatefulWidget {
   State<SwipeAnimation> createState() => _SwipeAnimationState();
 }
 
-class _SwipeAnimationState extends State<SwipeAnimation> {
+final class _SwipeAnimationState extends State<SwipeAnimation> {
   final GlobalKey _childKey = GlobalKey(debugLabel: 'BottomSheet child');
 
   SwipeGestures _generateSwipeGestures({required AxisDirection direction}) {

@@ -1,13 +1,10 @@
 import 'package:flutter/widgets.dart';
+
 import 'build_transition.dart';
-import 'widgets/slide.dart';
+import 'widgets/zoom.dart';
 
-final class SlideBuildTransition implements BuildTransition {
-  const SlideBuildTransition({
-    required this.position,
-  });
-
-  final Positions position;
+final class ZoomBuildTransition implements BuildTransition {
+  const ZoomBuildTransition();
 
   @override
   Widget call({
@@ -15,11 +12,9 @@ final class SlideBuildTransition implements BuildTransition {
     required Widget child,
     required Animation<double> secondaryAnimation,
   }) {
-    return Slide(
+    return Zoom(
       primaryRouteAnimation: animation,
       secondaryRouteAnimation: secondaryAnimation,
-      drive: position,
-      //!popGestureEnabled meter swipe
       child: child,
     );
   }

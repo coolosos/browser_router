@@ -1,6 +1,6 @@
 part of 'trace_route.dart';
 
-class SwipeTraceRoute extends PopupTraceRoute {
+final class SwipeTraceRoute extends PopupTraceRoute {
   SwipeTraceRoute({
     super.routeTransition,
     super.opaque,

@@ -5,7 +5,7 @@ import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show PopupTraceRoute;
 
-class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
+base class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
     with BrowserModalBarrierMixin<T> {
   /// A modal bottom sheet route.
   BrowserPopupRoute({

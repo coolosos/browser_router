@@ -2,7 +2,7 @@ part of 'overlay_manager.dart';
 
 const double kAppbarHeight = 40;
 
-class Banner extends OverlayModal {
+final class Banner extends OverlayModal {
   Banner({
     required super.content,
     required super.duration,

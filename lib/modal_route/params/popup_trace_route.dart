@@ -1,6 +1,6 @@
 part of 'trace_route.dart';
 
-class PopupTraceRoute extends TraceRoute {
+base class PopupTraceRoute extends TraceRoute {
   PopupTraceRoute({
     super.routeTransition,
     super.opaque = false,

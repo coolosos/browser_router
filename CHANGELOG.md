@@ -1,3 +1,13 @@
+## 0.2.0
+
+*   **Feat**: Added `CupertinoBackGestureDetector` with full-screen and configurable edge gesture support (`backGestureWidth`), supporting both full-screen and edge-swipe pop with full `NavigatorState.didStartUserGesture()` and `didStopUserGesture()` synchronization.
+*   **Feat**: Added `RouteTransition.zoom` implementing Material 3 style zoom and fade transitions in pure `widgets.dart`.
+*   **Feat**: Added `RouteTransition.adaptive` to adaptively resolve native-feeling transitions across platforms (iOS/macOS Slide, Android Zoom, Web/Desktop Fade).
+*   **Refactor**: Modernized `Slide` transition by removing unwanted `BorderRadius` card deformation and adding leading edge shadow and secondary route scrim darkening.
+*   **Feat**: Added `backGestureWidth` and `popClosePercentage` parameters to `PageTraceRoute` and `TraceRoute.page`.
+*   **Refactor**: Modernized Dart 3+ type system across all classes with architectural class modifiers (`final class`, `base class`, `sealed class`), generic return types on `pushNamed<T>()` / `Trace.push<R>()`, and strongly-typed `Map<Object?, Object?>` route argument maps.
+*   **Test**: Added comprehensive test suites (`test/cupertino_back_gesture_test.dart` and `test/transitions_test.dart`).
+
 ## 0.1.0
 
 *   **BREAKING CHANGE**: Defined `ChangeDrawerSize` semantic typedef (`void Function({required bool isExpanded})`) and updated `ModalBase.body` signature to use named boolean parameters, complying with `avoid_positional_boolean_parameters` linter rule.

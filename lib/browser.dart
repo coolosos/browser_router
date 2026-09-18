@@ -149,14 +149,14 @@ class Browser extends StatelessWidget {
 
     final name = uri?.path;
     final deepLinkParameter = uri?.queryParameters;
-    final traceParameter = settings.arguments as Map<dynamic, dynamic>?;
+    final traceParameter = settings.arguments as Map<Object?, Object?>?;
 
     final traceRoute = adaptiveTrace?.call(name) ??
         traceParameter?.getAndClean<TraceRoute>() ??
         PageTraceRoute();
     debugPrint('Browser.generate: traceRoute: $traceRoute');
 
-    final arguments = <dynamic, dynamic>{
+    final arguments = <Object?, Object?>{
       if (traceParameter != null) ...traceParameter,
       if (deepLinkParameter != null)
         DeepLinkParam: DeepLinkParam(deepLinkParameter),
@@ -178,22 +178,22 @@ class Browser extends StatelessWidget {
     );
 
     final route = switch (traceRoute) {
-      PageTraceRoute() => BrowserPageRoute<dynamic>(
+      PageTraceRoute() => BrowserPageRoute<Object?>(
           traceRoute: traceRoute,
           appRoute: browserRouteWithCustomTransition,
           settings: newSettings,
         ),
-      SwipeTraceRoute() => BrowserSwipePopupRoute<dynamic>(
+      SwipeTraceRoute() => BrowserSwipePopupRoute<Object?>(
           traceRoute: traceRoute,
           appRoute: browserRouteWithCustomTransition,
           settings: newSettings,
         ),
-      PopupTraceRoute() => BrowserPopupRoute<dynamic, PopupTraceRoute>(
+      PopupTraceRoute() => BrowserPopupRoute<Object?, PopupTraceRoute>(
           traceRoute: traceRoute,
           appRoute: browserRouteWithCustomTransition,
           settings: newSettings,
         ),
-      OverlayTraceRoute() => BrowserPageRoute<dynamic>(
+      OverlayTraceRoute() => BrowserPageRoute<Object?>(
           appRoute: browserRouteWithCustomTransition,
           traceRoute: PageTraceRoute(),
           settings: newSettings,
@@ -211,7 +211,7 @@ class Browser extends StatelessWidget {
   /// In case of path is not found then will be use the default route.
   BrowserRoute _obtainMainRoute(
     String? name,
-    Map<dynamic, dynamic> arguments,
+    Map<Object?, Object?> arguments,
   ) {
     debugPrint(
       'Browser._obtainMainRoute: Called with name: $name, arguments: $arguments',

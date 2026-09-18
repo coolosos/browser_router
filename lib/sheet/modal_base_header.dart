@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class ModalBaseHeaderParameter {
+final class ModalBaseHeaderParameter {
   ModalBaseHeaderParameter({
     required this.background,
     required this.headerBackground,
@@ -19,7 +19,7 @@ class ModalBaseHeaderParameter {
   final Widget closeIcon;
 }
 
-abstract class ModalBaseHeader extends SliverPersistentHeaderDelegate {
+abstract base class ModalBaseHeader extends SliverPersistentHeaderDelegate {
   ModalBaseHeader({
     required this.parameters,
     required this.shouldCloseOnMinExtent,

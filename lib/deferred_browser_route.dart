@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import 'browser.dart';
 
-class DeferredBrowserRoute extends BrowserRoute {
+final class DeferredBrowserRoute extends BrowserRoute {
   DeferredBrowserRoute({
     required super.path,
     required Future<void> Function() loadPageLibrary,
