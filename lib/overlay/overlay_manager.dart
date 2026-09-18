@@ -120,7 +120,19 @@ class OverlayManagerState extends State<OverlayManager> {
         stackTrace: s,
         name: 'OverlayManagerState.enqueue',
       );
+    } finally {
+      if (poolCurrentOverlayModal == overlayModal) {
+        poolCurrentOverlayModal = null;
+      }
     }
+  }
+
+  @override
+  void dispose() {
+    pool.close();
+    modal?.remove();
+    poolCurrentOverlayModal?.remove();
+    super.dispose();
   }
 
   @override

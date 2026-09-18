@@ -38,6 +38,9 @@ abstract class OverlayModal {
 
   /// create animation and overlayEntry an insert to overlayState
   Future<void> insert() async {
+    if (_isDisposed) return;
+    completer = Completer<void>();
+
     _overlayEntry = _createModal(
       (transition.routeTransition ?? RouteTransition.slide_down).build(
         child: _content(remove),
@@ -48,8 +51,8 @@ abstract class OverlayModal {
     //show
     _overlayState.insert(_overlayEntry!);
     await _animationController.forward();
-    //wait, if the duration is null, de content have a responsibility to cause
-    completer = Completer<void>();
+
+    if (_isDisposed) return;
 
     if (duration is Duration) {
       timer = Timer(
@@ -58,19 +61,28 @@ abstract class OverlayModal {
       );
     }
 
-    await completer!.future;
+    await completer?.future;
   }
+
+  bool _isDisposed = false;
 
   /// remove overlayEntry
   Future<void> remove() async {
-    timer?.cancel();
+    if (_isDisposed) return;
+    _isDisposed = true;
 
-    await _animationController.reverse();
+    timer?.cancel();
+    timer = null;
+
+    if (_animationController.status != AnimationStatus.dismissed) {
+      await _animationController.reverse();
+    }
 
     _overlayEntry?.remove();
     _overlayEntry = null;
     if (!(completer?.isCompleted ?? true)) {
       completer?.complete();
     }
+    _animationController.dispose();
   }
 }
