@@ -78,7 +78,7 @@ abstract class SheetBase<T extends ModalBaseParams> extends StatelessWidget {
           build: (context, scrollController) {
             final body = modal.body(
               context: context,
-              changeDrawerSize: (isExpanded) {
+              changeDrawerSize: ({required isExpanded}) {
                 adjustSize(
                   extentInside: scrollController?.position.extentInside,
                   extentTotal: scrollController?.position.extentTotal,
