@@ -1,6 +1,6 @@
 # Browser Router - Advanced Navigation for Flutter
 
-[![pub version](https://img.shields.io/pub/v/browser.svg)](https://pub.dev/packages/browser)
+[![pub version](https://img.shields.io/pub/v/browser_router.svg)](https://pub.dev/packages/browser_router)
 
 An advanced navigation system for Flutter that enables typed routes, custom transitions, and robust overlay management (Banners, Modals, Sheets).
 
@@ -13,6 +13,7 @@ An advanced navigation system for Flutter that enables typed routes, custom tran
 - **Semantic Navigation API**: Create a reusable, semantic, and centralized navigation API for your app using `Trace` objects.
 - **Deep Linking**: Automatically parses URL query parameters and delivers them to new or existing screens.
 - **Advanced Overlays & Popups**: Show sequential banners, complex modals, and multi-level popups.
+- **Zero UI Dependencies**: Pure `package:flutter/widgets.dart` implementation, completely decoupled from Material or Cupertino styling.
 
 ---
 
@@ -22,7 +23,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  browser: ^0.0.1 # Replace with the latest version
+  browser_router: ^0.1.0
 ```
 
 Then, run `flutter pub get` in your terminal.
@@ -53,7 +54,7 @@ final routes = [
 Use the `Browser` widget at the root of your application.
 
 ```dart
-import 'package:browser/browser.dart';
+import 'package:browser_router/browser.dart';
 import 'package:flutter/widgets.dart';
 
 void main() {
