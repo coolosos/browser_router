@@ -22,7 +22,9 @@ extension _Args on Map<dynamic, dynamic> {
       // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
       // is called when the stored argument is an instance of `SubClass`.
       final arg = values.firstWhereOrNull((value) => value is T) as T?;
-      removeWhere((key, value) => value is T);
+      if (arg != null) {
+        removeWhere((key, value) => value is T);
+      }
       return arg;
     }
   }
