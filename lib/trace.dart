@@ -40,7 +40,7 @@ class Trace<T extends TraceRoute> {
     );
   }
 
-  Future<dynamic> pushAndReplacement(BuildContext context) {
+  Future<void> pushAndReplacement(BuildContext context) {
     return context.pushReplacementNamed(
       path,
       args: [args],
@@ -48,21 +48,21 @@ class Trace<T extends TraceRoute> {
     );
   }
 
-  Future<dynamic> cleanAndPush(BuildContext context) {
+  Future<void> cleanAndPush(BuildContext context) {
     return context.popToFirstAndPushReplacementNamed(
       path,
       args: [args],
     );
   }
 
-  Future<dynamic> popToFirstAndPush(BuildContext context) {
+  Future<void> popToFirstAndPush(BuildContext context) {
     return context.popToFirstAndPushNamed(
       path,
       args: [args],
     );
   }
 
-  Future<dynamic> findMeOrPush(BuildContext context) {
+  Future<void> findMeOrPush(BuildContext context) {
     return context.popToSelectOrFirstAndPushNamed(
       path,
       args: [args],

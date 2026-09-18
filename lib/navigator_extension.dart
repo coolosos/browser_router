@@ -81,7 +81,6 @@ extension NavigatorX on BuildContext {
   void cleanArguments({
     RouteSettings? settings,
   }) {
-    _createArguments(null);
     final arguments =
         settings?.arguments ?? ModalRoute.of(this)?.settings.arguments;
 

@@ -99,6 +99,18 @@ class _RouteObserverProviderState
   }
 
   @override
+  void didUpdateWidget(RouteObserverProvider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.routeObserver != oldWidget.routeObserver) {
+      oldWidget.routeObserver.unsubscribe(this);
+      final modalRoute = ModalRoute.of<void>(context);
+      if (modalRoute != null) {
+        widget.routeObserver.subscribe(this, modalRoute);
+      }
+    }
+  }
+
+  @override
   void dispose() {
     widget.routeObserver.unsubscribe(this);
     super.dispose();
