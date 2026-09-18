@@ -1,3 +1,11 @@
+## 0.1.0
+
+*   **BREAKING CHANGE**: Defined `ChangeDrawerSize` semantic typedef (`void Function({required bool isExpanded})`) and updated `ModalBase.body` signature to use named boolean parameters, complying with `avoid_positional_boolean_parameters` linter rule.
+*   **Refactor**: Updated `SheetBase` and internal drawer resizing calls to pass named `isExpanded` parameter.
+*   **Chore**: Upgraded `coolint` to `^3.0.0-rc.1` and updated codebase for strict analyzer rules (`strict_raw_type`, `avoid_types_on_closure_parameters`, `inference_failure_on_instance_creation`, etc.).
+*   **Chore**: Upgraded `equatable` to `^2.1.0` and `pool` to `^1.5.3`.
+*   **Test**: Added comprehensive unit and widget tests for `ModalBase`, `SheetBase`, and `ChangeDrawerSize`.
+
 ## 0.0.5
 
 *   **Feat**: Changed `DeferredBrowserRoute` to use `pageBuilder` instead of `page` in its constructor, ensuring the page is built only after the deferred library is loaded, preventing potential issues.
