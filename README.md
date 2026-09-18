@@ -8,7 +8,7 @@ An advanced navigation system for Flutter that enables typed routes, custom tran
 
 - **Centralized Route Management**: Define all your app routes in one place.
 - **Typed Route Arguments**: Pass strongly-typed arguments to your routes safely, with validation.
-- **Custom Transitions**: Easily implement custom page transitions (slide, fade, etc.) with a smart priority system.
+- **Modern & Adaptive Transitions**: Native iOS slide with edge/full-screen gestures, Material 3 zoom & fade, and platform-adaptive transitions without UI package dependencies.
 - **Versatile Presentations**: Display any route as a full page, a modal popup, or a swipeable bottom sheet using `TraceRoute`.
 - **Semantic Navigation API**: Create a reusable, semantic, and centralized navigation API for your app using `Trace` objects.
 - **Deep Linking**: Automatically parses URL query parameters and delivers them to new or existing screens.
@@ -23,7 +23,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  browser_router: ^0.1.0
+  browser_router: ^0.2.0
 ```
 
 Then, run `flutter pub get` in your terminal.
