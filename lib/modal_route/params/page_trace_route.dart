@@ -16,6 +16,8 @@ final class PageTraceRoute extends TraceRoute {
     super.allowSnapshotting = true,
     super.barrierDismissible = false,
     this.popGestureEnabled = true,
+    this.backGestureWidth,
+    this.popClosePercentage = 0.35,
   });
 
   /// {@template flutter.widgets.PageRoute.fullscreenDialog}
@@ -28,6 +30,14 @@ final class PageTraceRoute extends TraceRoute {
   /// {@endtemplate}
   final bool fullScreenDialog;
 
-  //disable for ios gesture
+  /// Whether the interactive back swipe gesture is enabled for this route.
   final bool popGestureEnabled;
+
+  /// The width in logical pixels from the leading edge where the back gesture can start.
+  /// If `null`, the back gesture can be initiated from anywhere across the screen.
+  final double? backGestureWidth;
+
+  /// The fraction of screen width that must be dragged to trigger a pop when there is
+  /// no fling velocity. Defaults to `0.35` (35%).
+  final double popClosePercentage;
 }

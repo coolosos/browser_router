@@ -53,6 +53,8 @@ sealed class TraceRoute {
     String semanticsLabel = '',
     bool fullscreenDialog = false,
     bool popGestureEnabled = true,
+    double? backGestureWidth,
+    double popClosePercentage = 0.35,
   }) =>
       PageTraceRoute(
         routeTransition: routeTransition,
@@ -69,6 +71,8 @@ sealed class TraceRoute {
         semanticsLabel: semanticsLabel,
         fullScreenDialog: fullscreenDialog,
         popGestureEnabled: popGestureEnabled,
+        backGestureWidth: backGestureWidth,
+        popClosePercentage: popClosePercentage,
       );
 
   /// Creates a [PopupTraceRoute] for presenting a route as a modal dialog
