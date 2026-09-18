@@ -11,7 +11,7 @@ class SwipeAnimation extends StatefulWidget {
     required this.animationDirection,
     super.key,
   }) : assert(
-          enableDrag && animationController != null,
+          !enableDrag || animationController != null,
           "'BottomSheet.animationController' can not be null when 'BottomSheet.enableDrag' is true. "
           "Use 'BottomSheet.createAnimationController' to create one, or provide another AnimationController.",
         );
@@ -83,9 +83,11 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
       hasEnableGestures: widget.enableDrag,
       direction: widget.animationDirection,
       animateChild: true,
-      gestures: _generateSwipeGestures(
-        direction: widget.animationDirection,
-      ),
+      gestures: widget.enableDrag && widget.animationController != null
+          ? _generateSwipeGestures(
+              direction: widget.animationDirection,
+            )
+          : null,
       onNotification: (notification) {
         if (notification.extent == notification.minExtent) {
           widget.onClosing();

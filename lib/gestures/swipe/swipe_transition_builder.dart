@@ -46,6 +46,8 @@ class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(SwipeChildLayoutDelegate oldDelegate) {
-    return progress != oldDelegate.progress;
+    return progress != oldDelegate.progress ||
+        screenPercentaje != oldDelegate.screenPercentaje ||
+        direction != oldDelegate.direction;
   }
 }
