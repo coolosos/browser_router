@@ -5,7 +5,7 @@ import 'browser.dart';
 class DeferredBrowserRoute extends BrowserRoute {
   DeferredBrowserRoute({
     required super.path,
-    required Future Function() loadPageLibrary,
+    required Future<void> Function() loadPageLibrary,
     required Widget Function() pageBuilder,
     Future<void> Function()? initializeServiceLocator,
     Widget? onLoading,
@@ -28,13 +28,13 @@ class DeferredBrowserRoute extends BrowserRoute {
           ),
         );
 
-  final Future Function() _loadPageLibrary;
-  final Future Function()? _initializeServiceLocator;
+  final Future<void> Function() _loadPageLibrary;
+  final Future<void> Function()? _initializeServiceLocator;
   final Widget Function() _page;
 
-  static Future _loadDeferred({
-    required Future Function() loadPageLibrary,
-    Future Function()? initializeServiceLocator,
+  static Future<void> _loadDeferred({
+    required Future<void> Function() loadPageLibrary,
+    Future<void> Function()? initializeServiceLocator,
   }) async {
     await loadPageLibrary();
 
@@ -75,7 +75,7 @@ class _DeferredPageLoader extends StatefulWidget {
     this.onError,
   });
 
-  final Future<dynamic> loadDeferredContent;
+  final Future<void> loadDeferredContent;
   final Widget Function() page;
   final Widget? onLoading;
   final Widget? Function(Object? error)? onError;
@@ -85,7 +85,7 @@ class _DeferredPageLoader extends StatefulWidget {
 }
 
 class _DeferredPageLoaderState extends State<_DeferredPageLoader> {
-  late Future _initializationFuture;
+  late Future<void> _initializationFuture;
 
   @override
   void initState() {

@@ -54,7 +54,7 @@ void main() {
 
     testWidgets(
         'shows loading widget then page when future completes successfully',
-        (WidgetTester tester) async {
+        (tester) async {
       var libraryLoaded = false;
       final completer = Completer<void>();
 
@@ -88,13 +88,13 @@ void main() {
             initialRoute: route.path,
           ),
           pageRouteBuilder:
-              <T>(RouteSettings settings, WidgetBuilder builder) =>
+              <T>(settings, builder) =>
                   PageRouteBuilder<T>(
             settings: settings,
             pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
+              context,
+              animation,
+              secondaryAnimation,
             ) =>
                 builder(context),
           ),
@@ -115,7 +115,7 @@ void main() {
     });
 
     testWidgets('shows error widget when future completes with an error',
-        (WidgetTester tester) async {
+        (tester) async {
       final completer = Completer<void>();
       final testError = Exception('Failed to load library');
 
@@ -151,13 +151,13 @@ void main() {
             initialRoute: route.path,
           ),
           pageRouteBuilder:
-              <T>(RouteSettings settings, WidgetBuilder builder) =>
+              <T>(settings, builder) =>
                   PageRouteBuilder<T>(
             settings: settings,
             pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
+              context,
+              animation,
+              secondaryAnimation,
             ) =>
                 builder(context),
           ),
@@ -192,7 +192,7 @@ void main() {
       final deferredRoute = DeferredBrowserRoute(
         path: '/deferred_sync',
         loadPageLibrary: () async {
-          await Future.delayed(
+          await Future<void>.delayed(
             const Duration(milliseconds: 10),
           );
           libraryLoaded = true;
@@ -202,7 +202,7 @@ void main() {
           textDirection: TextDirection.ltr,
         ),
         initializeServiceLocator: () async {
-          await Future.delayed(
+          await Future<void>.delayed(
             const Duration(milliseconds: 5),
           );
           serviceLocatorInitialized = true;

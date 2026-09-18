@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: generate,
           onGenerateInitialRoutes: (routePath) => [
             generate(
-              RouteSettings(name: routePath, arguments: Map.from({})),
+              RouteSettings(name: routePath, arguments: const <dynamic, dynamic>{}),
             ),
           ],
         );

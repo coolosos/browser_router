@@ -1,5 +1,8 @@
 part of 'sheet.dart';
 
+/// A callback invoked to notify or request a change in drawer or sheet size.
+typedef ChangeDrawerSize = void Function({required bool isExpanded});
+
 abstract class ModalBase<T extends ModalBaseParams> {
   const ModalBase({required this.params});
 
@@ -11,8 +14,7 @@ abstract class ModalBase<T extends ModalBaseParams> {
 
   Widget body({
     required BuildContext context,
-    // ignore: avoid_positional_boolean_parameters todo
-    void Function(bool)? changeDrawerSize,
+    ChangeDrawerSize? changeDrawerSize,
   });
 
   Widget? bottomBar(BuildContext context);

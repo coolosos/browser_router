@@ -32,10 +32,10 @@ abstract base class SwipeGestures {
       return;
     }
 
+    final velocity = details.primaryVelocity;
     final bool willPop;
-    if (details.primaryVelocity != null &&
-        details.primaryVelocity!.abs() >= _kMinFlingVelocity) {
-      willPop = details.primaryVelocity! < 0; //Negative for pop Left
+    if (velocity != null && velocity.abs() >= _kMinFlingVelocity) {
+      willPop = velocity < 0; //Negative for pop Left
     } else {
       willPop = animationController.value <= closePercentage;
     }
@@ -73,10 +73,18 @@ final class SwipeDownRightGestures extends SwipeGestures {
       return;
     }
 
-    if (details.primaryDelta! > 0 || animationController.value > 0) {
+    final delta = details.primaryDelta;
+    if (delta == null) {
+      return;
+    }
+    final size = obtainSize();
+    if (size <= 0) {
+      return;
+    }
+
+    if (delta > 0 || animationController.value > 0) {
       animationController.value =
-          (animationController.value - details.primaryDelta! / obtainSize())
-              .clamp(0.0, 1.0);
+          (animationController.value - delta / size).clamp(0.0, 1.0);
     }
   }
 
@@ -87,10 +95,10 @@ final class SwipeDownRightGestures extends SwipeGestures {
       return;
     }
 
+    final velocity = details.primaryVelocity;
     final bool willPop;
-    if (details.primaryVelocity != null &&
-        details.primaryVelocity!.abs() >= _kMinFlingVelocity) {
-      willPop = details.primaryVelocity! > 0; // Positive   for pop right
+    if (velocity != null && velocity.abs() >= _kMinFlingVelocity) {
+      willPop = velocity > 0; // Positive for pop right
     } else {
       willPop = animationController.value <= closePercentage;
     }
@@ -123,10 +131,19 @@ final class SwipeUpLeftGestures extends SwipeGestures {
     if (canDragDone()) {
       return;
     }
-    if (details.primaryDelta! > 0 || animationController.value > 0) {
+
+    final delta = details.primaryDelta;
+    if (delta == null) {
+      return;
+    }
+    final size = obtainSize();
+    if (size <= 0) {
+      return;
+    }
+
+    if (delta > 0 || animationController.value > 0) {
       animationController.value =
-          (animationController.value + details.primaryDelta! / obtainSize())
-              .clamp(0.0, 1.0);
+          (animationController.value + delta / size).clamp(0.0, 1.0);
     }
   }
 }

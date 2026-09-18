@@ -1,7 +1,5 @@
 import 'package:browser_router/gestures/swipe/swipe.dart';
-import 'package:flutter/cupertino.dart' show CupertinoRouteTransitionMixin;
 import 'package:flutter/foundation.dart'; // Import for debugPrint
-import 'package:flutter/material.dart' show MaterialRouteTransitionMixin;
 import 'package:flutter/widgets.dart';
 
 import '../browser.dart';
@@ -16,11 +14,11 @@ class BrowserPageRoute<T> extends PageRoute<T>
     required this.traceRoute,
     super.settings,
   })  : transitionDuration = appRoute.routeTransition == RouteTransition.none
-            ? const Duration(milliseconds: 0)
+            ? Duration.zero
             : traceRoute.transitionDuration,
         reverseTransitionDuration =
             appRoute.routeTransition == RouteTransition.none
-                ? const Duration(milliseconds: 0)
+                ? Duration.zero
                 : traceRoute.reverseTransitionDuration,
         barrierLabel = traceRoute.barrierLabel,
         maintainState = traceRoute.maintainState,
@@ -64,11 +62,7 @@ class BrowserPageRoute<T> extends PageRoute<T>
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
     // Don't perform outgoing animation if the next route is a fullscreen dialog.
-    return (nextRoute is MaterialRouteTransitionMixin &&
-            !nextRoute.fullscreenDialog) ||
-        (nextRoute is CupertinoRouteTransitionMixin &&
-            !nextRoute.fullscreenDialog) ||
-        (nextRoute is BrowserPageRoute && !nextRoute.fullscreenDialog);
+    return nextRoute is PageRoute<dynamic> && !nextRoute.fullscreenDialog;
   }
 
   @override

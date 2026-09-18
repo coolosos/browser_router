@@ -32,7 +32,7 @@ class BrowserRoute extends Equatable {
   ///
   /// This is useful for triggering logic that depends on the route's context,
   /// such as dependency injection or analytics events.
-  final Function(BuildContext context)? builderTrigger;
+  final void Function(BuildContext context)? builderTrigger;
 
   /// An optional function to validate arguments before navigating to this route.
   ///
@@ -60,7 +60,7 @@ class BrowserRoute extends Equatable {
     String? path,
     Widget? page,
     RouteTransition? routeTransition,
-    Function(BuildContext context)? builderTrigger,
+    void Function(BuildContext context)? builderTrigger,
     bool Function(Check checkArgument, GetArguments getArgument)?
         validateArguments,
   }) {

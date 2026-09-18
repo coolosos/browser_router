@@ -3,17 +3,17 @@ part of 'swipe.dart';
 class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
   SwipeChildLayoutDelegate(
     this.progress,
-    this.screenPercentaje,
+    this.screenPercentage,
     this.direction,
   );
 
   final double progress;
-  final double screenPercentaje;
+  final double screenPercentage;
   final AxisDirection direction;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    final maxHeight = constraints.maxHeight * screenPercentaje;
+    final maxHeight = constraints.maxHeight * screenPercentage;
     return BoxConstraints(
       minWidth: constraints.maxWidth,
       maxWidth: constraints.maxWidth,
@@ -46,6 +46,8 @@ class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(SwipeChildLayoutDelegate oldDelegate) {
-    return progress != oldDelegate.progress;
+    return progress != oldDelegate.progress ||
+        screenPercentage != oldDelegate.screenPercentage ||
+        direction != oldDelegate.direction;
   }
 }

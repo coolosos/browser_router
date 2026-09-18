@@ -28,7 +28,7 @@ class Modal extends OverlayModal {
     );
 
     return OverlayEntry(
-      builder: (BuildContext context) {
+      builder: (context) {
         return GestureDetector(
           onTap: () {
             if (isDismissible) {

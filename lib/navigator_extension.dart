@@ -1,27 +1,27 @@
 part of 'browser.dart';
 
-extension _Args on Map {
+extension _Args on Map<dynamic, dynamic> {
   T? getArgument<T>() {
-    if (containsKey(T.runtimeType)) {
-      return this[T.runtimeType];
+    if (containsKey(T)) {
+      return this[T] as T?;
     } else {
       // Fallback for polymorphic arguments.
       // This handles cases where the requested type `T` is a superclass
       // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
       // is called when the stored argument is an instance of `SubClass`.
-      return values.firstWhereOrNull((element) => element is T);
+      return values.firstWhereOrNull((element) => element is T) as T?;
     }
   }
 
   T? getAndClean<T>() {
-    if (containsKey(T.runtimeType)) {
-      return remove(T.runtimeType);
+    if (containsKey(T)) {
+      return remove(T) as T?;
     } else {
       // Fallback for polymorphic arguments.
       // This handles cases where the requested type `T` is a superclass
       // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
       // is called when the stored argument is an instance of `SubClass`.
-      final arg = values.firstWhereOrNull((value) => value is T);
+      final arg = values.firstWhereOrNull((value) => value is T) as T?;
       removeWhere((key, value) => value is T);
       return arg;
     }
@@ -29,9 +29,10 @@ extension _Args on Map {
 }
 
 extension NavigatorX on BuildContext {
-  Map _createArguments(List<dynamic>? args) {
-    final arguments = {
-      for (final argument in (args ?? [])) argument.runtimeType: argument,
+  Map<dynamic, dynamic> _createArguments(List<dynamic>? args) {
+    final arguments = <dynamic, dynamic>{
+      for (final argument in (args ?? []))
+        if (argument != null) argument.runtimeType: argument,
     };
     return arguments;
   }
@@ -80,7 +81,6 @@ extension NavigatorX on BuildContext {
   void cleanArguments({
     RouteSettings? settings,
   }) {
-    _createArguments(null);
     final arguments =
         settings?.arguments ?? ModalRoute.of(this)?.settings.arguments;
 
@@ -180,7 +180,7 @@ extension NavigatorX on BuildContext {
     }
   }
 
-  Future popToFirstAndPushNamed<T extends RouteParams?>(
+  Future<void> popToFirstAndPushNamed<T extends RouteParams?>(
     String path, {
     List<T> args = const [],
   }) async {
@@ -194,7 +194,7 @@ extension NavigatorX on BuildContext {
     await pushNamed(path, args: [...args, popParams], navigator: navigator);
   }
 
-  Future popToSelectOrFirstAndPushNamed<T extends RouteParams?>(
+  Future<void> popToSelectOrFirstAndPushNamed<T extends RouteParams?>(
     String path, {
     List<T> args = const [],
   }) async {
@@ -215,7 +215,7 @@ extension NavigatorX on BuildContext {
     }
   }
 
-  Future popToFirstAndPushReplacementNamed<T extends RouteParams?>(
+  Future<void> popToFirstAndPushReplacementNamed<T extends RouteParams?>(
     String path, {
     List<T> args = const [],
   }) async {
