@@ -10,7 +10,7 @@ export 'modal_base_params.dart';
 part 'sheet_base.dart';
 part 'modal_base.dart';
 
-class Sheet extends StatelessWidget {
+final class Sheet extends StatelessWidget {
   const Sheet({super.key});
 
   static const sheetPath = 'sheet';
@@ -34,11 +34,11 @@ class Sheet extends StatelessWidget {
     BuildContext context,
     Widget child,
   ) async {
-    await Trace(
+    await Trace<TraceRoute>(
       path: sheetPath,
       traceRoute: TraceRoute.popup(),
       args: SheetRouteParams(child: child),
-    ).push(context);
+    ).push<void>(context);
   }
 }
 

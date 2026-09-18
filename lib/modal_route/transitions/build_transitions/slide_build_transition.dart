@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'build_transition.dart';
 import 'widgets/slide.dart';
 
-class SlideBuildTransition implements BuildTransition {
+final class SlideBuildTransition implements BuildTransition {
   const SlideBuildTransition({
     required this.position,
   });

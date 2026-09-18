@@ -1,6 +1,6 @@
 part of 'swipe.dart';
 
-class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
+final class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
   SwipeChildLayoutDelegate(
     this.progress,
     this.screenPercentage,

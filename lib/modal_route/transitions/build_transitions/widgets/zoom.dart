@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 /// A Material 3 style zoom transition that scales and fades the incoming route
 /// and subtly zooms and fades out the outgoing secondary route.
-class Zoom extends StatelessWidget {
+final class Zoom extends StatelessWidget {
   Zoom({
     required this.primaryRouteAnimation,
     required this.secondaryRouteAnimation,

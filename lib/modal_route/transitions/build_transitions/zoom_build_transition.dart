@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'build_transition.dart';
 import 'widgets/zoom.dart';
 
-class ZoomBuildTransition implements BuildTransition {
+final class ZoomBuildTransition implements BuildTransition {
   const ZoomBuildTransition();
 
   @override

@@ -12,7 +12,7 @@ import 'zoom_build_transition.dart';
 /// - iOS & macOS: [SlideBuildTransition] (right-to-left slide with parallax and edge shadow)
 /// - Android: [ZoomBuildTransition] (Material 3 zoom & fade)
 /// - Web, Windows, Linux: [FadeBuildTransition] (clean fade for desktop & SPA web)
-class AdaptiveBuildTransition implements BuildTransition {
+final class AdaptiveBuildTransition implements BuildTransition {
   const AdaptiveBuildTransition();
 
   @override

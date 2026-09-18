@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'build_transition.dart';
 import 'widgets/fade.dart';
 
-class FadeBuildTransition implements BuildTransition {
+final class FadeBuildTransition implements BuildTransition {
   const FadeBuildTransition();
   @override
   Widget call({

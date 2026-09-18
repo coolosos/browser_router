@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 final class _TestModalParams extends ModalBaseParams {}
 
-class _TestHeader extends ModalBaseHeader {
+final class _TestHeader extends ModalBaseHeader {
   _TestHeader({
     required super.parameters,
     required super.shouldCloseOnMinExtent,
@@ -26,7 +26,7 @@ class _TestHeader extends ModalBaseHeader {
   }
 }
 
-class _TestModal extends ModalBase<_TestModalParams> {
+final class _TestModal extends ModalBase<_TestModalParams> {
   const _TestModal({
     required super.params,
     this.onBodyBuilt,
@@ -88,7 +88,7 @@ class _TestModal extends ModalBase<_TestModalParams> {
   }
 }
 
-class _TestSheet extends SheetBase<_TestModalParams> {
+final class _TestSheet extends SheetBase<_TestModalParams> {
   const _TestSheet({
     required super.modal,
     this.onAdjustSizeCalled,

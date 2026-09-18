@@ -7,7 +7,7 @@ import 'shared_modal_barrier.dart';
 
 export 'params/trace_route.dart' show PageTraceRoute;
 
-class BrowserPageRoute<T> extends PageRoute<T>
+final class BrowserPageRoute<T> extends PageRoute<T>
     with BrowserModalBarrierMixin<T> {
   BrowserPageRoute({
     required this.appRoute,

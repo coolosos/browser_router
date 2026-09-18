@@ -21,7 +21,7 @@ enum AppPath {
 ///
 /// This class creates a pre-configured "shortcut" for a specific navigation
 /// event, bundling the path, arguments, and presentation (`TraceRoute`).
-class AppTrace extends Trace {
+class AppTrace extends Trace<TraceRoute> {
   /// Private constructor to be used by the factory constructors.
   const AppTrace._({
     required super.path,

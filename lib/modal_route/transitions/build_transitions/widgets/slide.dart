@@ -35,7 +35,7 @@ enum Positions {
   final Offset secondaryOffset;
 }
 
-class Slide extends StatelessWidget {
+final class Slide extends StatelessWidget {
   Slide({
     required this.primaryRouteAnimation,
     required Animation<double> secondaryRouteAnimation,

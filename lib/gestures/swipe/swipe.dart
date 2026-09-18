@@ -19,7 +19,7 @@ extension GenericAxis on AxisDirection {
   }
 }
 
-class Swipe extends StatelessWidget {
+final class Swipe extends StatelessWidget {
   Swipe({
     required this.animation,
     required Widget child,

@@ -1,7 +1,7 @@
 part of 'browser.dart';
 
 @immutable
-class BrowserConfig extends InheritedWidget {
+final class BrowserConfig extends InheritedWidget {
   const BrowserConfig({
     required this.defaultRoute,
     required this.routes,

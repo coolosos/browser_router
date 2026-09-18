@@ -32,40 +32,44 @@ class Trace<T extends TraceRoute> {
     this.args,
   });
 
-  Future<dynamic> push(BuildContext context) {
-    return context.pushNamed(
+  Future<R?> push<R extends Object?>(BuildContext context) {
+    return context.pushNamed<R>(
       path,
-      args: [args],
+      args: [if (args != null) args!],
       traceRoute: traceRoute,
     );
   }
 
-  Future<void> pushAndReplacement(BuildContext context) {
-    return context.pushReplacementNamed(
+  Future<R?> pushAndReplacement<R extends Object?, TO extends Object?>(
+    BuildContext context, {
+    TO? result,
+  }) {
+    return context.pushReplacementNamed<R, TO>(
       path,
-      args: [args],
+      args: [if (args != null) args!],
       traceRoute: traceRoute,
+      result: result,
     );
   }
 
   Future<void> cleanAndPush(BuildContext context) {
     return context.popToFirstAndPushReplacementNamed(
       path,
-      args: [args],
+      args: [if (args != null) args!],
     );
   }
 
   Future<void> popToFirstAndPush(BuildContext context) {
     return context.popToFirstAndPushNamed(
       path,
-      args: [args],
+      args: [if (args != null) args!],
     );
   }
 
   Future<void> findMeOrPush(BuildContext context) {
     return context.popToSelectOrFirstAndPushNamed(
       path,
-      args: [args],
+      args: [if (args != null) args!],
     );
   }
 

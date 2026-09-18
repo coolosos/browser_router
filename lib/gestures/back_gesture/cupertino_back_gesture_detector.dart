@@ -8,7 +8,7 @@ const double _kDefaultMinFlingVelocity = 300;
 ///
 /// Supports both full-screen swipe (when [backGestureWidth] is `null`) and
 /// edge-only swipe (when [backGestureWidth] is specified, e.g. `20.0`).
-class CupertinoBackGestureDetector extends StatefulWidget {
+final class CupertinoBackGestureDetector extends StatefulWidget {
   const CupertinoBackGestureDetector({
     required this.child,
     required this.navigator,
@@ -39,7 +39,7 @@ class CupertinoBackGestureDetector extends StatefulWidget {
       _CupertinoBackGestureDetectorState();
 }
 
-class _CupertinoBackGestureDetectorState
+final class _CupertinoBackGestureDetectorState
     extends State<CupertinoBackGestureDetector> {
   bool _isDragging = false;
 
@@ -166,7 +166,8 @@ class _CupertinoBackGestureDetectorState
   }
 }
 
-class _CupertinoBackGestureRecognizer extends HorizontalDragGestureRecognizer {
+final class _CupertinoBackGestureRecognizer
+    extends HorizontalDragGestureRecognizer {
   _CupertinoBackGestureRecognizer({
     required this.getBackGestureWidth,
     required this.getTextDirection,

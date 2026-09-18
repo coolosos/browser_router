@@ -1,6 +1,6 @@
 part of 'browser.dart';
 
-class PageObserverProvider extends SingleChildStatelessWidget {
+final class PageObserverProvider extends SingleChildStatelessWidget {
   const PageObserverProvider({
     required this.routeObserver,
     this.onAppear,
@@ -33,7 +33,7 @@ class PageObserverProvider extends SingleChildStatelessWidget {
   }
 }
 
-class RouteObserverProvider extends SingleChildStatefulWidget {
+final class RouteObserverProvider extends SingleChildStatefulWidget {
   const RouteObserverProvider({
     required this.routeObserver,
     this.didPopNext,
@@ -86,7 +86,7 @@ class RouteObserverProvider extends SingleChildStatefulWidget {
   State<RouteObserverProvider> createState() => _RouteObserverProviderState();
 }
 
-class _RouteObserverProviderState
+final class _RouteObserverProviderState
     extends SingleChildState<RouteObserverProvider> with RouteAware {
   @override
   void didChangeDependencies() {

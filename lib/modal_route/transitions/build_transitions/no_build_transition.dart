@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'build_transition.dart';
 
-class NoBuildTransition implements BuildTransition {
+final class NoBuildTransition implements BuildTransition {
   const NoBuildTransition();
   @override
   Widget call({
