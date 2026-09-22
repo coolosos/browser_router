@@ -2,29 +2,37 @@ part of 'browser.dart';
 
 extension _Args on Map<dynamic, dynamic> {
   T? getArgument<T>() {
-    if (containsKey(T)) {
-      return this[T] as T?;
-    } else {
-      // Fallback for polymorphic arguments.
-      // This handles cases where the requested type `T` is a superclass
-      // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
-      // is called when the stored argument is an instance of `SubClass`.
-      return values.firstWhereOrNull((element) => element is T) as T?;
+    final arg = this[T];
+    // Checks `containsKey` only if the stored value is explicitly `null`.
+    if (arg != null || containsKey(T)) {
+      return arg as T?;
     }
+    // Fallback for polymorphic arguments.
+    // This handles cases where the requested type `T` is a superclass
+    // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
+    // is called when the stored argument is an instance of `SubClass`.
+    return values.firstWhereOrNull((element) => element is T) as T?;
   }
 
   T? getAndClean<T>() {
     if (containsKey(T)) {
       return remove(T) as T?;
-    } else {
-      // Fallback for polymorphic arguments.
-      // This handles cases where the requested type `T` is a superclass
-      // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
-      // is called when the stored argument is an instance of `SubClass`.
-      final arg = values.firstWhereOrNull((value) => value is T) as T?;
-      removeWhere((key, value) => value is T);
-      return arg;
     }
+
+    // Fallback for polymorphic arguments.
+    // This handles cases where the requested type `T` is a superclass
+    // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
+    // is called when the stored argument is an instance of `SubClass`.
+    T? result;
+    removeWhere((key, value) {
+      if (value is T) {
+        result ??= value; // Null-aware assignment
+        return true;
+      }
+      return false;
+    });
+
+    return result;
   }
 }
 
