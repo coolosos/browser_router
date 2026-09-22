@@ -152,16 +152,17 @@ class Browser extends StatelessWidget {
     final traceParameter = settings.arguments as Map<dynamic, dynamic>?;
 
     final traceRoute = adaptiveTrace?.call(name) ??
-        traceParameter?.getAndClean<TraceRoute>() ??
+        traceParameter?.getArgument<TraceRoute>() ??
         PageTraceRoute();
-    debugPrint('Browser.generate: traceRoute: $traceRoute');
 
     final arguments = <dynamic, dynamic>{
-      if (traceParameter != null) ...traceParameter,
+      if (traceParameter != null)
+        for (final entry in traceParameter.entries)
+          if (entry.key != TraceRoute && entry.value is! TraceRoute)
+            entry.key: entry.value,
       if (deepLinkParameter != null)
         DeepLinkParam: DeepLinkParam(deepLinkParameter),
     };
-    debugPrint('Browser.generate: arguments: $arguments');
 
     final appRoute = _obtainMainRoute(name, arguments);
     debugPrint('Browser.generate: appRoute: ${appRoute.path}');
