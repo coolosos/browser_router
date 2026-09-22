@@ -485,5 +485,50 @@ void main() {
       expect(retrievedAdmin?.id, 'adm_unmodifiable');
       expect(retrievedAdmin?.role, 'editor');
     });
+
+    testWidgets(
+        'getArgumentAndClean on missing polymorphic argument in unmodifiable map does not throw',
+        (tester) async {
+      final routes = [
+        const BrowserRoute(
+          path: '/home',
+          page: SizedBox(),
+        ),
+      ];
+
+      await tester.pumpWidget(
+        Browser(
+          routes: routes,
+          defaultRoute: routes.first,
+          builder: (context, routeObserver, generate) {
+            return WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+              initialRoute: '/home',
+            );
+          },
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final unmodifiableArgs = Map<dynamic, dynamic>.unmodifiable({
+        const AdminUserArgs(id: 'adm_1', role: 'admin').runtimeType:
+            const AdminUserArgs(id: 'adm_1', role: 'admin'),
+      });
+
+      final settings = RouteSettings(name: '/home', arguments: unmodifiableArgs);
+      final element = tester.element(find.byType(SizedBox));
+
+      expect(
+        () => element.getArgumentAndClean<SessionArgs>(settings: settings),
+        returnsNormally,
+      );
+      expect(
+        element.getArgumentAndClean<SessionArgs>(settings: settings),
+        isNull,
+      );
+    });
   });
 }
