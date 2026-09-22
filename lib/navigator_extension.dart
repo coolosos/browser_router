@@ -15,24 +15,28 @@ extension _Args on Map<dynamic, dynamic> {
   }
 
   T? getAndClean<T>() {
-    if (containsKey(T)) {
-      return remove(T) as T?;
-    }
-
-    // Fallback for polymorphic arguments.
-    // This handles cases where the requested type `T` is a superclass
-    // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
-    // is called when the stored argument is an instance of `SubClass`.
-    T? result;
-    removeWhere((key, value) {
-      if (value is T) {
-        result ??= value; // Null-aware assignment
-        return true;
+    try {
+      if (containsKey(T)) {
+        return remove(T) as T?;
       }
-      return false;
-    });
 
-    return result;
+      // Fallback for polymorphic arguments.
+      // This handles cases where the requested type `T` is a superclass
+      // of the actual argument instance. e.g., if `getArgument<BaseClass>()`
+      // is called when the stored argument is an instance of `SubClass`.
+      T? result;
+      removeWhere((key, value) {
+        if (value is T) {
+          result ??= value; // Null-aware assignment
+          return true;
+        }
+        return false;
+      });
+
+      return result;
+    } catch (_) {
+      return getArgument<T>();
+    }
   }
 }
 
