@@ -3,7 +3,7 @@ import 'package:browser_router/browser.dart';
 import 'package:flutter/widgets.dart';
 
 class ToSetPopArgsScreen extends StatefulWidget {
-  const ToSetPopArgsScreen({super.key});
+  const new({super.key});
 
   @override
   State<ToSetPopArgsScreen> createState() => _ToSetPopArgsScreenState();

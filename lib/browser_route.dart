@@ -9,7 +9,7 @@ typedef GetArguments = T? Function<T extends RouteParams>();
 /// with a [page] widget that should be displayed. It also allows for defining
 /// a default [routeTransition] and argument validation logic.
 class BrowserRoute extends Equatable {
-  const BrowserRoute({
+  const new({
     required this.path,
     required this.page,
     this.builderTrigger,

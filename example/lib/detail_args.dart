@@ -1,7 +1,7 @@
 import 'package:browser_router/browser.dart';
 
 final class DetailArgs extends RouteParams {
-  DetailArgs({
+  new({
     required this.message,
   });
 

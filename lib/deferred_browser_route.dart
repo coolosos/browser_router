@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'browser.dart';
 
 class DeferredBrowserRoute extends BrowserRoute {
-  DeferredBrowserRoute({
+  new({
     required super.path,
     required Future<void> Function() loadPageLibrary,
     required Widget Function() pageBuilder,
@@ -68,7 +68,7 @@ class DeferredBrowserRoute extends BrowserRoute {
 }
 
 class _DeferredPageLoader extends StatefulWidget {
-  const _DeferredPageLoader({
+  const new({
     required this.loadDeferredContent,
     required this.page,
     this.onLoading,
@@ -81,7 +81,7 @@ class _DeferredPageLoader extends StatefulWidget {
   final Widget? Function(Object? error)? onError;
 
   @override
-  _DeferredPageLoaderState createState() => _DeferredPageLoaderState();
+  State<_DeferredPageLoader> createState() => _DeferredPageLoaderState();
 }
 
 class _DeferredPageLoaderState extends State<_DeferredPageLoader> {

@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'build_transition.dart';
 import 'widgets/fade.dart';
 
-class FadeBuildTransition implements BuildTransition {
-  const FadeBuildTransition();
+final class FadeBuildTransition implements BuildTransition {
+  const new();
   @override
   Widget call({
     required Animation<double> animation,

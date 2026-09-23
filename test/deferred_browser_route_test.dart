@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart'; // Changed from material to widgets
 import 'package:flutter_test/flutter_test.dart';
 
 class _TestPageRoute extends PageRoute<void> {
-  _TestPageRoute({required this.child, required RouteSettings settings})
+  new({required this.child, required RouteSettings settings})
       : super(settings: settings);
 
   final Widget child;

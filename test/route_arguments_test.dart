@@ -6,17 +6,17 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Class hierarchy for polymorphic testing
 abstract base class BaseUserArgs extends RouteParams {
-  const BaseUserArgs({required this.id});
+  const new({required this.id});
   final String id;
 }
 
 final class AdminUserArgs extends BaseUserArgs {
-  const AdminUserArgs({required super.id, required this.role});
+  const new({required super.id, required this.role});
   final String role;
 }
 
 final class SessionArgs extends RouteParams {
-  const SessionArgs(this.token);
+  const new(this.token);
   final String token;
 }
 
@@ -529,6 +529,16 @@ void main() {
         element.getArgumentAndClean<SessionArgs>(settings: settings),
         isNull,
       );
+    });
+
+    test('DataParam holds generic data and RouteParams defaults validate to true', () {
+      const dataParam = DataParam<int>(42);
+      expect(dataParam.data, equals(42));
+      expect(dataParam.validate(), isTrue);
+
+      const nullDataParam = DataParam<String>(null);
+      expect(nullDataParam.data, isNull);
+      expect(nullDataParam.validate(), isTrue);
     });
   });
 }

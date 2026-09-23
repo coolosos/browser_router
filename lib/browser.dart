@@ -72,7 +72,7 @@ class Browser extends StatelessWidget {
   /// The [builder] is used to construct the main app widget.
   /// The [routes] list defines all possible navigation paths.
   /// The [defaultRoute] is used as a fallback when a route is not found or invalid.
-  const Browser({
+  const new({
     required this.builder,
     required this.routes,
     required this.defaultRoute,
@@ -153,7 +153,7 @@ class Browser extends StatelessWidget {
 
     final traceRoute = adaptiveTrace?.call(name) ??
         traceParameter?.getArgument<TraceRoute>() ??
-        PageTraceRoute();
+        const PageTraceRoute();
 
     final arguments = <dynamic, dynamic>{
       if (traceParameter != null)
@@ -196,7 +196,7 @@ class Browser extends StatelessWidget {
         ),
       OverlayTraceRoute() => BrowserPageRoute<dynamic>(
           appRoute: browserRouteWithCustomTransition,
-          traceRoute: PageTraceRoute(),
+          traceRoute: const PageTraceRoute(),
           settings: newSettings,
         ),
     };
@@ -386,12 +386,12 @@ class Browser extends StatelessWidget {
         alignment: builderAlignment,
         duration: null,
         transition: transitionParams ??
-            OverlayTraceRoute(
+            const OverlayTraceRoute(
               routeTransition: RouteTransition.fade,
-              transitionDuration: const Duration(
+              transitionDuration: Duration(
                 milliseconds: 300,
               ),
-              reverseTransitionDuration: const Duration(
+              reverseTransitionDuration: Duration(
                 milliseconds: 300,
               ),
             ),

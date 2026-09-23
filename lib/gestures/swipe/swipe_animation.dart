@@ -1,7 +1,7 @@
 part of 'swipe.dart';
 
 class SwipeAnimation extends StatefulWidget {
-  const SwipeAnimation({
+  const new({
     required this.animation,
     required this.builder,
     required this.screenMaximumPercentage,
@@ -31,45 +31,39 @@ class SwipeAnimation extends StatefulWidget {
 class _SwipeAnimationState extends State<SwipeAnimation> {
   final GlobalKey _childKey = GlobalKey(debugLabel: 'BottomSheet child');
 
-  SwipeGestures _generateSwipeGestures({required AxisDirection direction}) {
-    switch (direction) {
-      case AxisDirection.up:
-        return SwipeDownRightGestures(
-          animationController: widget.animationController!,
-          obtainSize: () => context.size?.height ?? 0,
-          canDragDone: () =>
-              widget.animationController?.status == AnimationStatus.reverse,
-          onClosing: widget.onClosing,
-        );
-      case AxisDirection.left:
-        return SwipeDownRightGestures(
-          animationController: widget.animationController!,
-          obtainSize: () => context.size?.width ?? 0,
-          canDragDone: () =>
-              widget.animationController?.status == AnimationStatus.reverse,
-          onClosing: widget.onClosing,
-          closePercentage: 0.8,
-        );
-      case AxisDirection.down:
-        return SwipeUpLeftGestures(
-          animationController: widget.animationController!,
-          obtainSize: () => context.size?.height ?? 0,
-          canDragDone: () =>
-              widget.animationController?.status == AnimationStatus.reverse,
-          onClosing: widget.onClosing,
-        );
-
-      case AxisDirection.right:
-        return SwipeUpLeftGestures(
-          animationController: widget.animationController!,
-          obtainSize: () => context.size?.width ?? 0,
-          canDragDone: () =>
-              widget.animationController?.status == AnimationStatus.reverse,
-          onClosing: widget.onClosing,
-          closePercentage: 0.8,
-        );
-    }
-  }
+  SwipeGestures _generateSwipeGestures({required AxisDirection direction}) =>
+      switch (direction) {
+        AxisDirection.up => SwipeDownRightGestures(
+            animationController: widget.animationController!,
+            obtainSize: () => context.size?.height ?? 0,
+            canDragDone: () =>
+                widget.animationController?.status == AnimationStatus.reverse,
+            onClosing: widget.onClosing,
+          ),
+        AxisDirection.left => SwipeDownRightGestures(
+            animationController: widget.animationController!,
+            obtainSize: () => context.size?.width ?? 0,
+            canDragDone: () =>
+                widget.animationController?.status == AnimationStatus.reverse,
+            onClosing: widget.onClosing,
+            closePercentage: 0.8,
+          ),
+        AxisDirection.down => SwipeUpLeftGestures(
+            animationController: widget.animationController!,
+            obtainSize: () => context.size?.height ?? 0,
+            canDragDone: () =>
+                widget.animationController?.status == AnimationStatus.reverse,
+            onClosing: widget.onClosing,
+          ),
+        AxisDirection.right => SwipeUpLeftGestures(
+            animationController: widget.animationController!,
+            obtainSize: () => context.size?.width ?? 0,
+            canDragDone: () =>
+                widget.animationController?.status == AnimationStatus.reverse,
+            onClosing: widget.onClosing,
+            closePercentage: 0.8,
+          ),
+      };
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 part of 'overlay_manager.dart';
 
 class Modal extends OverlayModal {
-  Modal({
+  new({
     required super.content,
     required super.transition,
     required super.overlayState,
@@ -22,7 +22,7 @@ class Modal extends OverlayModal {
     final overlay = ColoredBox(
       color: backgroundColor,
       child: Align(
-        alignment: Alignment.center,
+        alignment: alignment,
         child: child,
       ),
     );

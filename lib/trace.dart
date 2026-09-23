@@ -26,7 +26,7 @@ part of 'browser.dart';
 /// AppTraces.toProfile('123').push(context);
 /// ```
 class Trace<T extends TraceRoute> {
-  const Trace({
+  const new({
     required this.path,
     this.traceRoute,
     this.args,

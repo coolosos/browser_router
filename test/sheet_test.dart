@@ -2,10 +2,10 @@ import 'package:browser_router/browser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final class _TestModalParams extends ModalBaseParams {}
+final class _TestModalParams extends ModalBaseParams;
 
 class _TestHeader extends ModalBaseHeader {
-  _TestHeader({
+  new({
     required super.parameters,
     required super.shouldCloseOnMinExtent,
     required super.snap,
@@ -27,7 +27,7 @@ class _TestHeader extends ModalBaseHeader {
 }
 
 class _TestModal extends ModalBase<_TestModalParams> {
-  const _TestModal({
+  const new({
     required super.params,
     this.onBodyBuilt,
   });
@@ -38,12 +38,12 @@ class _TestModal extends ModalBase<_TestModalParams> {
   ModalBaseHeaderParameter contextParameters({
     required BuildContext context,
   }) {
-    return ModalBaseHeaderParameter(
+    return const ModalBaseHeaderParameter(
       background: Colors.white,
       headerBackground: Colors.blue,
       dragBar: Colors.grey,
-      closeIcon: const Icon(Icons.close),
-      title: const Text('Test Title'),
+      closeIcon: Icon(Icons.close),
+      title: Text('Test Title'),
     );
   }
 
@@ -89,7 +89,7 @@ class _TestModal extends ModalBase<_TestModalParams> {
 }
 
 class _TestSheet extends SheetBase<_TestModalParams> {
-  const _TestSheet({
+  const new({
     required super.modal,
     this.onAdjustSizeCalled,
   });
@@ -193,6 +193,92 @@ void main() {
       expect(safeArea.external.bottom, isFalse);
       expect(safeArea.internal.top, isTrue);
       expect(safeArea.internal.bottom, isTrue);
+    });
+
+    test('ModalDraggableScrollableSheetParams constructors and fields', () {
+      const standard = ModalDraggableScrollableSheetParams(
+        initialHeightChildSize: 0.5,
+        minHeightChildSize: 0.2,
+        maxHeightChildSize: 0.9,
+        withChildSize: 0.7,
+        expand: false,
+        snap: true,
+        snapSizes: [0.5, 0.9],
+        snapAnimationDuration: Duration(milliseconds: 250),
+        shouldCloseOnMinExtent: false,
+      );
+      expect(standard.initialHeightChildSize, equals(0.5));
+      expect(standard.minHeightChildSize, equals(0.2));
+      expect(standard.maxHeightChildSize, equals(0.9));
+      expect(standard.withChildSize, equals(0.7));
+      expect(standard.expand, isFalse);
+      expect(standard.snap, isTrue);
+      expect(standard.snapSizes, equals([0.5, 0.9]));
+      expect(standard.snapAnimationDuration, equals(const Duration(milliseconds: 250)));
+      expect(standard.shouldCloseOnMinExtent, isFalse);
+
+      const small = ModalDraggableScrollableSheetParams.small();
+      expect(small.initialHeightChildSize, equals(0.35));
+      expect(small.minHeightChildSize, equals(0.35));
+      expect(small.maxHeightChildSize, equals(0.75));
+
+      const medium = ModalDraggableScrollableSheetParams.medium();
+      expect(medium.initialHeightChildSize, equals(0.4));
+      expect(medium.minHeightChildSize, equals(0.4));
+      expect(medium.maxHeightChildSize, equals(0.6));
+
+      const large = ModalDraggableScrollableSheetParams.large();
+      expect(large.initialHeightChildSize, equals(0.45));
+      expect(large.minHeightChildSize, equals(0.3));
+      expect(large.maxHeightChildSize, equals(0.86));
+    });
+
+    test('ModalBaseHeader extents with and without title/snap', () {
+      final headerWithTitle = _TestHeader(
+        parameters: const ModalBaseHeaderParameter(
+          background: Colors.white,
+          headerBackground: Colors.blue,
+          dragBar: Colors.grey,
+          closeIcon: Icon(Icons.close),
+          title: Text('Title'),
+        ),
+        shouldCloseOnMinExtent: false,
+        snap: false,
+        border: null,
+      );
+      expect(headerWithTitle.maxExtent, equals(57));
+      expect(headerWithTitle.minExtent, equals(57));
+      expect(headerWithTitle.shouldRebuild(headerWithTitle), isFalse);
+
+      final headerWithoutTitle = _TestHeader(
+        parameters: const ModalBaseHeaderParameter(
+          background: Colors.white,
+          headerBackground: Colors.blue,
+          dragBar: Colors.grey,
+          closeIcon: Icon(Icons.close),
+          title: null,
+        ),
+        shouldCloseOnMinExtent: false,
+        snap: false,
+        border: null,
+      );
+      expect(headerWithoutTitle.maxExtent, equals(27));
+      expect(headerWithoutTitle.minExtent, equals(27));
+
+      final headerWithSnap = _TestHeader(
+        parameters: const ModalBaseHeaderParameter(
+          background: Colors.white,
+          headerBackground: Colors.blue,
+          dragBar: Colors.grey,
+          closeIcon: Icon(Icons.close),
+          title: null,
+        ),
+        shouldCloseOnMinExtent: false,
+        snap: true,
+        border: null,
+      );
+      expect(headerWithSnap.maxExtent, equals(57));
+      expect(headerWithSnap.minExtent, equals(57));
     });
   });
 }

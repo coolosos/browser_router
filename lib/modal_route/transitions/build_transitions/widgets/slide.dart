@@ -27,7 +27,7 @@ enum Positions {
   ),
   ;
 
-  const Positions({
+  new({
     required this.primaryOffset,
     required this.secondaryOffset,
   });
@@ -36,7 +36,7 @@ enum Positions {
 }
 
 class Slide extends StatelessWidget {
-  Slide({
+  new({
     required this.primaryRouteAnimation,
     required Animation<double> secondaryRouteAnimation,
     required Positions drive,
@@ -79,7 +79,7 @@ class Slide extends StatelessWidget {
 
   final Widget child;
 
-  final DecorationTween decorationTween = DecorationTween(
+  static final DecorationTween decorationTween = DecorationTween(
     begin: BoxDecoration(
       color: const Color.fromARGB(0, 255, 255, 255),
       border: Border.all(style: BorderStyle.none),

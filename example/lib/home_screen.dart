@@ -5,7 +5,7 @@ import 'package:browser_router/browser.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const new({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({required this.title});
+  const new({required this.title});
   final String title;
 
   @override
@@ -211,7 +211,7 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _ExampleButton extends StatelessWidget {
-  const _ExampleButton({required this.text, required this.onTap});
+  const new({required this.text, required this.onTap});
 
   final String text;
   final VoidCallback onTap;

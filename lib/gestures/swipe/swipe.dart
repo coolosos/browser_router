@@ -7,20 +7,14 @@ part 'swipe_gestures.dart';
 part 'swipe_transition_builder.dart';
 
 extension GenericAxis on AxisDirection {
-  Axis generic() {
-    switch (this) {
-      case AxisDirection.up:
-      case AxisDirection.down:
-        return Axis.vertical;
-      case AxisDirection.right:
-      case AxisDirection.left:
-        return Axis.horizontal;
-    }
-  }
+  Axis generic() => switch (this) {
+        AxisDirection.up || AxisDirection.down => Axis.vertical,
+        AxisDirection.right || AxisDirection.left => Axis.horizontal,
+      };
 }
 
 class Swipe extends StatelessWidget {
-  Swipe({
+  new({
     required this.animation,
     required Widget child,
     required this.screenMaximumPercentage,

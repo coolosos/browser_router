@@ -1,61 +1,77 @@
 # Browser Router - Advanced Navigation for Flutter
 
 [![pub version](https://img.shields.io/pub/v/browser_router.svg)](https://pub.dev/packages/browser_router)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-An advanced navigation system for Flutter that enables typed routes, custom transitions, and robust overlay management (Banners, Modals, Sheets).
+An advanced, strongly-typed navigation and overlay management system for Flutter, built with zero external UI dependencies on pure `package:flutter/widgets.dart`.
+
+---
 
 ## Features
 
-- **Centralized Route Management**: Define all your app routes in one place.
-- **Typed Route Arguments**: Pass strongly-typed arguments to your routes safely, with validation.
-- **Custom Transitions**: Easily implement custom page transitions (slide, fade, etc.) with a smart priority system.
-- **Versatile Presentations**: Display any route as a full page, a modal popup, or a swipeable bottom sheet using `TraceRoute`.
-- **Semantic Navigation API**: Create a reusable, semantic, and centralized navigation API for your app using `Trace` objects.
-- **Deep Linking**: Automatically parses URL query parameters and delivers them to new or existing screens.
-- **Advanced Overlays & Popups**: Show sequential banners, complex modals, and multi-level popups.
-- **Zero UI Dependencies**: Pure `package:flutter/widgets.dart` implementation, completely decoupled from Material or Cupertino styling.
+- **Centralized Route Management**: Define all application routes in a single declarative registry.
+- **Strongly-Typed Route Arguments**: Pass type-safe arguments using `RouteParams` with built-in validation and polymorphic type resolution.
+- **Custom & Adaptive Transitions**: Seamlessly apply transitions (slide, fade, scale, etc.) per route or globally based on platform/path.
+- **Versatile Presentation Styles**: Present any screen as a full page, a modal dialog, or a swipeable bottom sheet via `TraceRoute`.
+- **Semantic Navigation API**: Create a decoupled, domain-driven navigation layer using `Trace` objects.
+- **Reactive Navigation Lifecycle**: Listen to visibility changes (`onAppear`, `onDisappear`) via `Browser.watch`.
+- **Atomic Argument Consumption**: Eliminate duplicate event triggers on widget rebuilds with `context.getArgumentAndClean<T>()`.
+- **Universal Navigation & Deep Linking**: Automatic URL query parameter extraction to `DeepLinkParam` and versatile URL routing with `context.launchAction()`.
+- **Advanced Overlays & Sequential Banners**: Managed banner queues, modal overlays, and bottom sheets decoupled from the navigator stack.
+- **Code Splitting & Deferred Loading**: Out-of-the-box support for lazy loading routes with `DeferredBrowserRoute`.
+- **Zero UI Framework Dependencies**: 100% decoupled from Material and Cupertino widgets.
 
 ---
 
 ## Installation
 
-Add this to your package's `pubspec.yaml` file:
+Add `browser_router` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  browser_router: ^0.1.0
+  browser_router: ^0.2.0
 ```
 
-Then, run `flutter pub get` in your terminal.
+Then run:
+
+```bash
+flutter pub get
+```
 
 ---
 
 ## Getting Started
 
-1.  **Define your routes**
+### 1. Define Routes
 
-Create a list of `BrowserRoute` objects.
-
-```dart
-final routes = [
-  BrowserRoute(
-    path: '/',
-    page: const HomeScreen(),
-  ),
-  BrowserRoute(
-    path: '/profile',
-    page: const ProfileScreen(),
-  ),
-];
-```
-
-2.  **Wrap your app with `Browser`**
-
-Use the `Browser` widget at the root of your application.
+Create a list of `BrowserRoute` instances:
 
 ```dart
 import 'package:browser_router/browser.dart';
 import 'package:flutter/widgets.dart';
+
+final routes = [
+  BrowserRoute(
+    path: '/',
+    page: const HomeScreen(),
+    routeTransition: RouteTransition.none,
+  ),
+  BrowserRoute(
+    path: '/profile',
+    page: const ProfileScreen(),
+    routeTransition: RouteTransition.slide_right,
+  ),
+];
+```
+
+### 2. Wrap Your App with `Browser`
+
+Place `Browser` at the root of your application widget hierarchy:
+
+```dart
+import 'package:browser_router/browser.dart';
+import 'package:flutter/widgets.dart';
+import 'routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,7 +92,7 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: generate,
           onGenerateInitialRoutes: (routePath) => [
             generate(
-              RouteSettings(name: routePath, arguments: Map.from({})),
+              RouteSettings(name: routePath, arguments: const <dynamic, dynamic>{}),
             ),
           ],
         );
@@ -86,210 +102,388 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-3.  **Navigate**
+### 3. Basic Navigation
 
-You can now navigate between screens using `context.pushNamed`.
+Navigate using the `BuildContext` extension methods:
 
 ```dart
-// Navigate to the profile screen
+// Push a new route
 context.pushNamed('/profile');
 
-// Go back
+// Pop the current route
 context.pop();
 ```
 
 ---
 
-## Advanced Navigation
+## Typed Route Arguments (`RouteParams`)
 
-`browser` provides powerful, unified methods for navigation.
+Pass strongly-typed data between screens safely without casting `dynamic` maps.
 
-### Deep Linking
+### 1. Define an Arguments Class
 
-If you navigate to a path that contains URL query parameters (e.g. `/profile?id=123`), `browser` automatically parses them into a `DeepLinkParam` object.
-
-There are two ways to receive these parameters:
-
-**1. On a new screen**
-
-If the deep link pushes a new screen, that screen can get the parameters directly in its `build` method.
+Subclass `RouteParams` (using `final class` or `base class`):
 
 ```dart
-// In ProfileScreen's build method
-final deepLinkParams = context.getArgument<DeepLinkParam>();
-if (deepLinkParams != null) {
-  final userId = deepLinkParams.params['id']; // "123"
+import 'package:browser_router/browser.dart';
+
+final class ProfileArgs extends RouteParams {
+  const ProfileArgs({required this.userId});
+
+  final String userId;
+
+  @override
+  bool validate() => userId.isNotEmpty;
 }
 ```
 
-**2. On an existing screen (with `Browser.watch`)**
+### 2. Add Route Validation (Optional)
 
-If the deep link navigates to a screen that is already in the stack (like the `HomeScreen`), you can receive the parameters in the `onAppear` callback of `Browser.watch`.
-
-```dart
-// In HomeScreen's State
-Widget build(BuildContext context) {
-  return Browser.watch(
-    onAppear: (context, deepLink) {
-      // The `deepLink` parameter will be populated here
-      if (deepLink != null) {
-        final message = deepLink.params['message'];
-        // ... update state with the message
-      }
-    },
-    child: ...
-  );
-}
-```
-
-### Presentation with `TraceRoute`
-
-A `TraceRoute` is an object that defines **HOW** a route is presented. The type of `TraceRoute` you provide determines the presentation style.
-
-- `PageTraceRoute`: The default. Presents the route as a standard, full-screen page.
-- `PopupTraceRoute`: Presents the route as a modal dialog.
-- `SwipeTraceRoute`: Presents the route as a swipeable bottom sheet.
-
-### Typed Arguments (`args`)
-
-This is the recommended way to pass data between screens.
-
-**1. Create an arguments class**
-
-```dart
-class ProfileArgs extends RouteParams { ... }
-```
-
-**2. Add validation to your route**
+Enforce arguments validation before navigation occurs. If validation fails, `Browser` automatically falls back to `defaultRoute`:
 
 ```dart
 BrowserRoute(
   path: '/profile',
-  page: ProfileScreen(),
+  page: const ProfileScreen(),
   validateArguments: (check, get) => check<ProfileArgs>(),
-),
+)
 ```
 
-**3. Push with arguments**
+### 3. Push with Arguments
 
 ```dart
 context.pushNamed(
   '/profile',
-  args: [ProfileArgs(userId: '123')],
+  args: [ProfileArgs(userId: 'usr_12345')],
 );
 ```
 
-**4. Retrieve the arguments**
+### 4. Read Arguments in the Target Screen
+
+Use `context.getArgument<T>()` in your `build` method. This read is **idempotent** and safe across multiple widget rebuilds:
 
 ```dart
-final args = context.getArgument<ProfileArgs>();
-```
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
-### Receiving Arguments from `pop`
+  @override
+  Widget build(BuildContext context) {
+    final args = context.getArgument<ProfileArgs>();
 
-To receive a "result" from a screen that was popped, you must wrap the receiving widget with `Browser.watch` and check for your result arguments inside the `onAppear` callback.
-
-```dart
-// In the receiving screen (e.g., HomeScreen)
-return Browser.watch(
-  onAppear: (context, deepLink) {
-    // Use getArgumentAndClean for one-time pop results
-    final popArgs = context.getArgumentAndClean<PopResultArgs>();
-    if (popArgs != null) {
-      // ... update state with popArgs.result
-    }
-  },
-  child: ...
-);
-```
-
-### `getArgument` vs. `getArgumentAndClean`
-
-- **`getArgument<T>()`**: **Reads** an argument without removing it. Use for data needed to build a screen (e.g., a product ID).
-- **`getArgumentAndClean<T>()`**: **Reads** an argument and then **removes it**. Use for one-time events, like results from a `pop`, to avoid processing the same event multiple times.
-
----
-
-## Advanced Pattern: Semantic Navigation API with `Trace`
-
-For large applications, you can use the `Trace` class to create a centralized, reusable, and semantic API for all your navigation events.
-
-**1. Centralize Paths**
-
-```dart
-enum AppPath {
-  profile('/profile');
-  const AppPath(this.path);
-  final String path;
-}
-```
-
-**2. Create a `Trace` Wrapper**
-
-```dart
-class AppTrace extends Trace {
-  const AppTrace._({required super.path, super.args, super.traceRoute});
-
-  factory AppTrace.toProfile({ required String userId }) {
-    return AppTrace._(
-      path: AppPath.profile.path,
-      args: ProfileArgs(userId: userId),
+    return Center(
+      child: Text('User ID: ${args?.userId}'),
     );
   }
 }
 ```
 
-**3. Use the Semantic API**
+---
+
+## Returning Data & Reactive Lifecycle (`Browser.watch`)
+
+`browser_router` solves the problem of lost return data and unhandled gestures (*swipe-to-dismiss*) by updating the route settings of the underlying screen directly.
+
+### 1. Returning Arguments on Pop
 
 ```dart
-AppTrace.toProfile(userId: '123').push(context);
+// Return data directly when popping
+context.pop(args: OrderResultArgs(status: 'COMPLETED'));
+
+// Or pop multiple screens to the root and pass arguments
+context.popToFirst(args: [OrderResultArgs(status: 'COMPLETED')]);
 ```
+
+### 2. Staging Arguments for Gesture Dismissals
+
+If a screen can be dismissed via swipe gestures or system back buttons, stage return arguments in `initState` or upon user actions using `setPopArgument`:
+
+```dart
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    context.setPopArgument(DraftSavedArgs(savedAt: DateTime.now()));
+  });
+}
+```
+
+### 3. Consuming Results with `Browser.watch` and `getArgumentAndClean`
+
+Wrap the receiving widget with `Browser.watch`. In `onAppear`, use `context.getArgumentAndClean<T>()` to read and atomically remove the argument:
+
+```dart
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Browser.watch(
+      onAppear: (context, deepLink) {
+        // Atomic consumption: eliminates repeat execution on rebuilds
+        final result = context.getArgumentAndClean<OrderResultArgs>();
+        if (result != null) {
+          showToast('Order: ${result.status}');
+        }
+      },
+      child: const HomeContent(),
+    );
+  }
+}
+```
+
+### `getArgument` vs. `getArgumentAndClean`
+
+| Method | Behavior | Primary Use Case |
+| :--- | :--- | :--- |
+| `context.getArgument<T>()` | **Reads** the argument without modifying the route map. | Screen construction data (e.g. IDs, configurations). |
+| `context.getArgumentAndClean<T>()` | **Reads and removes** the argument from the route map. | One-time events (e.g. pop results, snackbar triggers). |
+
 ---
-## A Note on Flutter Web Routing Strategies
 
-This package works directly with Flutter's default web routing strategy, which uses a "hash" (or fragment) in the URL.
+## Semantic Navigation API with `Trace`
 
-### Default Strategy (Hash-based)
+Encapsulate routes, arguments, and presentations into reusable domain objects:
 
-By default, your Flutter web app's URLs will look like this:
+```dart
+enum AppPath {
+  home('/'),
+  profile('/profile'),
+  productDetail('/product/detail');
 
+  const AppPath(this.path);
+  final String path;
+}
+
+class AppTrace extends Trace {
+  const AppTrace._({
+    required super.path,
+    super.args,
+    super.traceRoute,
+  });
+
+  factory AppTrace.toProfile(String userId) {
+    return AppTrace._(
+      path: AppPath.profile.path,
+      args: ProfileArgs(userId: userId),
+      traceRoute: const PageTraceRoute(
+        routeTransition: RouteTransition.slide_right,
+      ),
+    );
+  }
+
+  factory AppTrace.toProductModal(String productId) {
+    return AppTrace._(
+      path: AppPath.productDetail.path,
+      args: ProductArgs(id: productId),
+      traceRoute: const PopupTraceRoute(
+        routeTransition: RouteTransition.fade,
+      ),
+    );
+  }
+}
 ```
-https://yourapp.com/#/home
-https://yourapp.com/#/profile/123?mode=edit
+
+### Semantic Actions
+
+```dart
+// Standard push
+AppTrace.toProfile('123').push(context);
+
+// Push and replace current route
+AppTrace.toProfile('123').pushAndReplacement(context);
+
+// Pop to first screen and push
+AppTrace.toProfile('123').popToFirstAndPush(context);
+
+// Pop to root and replace
+AppTrace.toProfile('123').cleanAndPush(context);
+
+// Pop to existing instance in stack or push if not present
+AppTrace.toProfile('123').findMeOrPush(context);
 ```
 
-With this strategy, route arguments and parameters are managed on the client-side and work without any special configuration on your web server.
+---
 
-### Path-based Strategy
+## Presentation Styles (`TraceRoute`) & Transitions
 
-If you prefer cleaner, more SEO-friendly URLs without the `#`:
+Change how a route is presented without altering its widget implementation:
 
-```
-https://yourapp.com/home
-https://yourapp.com/profile/123?mode=edit
-```
+- **`PageTraceRoute`**: Full-screen page navigation.
+- **`PopupTraceRoute`**: Displays the route as a modal dialog.
+- **`SwipeTraceRoute`**: Displays the route as an interactive bottom sheet with swipe-to-dismiss gestures.
+- **`OverlayTraceRoute`**: Displays the route in the overlay layer.
 
-You can enable the "path-based" routing strategy. To do so, follow these two steps:
+### Available Transitions
 
-1.  **Enable the Strategy in Flutter:** Call `usePathUrlStrategy()` at the beginning of your `main()` function in `main.dart`.
+- `RouteTransition.slide_right`
+- `RouteTransition.slide_left`
+- `RouteTransition.slide_up`
+- `RouteTransition.slide_down`
+- `RouteTransition.fade`
+- `RouteTransition.scale`
+- `RouteTransition.none`
 
-    ```dart
-    // main.dart
-    import 'package:flutter/material.dart';
-    import 'package:flutter_web_plugins/url_strategy.dart';
+### Adaptive Transitions and Traces
 
-    void main() {
-      // Call this function before runApp()
-      usePathUrlStrategy();
-      runApp(const MyApp());
+Configure global transition or presentation rules in `Browser`:
+
+```dart
+Browser(
+  routes: routes,
+  defaultRoute: routes.first,
+  adaptiveTransition: (route) {
+    // Apply platform-specific transitions
+    return RouteTransition.slide_right;
+  },
+  adaptiveTrace: (name) {
+    // All routes under /modal/ open as popups automatically
+    if (name?.startsWith('/modal/') ?? false) {
+      return const PopupTraceRoute();
     }
-    ```
+    return null;
+  },
+  builder: (context, routeObserver, generate) => ...,
+)
+```
 
-2.  **Configure Your Web Server:** This is a **critical** step. You must configure your production server (Nginx, Apache, Firebase Hosting, etc.) to redirect all requests to your `index.html` file. Without this, users who directly access an internal URL of your app will get a 404 error.
+---
 
-    For more details on how to configure your server, see the [official Flutter documentation](https://docs.flutter.dev/ui/navigation/url-strategies).
+## Universal Navigation & Deep Linking (`launchAction`)
 
-By following these steps, `browser` will work perfectly with the routing strategy you choose.
+`browser_router` automatically captures query parameters into `DeepLinkParam`:
+
+```dart
+// Navigating to: /profile?id=456&theme=dark
+final deepLink = context.getArgument<DeepLinkParam>();
+final id = deepLink?.params['id']; // "456"
+```
+
+Use `context.launchAction()` for unified routing of internal routes and external URLs:
+
+```dart
+// Pop current view
+context.launchAction('/?navigateType=pop');
+
+// Pop to first view and push
+context.launchAction('/profile?navigateType=popFirstAndPush');
+
+// Push replacement
+context.launchAction('/dashboard?navigateType=pushReplacement');
+
+// External link (triggers openUrl callback)
+context.launchAction('https://flutter.dev');
+```
+
+---
+
+## Overlays, Sequential Banners & Sheets
+
+Manage UI components that sit above the navigation stack using built-in overlay utilities:
+
+### 1. Sequential Banners Queue
+
+Display notification banners one after another in FIFO order:
+
+```dart
+Browser.enqueueBanner(
+  context,
+  (dismiss) => Container(
+    padding: const EdgeInsets.all(16),
+    color: const Color(0xFF008080),
+    child: Row(
+      children: [
+        const Text('Update available!'),
+        GestureDetector(
+          onTap: dismiss,
+          child: const Text(' Dismiss'),
+        ),
+      ],
+    ),
+  ),
+);
+```
+
+### 2. Custom Overlay Modals
+
+Show a modal overlay independent of the Navigator route stack:
+
+```dart
+Browser.showOverlay(
+  context,
+  backgroundColor: const Color(0x80000000),
+  isDismissible: true,
+  builder: (dismiss) => Container(
+    width: 300,
+    height: 200,
+    color: const Color(0xFFFFFFFF),
+    child: Center(
+      child: GestureDetector(
+        onTap: dismiss,
+        child: const Text('Close Modal'),
+      ),
+    ),
+  ),
+);
+
+// Dismiss programmatically
+Browser.dismissOverlay(context);
+```
+
+### 3. Modal Bottom Sheet
+
+```dart
+Browser.showModalBottomSheet(
+  context: context,
+  backgroundColor: const Color(0xFFFFFFFF),
+  heightFactor: 0.6,
+  builder: (context) => const SheetContentView(),
+);
+```
+
+---
+
+## Code Splitting & Deferred Loading (`DeferredBrowserRoute`)
+
+Optimize initial download bundle sizes on Flutter Web and apps by loading route modules on-demand:
+
+```dart
+import 'package:browser_router/deferred_browser_route.dart';
+import 'package:my_app/screens/heavy_feature.dart' deferred as heavy_feature;
+
+final routes = [
+  DeferredBrowserRoute(
+    path: '/heavy_feature',
+    loadLibrary: heavy_feature.loadLibrary,
+    pageBuilder: () => heavy_feature.HeavyFeatureScreen(),
+    loadingWidget: const Center(child: Text('Loading...')),
+  ),
+];
+```
+
+---
+
+## Flutter Web Routing Strategies
+
+`browser_router` supports both Hash-based and Path-based URL routing strategies.
+
+### 1. Default Strategy (Hash-based)
+URLs contain `#`: `https://yourapp.com/#/profile?id=123`. Works out-of-the-box without web server configuration.
+
+### 2. Path-based Strategy
+Clean URLs: `https://yourapp.com/profile?id=123`.
+
+To enable:
+```dart
+import 'package:flutter_web_plugins/url_strategy.dart';
+
+void main() {
+  usePathUrlStrategy();
+  runApp(const MyApp());
+}
+```
+
+> [!IMPORTANT]
+> When using path-based URLs, configure your web server (Nginx, Firebase Hosting, Apache) to rewrite all requests to `index.html` to prevent 404 errors on direct URL access.
 
 ---
 
@@ -301,7 +495,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Maintainers & Contributors ✨
 
-Big thanks go to these wonderful people who have contributed to the project:
+Big thanks to the contributors:
 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -314,7 +508,5 @@ Big thanks go to these wonderful people who have contributed to the project:
     </tr>
   </tbody>
 </table>
-
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
- 
