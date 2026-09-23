@@ -530,5 +530,15 @@ void main() {
         isNull,
       );
     });
+
+    test('DataParam holds generic data and RouteParams defaults validate to true', () {
+      const dataParam = DataParam<int>(42);
+      expect(dataParam.data, equals(42));
+      expect(dataParam.validate(), isTrue);
+
+      const nullDataParam = DataParam<String>(null);
+      expect(nullDataParam.data, isNull);
+      expect(nullDataParam.validate(), isTrue);
+    });
   });
 }

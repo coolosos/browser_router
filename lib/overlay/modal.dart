@@ -22,7 +22,7 @@ class Modal extends OverlayModal {
     final overlay = ColoredBox(
       color: backgroundColor,
       child: Align(
-        alignment: Alignment.center,
+        alignment: alignment,
         child: child,
       ),
     );
