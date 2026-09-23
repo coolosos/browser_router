@@ -187,7 +187,8 @@ void main() {
 
   group('SwipeChildLayoutDelegate Tests', () {
     test('Calculates constraints and positions for each AxisDirection', () {
-      final delegateUp = SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
+      const delegateUp =
+          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
       final constraints = delegateUp.getConstraintsForChild(
         const BoxConstraints(maxWidth: 400, maxHeight: 800),
       );
@@ -202,7 +203,7 @@ void main() {
       expect(posUp, const Offset(0, 800 - 400 * 0.5));
 
       // Position down
-      final delegateDown =
+      const delegateDown =
           SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.down);
       final posDown = delegateDown.getPositionForChild(
         const Size(400, 800),
@@ -211,7 +212,7 @@ void main() {
       expect(posDown, const Offset(0, 800 - 400));
 
       // Position right
-      final delegateRight =
+      const delegateRight =
           SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.right);
       final posRight = delegateRight.getPositionForChild(
         const Size(400, 800),
@@ -220,7 +221,7 @@ void main() {
       expect(posRight, const Offset(400 * 0.5 - 400, 800 - 400));
 
       // Position left
-      final delegateLeft =
+      const delegateLeft =
           SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.left);
       final posLeft = delegateLeft.getPositionForChild(
         const Size(400, 800),
@@ -229,15 +230,15 @@ void main() {
       expect(posLeft, const Offset(400 - 400 * 0.5, 800 - 400));
 
       // shouldRelayout
-      final delegateSame =
+      const delegateSame =
           SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
       expect(delegateUp.shouldRelayout(delegateSame), isFalse);
 
-      final delegateDiffProgress =
+      const delegateDiffProgress =
           SwipeChildLayoutDelegate(0.7, 0.8, AxisDirection.up);
       expect(delegateUp.shouldRelayout(delegateDiffProgress), isTrue);
 
-      final delegateDiffDirection =
+      const delegateDiffDirection =
           SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.left);
       expect(delegateUp.shouldRelayout(delegateDiffDirection), isTrue);
     });
@@ -245,7 +246,7 @@ void main() {
 }
 
 class _TestSwipeWidget extends StatefulWidget {
-  const _TestSwipeWidget({required this.onControllerCreated});
+  const new({required this.onControllerCreated});
 
   final void Function(AnimationController controller) onControllerCreated;
 
@@ -292,7 +293,7 @@ class _TestSwipeWidgetState extends State<_TestSwipeWidget>
 }
 
 class _GestureHostWidget extends StatefulWidget {
-  const _GestureHostWidget({required this.onInit, required this.child});
+  const new({required this.onInit, required this.child});
 
   final void Function(TickerProvider vsync) onInit;
   final Widget child;

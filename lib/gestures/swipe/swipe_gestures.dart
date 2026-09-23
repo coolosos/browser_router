@@ -1,7 +1,7 @@
 part of 'swipe.dart';
 
 abstract base class SwipeGestures {
-  SwipeGestures({
+  new({
     required this.obtainSize,
     required this.animationController,
     required this.canDragDone,
@@ -57,7 +57,7 @@ abstract base class SwipeGestures {
 const double _kMinFlingVelocity = 1;
 
 final class SwipeDownRightGestures extends SwipeGestures {
-  SwipeDownRightGestures({
+  new({
     required super.obtainSize,
     required super.animationController,
     required super.canDragDone,
@@ -116,7 +116,7 @@ final class SwipeDownRightGestures extends SwipeGestures {
 }
 
 final class SwipeUpLeftGestures extends SwipeGestures {
-  SwipeUpLeftGestures({
+  new({
     required super.obtainSize,
     required super.animationController,
     required super.canDragDone,

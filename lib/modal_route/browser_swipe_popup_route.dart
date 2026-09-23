@@ -10,7 +10,7 @@ export 'params/trace_route.dart' show SwipeTraceRoute;
 class BrowserSwipePopupRoute<T> extends BrowserPopupRoute<T, SwipeTraceRoute>
     with BrowserModalBarrierMixin<T> {
   /// A modal bottom sheet route.
-  BrowserSwipePopupRoute({
+  new({
     required super.traceRoute,
     required super.appRoute,
     super.settings,

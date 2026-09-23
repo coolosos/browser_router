@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'app_traces.dart';
 
 class IntermediateScreen extends StatelessWidget {
-  const IntermediateScreen({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

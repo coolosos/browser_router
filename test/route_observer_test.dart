@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final class TestArgs extends RouteParams {
-  const TestArgs(this.value);
+  const new(this.value);
   final String value;
 }
 

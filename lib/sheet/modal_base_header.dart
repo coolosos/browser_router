@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class ModalBaseHeaderParameter {
-  ModalBaseHeaderParameter({
+final class ModalBaseHeaderParameter {
+  const new({
     required this.background,
     required this.headerBackground,
     required this.dragBar,
@@ -20,7 +20,7 @@ class ModalBaseHeaderParameter {
 }
 
 abstract class ModalBaseHeader extends SliverPersistentHeaderDelegate {
-  ModalBaseHeader({
+  const new({
     required this.parameters,
     required this.shouldCloseOnMinExtent,
     required this.snap,

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'push_args.dart';
 
 class PushArgsScreen extends StatelessWidget {
-  const PushArgsScreen({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

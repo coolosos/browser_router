@@ -44,7 +44,7 @@ extension NavigatorX on BuildContext {
   Map<dynamic, dynamic> _createArguments(List<dynamic>? args) {
     final arguments = <dynamic, dynamic>{
       for (final argument in (args ?? []))
-        if (argument != null) argument.runtimeType: argument,
+        argument.runtimeType: ?argument,
     };
     return arguments;
   }
@@ -125,7 +125,7 @@ extension NavigatorX on BuildContext {
     final argsMap = _createArguments([
       ...args,
       pushParams,
-      if (traceRoute != null) traceRoute,
+      ?traceRoute,
     ]);
     return (navigator ?? navigate).pushNamed(path, arguments: argsMap);
   }
@@ -143,7 +143,7 @@ extension NavigatorX on BuildContext {
     final argsMap = _createArguments([
       ...args,
       pushParams,
-      if (traceRoute != null) traceRoute,
+      ?traceRoute,
     ]);
     return (navigator ?? navigate)
         .pushReplacementNamed(path, arguments: argsMap);

@@ -2,10 +2,10 @@ import 'package:browser_router/browser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final class _TestModalParams extends ModalBaseParams {}
+final class _TestModalParams extends ModalBaseParams;
 
 class _TestHeader extends ModalBaseHeader {
-  _TestHeader({
+  new({
     required super.parameters,
     required super.shouldCloseOnMinExtent,
     required super.snap,
@@ -27,7 +27,7 @@ class _TestHeader extends ModalBaseHeader {
 }
 
 class _TestModal extends ModalBase<_TestModalParams> {
-  const _TestModal({
+  const new({
     required super.params,
     this.onBodyBuilt,
   });
@@ -38,12 +38,12 @@ class _TestModal extends ModalBase<_TestModalParams> {
   ModalBaseHeaderParameter contextParameters({
     required BuildContext context,
   }) {
-    return ModalBaseHeaderParameter(
+    return const ModalBaseHeaderParameter(
       background: Colors.white,
       headerBackground: Colors.blue,
       dragBar: Colors.grey,
-      closeIcon: const Icon(Icons.close),
-      title: const Text('Test Title'),
+      closeIcon: Icon(Icons.close),
+      title: Text('Test Title'),
     );
   }
 
@@ -89,7 +89,7 @@ class _TestModal extends ModalBase<_TestModalParams> {
 }
 
 class _TestSheet extends SheetBase<_TestModalParams> {
-  const _TestSheet({
+  const new({
     required super.modal,
     this.onAdjustSizeCalled,
   });

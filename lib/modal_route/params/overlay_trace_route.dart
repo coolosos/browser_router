@@ -1,7 +1,7 @@
 part of 'trace_route.dart';
 
-class OverlayTraceRoute extends TraceRoute {
-  OverlayTraceRoute({
+final class OverlayTraceRoute extends TraceRoute {
+  const new({
     super.routeTransition,
     super.opaque,
     super.maintainState,

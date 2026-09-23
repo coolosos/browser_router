@@ -16,7 +16,7 @@ part of 'browser.dart';
 /// }
 /// ```
 abstract base class RouteParams {
-  const RouteParams();
+  const new();
 
   /// Validates the arguments. Returns `true` if the arguments are valid.
   ///
@@ -27,7 +27,7 @@ abstract base class RouteParams {
 }
 
 final class DataParam<T> extends RouteParams {
-  const DataParam(
+  const new(
     this.data,
   );
 
@@ -40,7 +40,7 @@ final class DataParam<T> extends RouteParams {
 /// an instance of [DeepLinkParam] containing `{'foo': 'bar'}` is automatically
 /// added to the route's arguments.
 final class DeepLinkParam extends RouteParams {
-  const DeepLinkParam(
+  const new(
     this.params,
   );
 
@@ -48,7 +48,7 @@ final class DeepLinkParam extends RouteParams {
 }
 
 final class _PopParam extends RouteParams {
-  const _PopParam(
+  const new(
     this.popParams,
   );
 
@@ -56,7 +56,7 @@ final class _PopParam extends RouteParams {
 }
 
 final class _PushParam extends RouteParams {
-  const _PushParam(
+  const new(
     this.pushParams,
   );
 

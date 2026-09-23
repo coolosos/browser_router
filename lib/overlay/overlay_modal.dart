@@ -6,13 +6,12 @@ typedef ContentBuilder = Widget Function(
 );
 
 abstract class OverlayModal {
-  OverlayModal({
+  new({
     required this.duration,
-    required ContentBuilder content,
+    required this._content,
     required this.transition,
     required OverlayState overlayState,
-  })  : _content = content,
-        _overlayState = overlayState,
+  })  : _overlayState = overlayState,
         _animationController = AnimationController(
           vsync: overlayState,
           duration: transition.transitionDuration,

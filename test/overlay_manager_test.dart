@@ -75,10 +75,10 @@ void main() {
             ),
           ],
         ),
-        transition: OverlayTraceRoute(
+        transition: const OverlayTraceRoute(
           routeTransition: RouteTransition.fade,
-          transitionDuration: const Duration(milliseconds: 100),
-          reverseTransitionDuration: const Duration(milliseconds: 100),
+          transitionDuration: Duration(milliseconds: 100),
+          reverseTransitionDuration: Duration(milliseconds: 100),
         ),
         overlayState: Overlay.of(savedContext),
         backgroundColor: Colors.black54,
@@ -121,10 +121,10 @@ void main() {
       final banner1 = Banner.fromContext(
         context: savedContext,
         duration: const Duration(seconds: 1),
-        transition: OverlayTraceRoute(
+        transition: const OverlayTraceRoute(
           routeTransition: RouteTransition.slide_down,
-          transitionDuration: const Duration(milliseconds: 50),
-          reverseTransitionDuration: const Duration(milliseconds: 50),
+          transitionDuration: Duration(milliseconds: 50),
+          reverseTransitionDuration: Duration(milliseconds: 50),
         ),
         content: (remove) => const Text('Banner 1 Content'),
       );
@@ -162,7 +162,7 @@ void main() {
                           OverlayManager.of(context)?.showModal(
                             Modal(
                               content: (remove) => const Text('Overlay'),
-                              transition: OverlayTraceRoute(
+                              transition: const OverlayTraceRoute(
                                 routeTransition: RouteTransition.none,
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,

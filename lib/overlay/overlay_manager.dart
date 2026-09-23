@@ -14,7 +14,7 @@ part 'modal.dart';
 part 'overlay_modal.dart';
 
 class OverlayManager extends StatefulWidget {
-  const OverlayManager({
+  const new({
     required this.child,
     super.key,
   });
@@ -49,10 +49,10 @@ class OverlayManager extends StatefulWidget {
       Banner.fromContext(
         context: context,
         duration: const Duration(seconds: 5),
-        transition: OverlayTraceRoute(
+        transition: const OverlayTraceRoute(
           routeTransition: RouteTransition.slide_down,
-          reverseTransitionDuration: const Duration(milliseconds: 300),
-          transitionDuration: const Duration(milliseconds: 300),
+          reverseTransitionDuration: Duration(milliseconds: 300),
+          transitionDuration: Duration(milliseconds: 300),
         ),
         content: content,
         topPadding: topPadding,

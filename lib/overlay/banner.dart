@@ -3,7 +3,7 @@ part of 'overlay_manager.dart';
 const double kAppbarHeight = 40;
 
 class Banner extends OverlayModal {
-  Banner({
+  new({
     required super.content,
     required super.duration,
     required super.transition,
@@ -11,7 +11,7 @@ class Banner extends OverlayModal {
     this.topPadding = kAppbarHeight,
   });
 
-  factory Banner.fromContext({
+  factory fromContext({
     required BuildContext context,
     required ContentBuilder content,
     required OverlayTraceRoute transition,

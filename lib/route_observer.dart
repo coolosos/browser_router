@@ -1,7 +1,7 @@
 part of 'browser.dart';
 
 class PageObserverProvider extends SingleChildStatelessWidget {
-  const PageObserverProvider({
+  const new({
     required this.routeObserver,
     this.onAppear,
     this.onDisappear,
@@ -34,7 +34,7 @@ class PageObserverProvider extends SingleChildStatelessWidget {
 }
 
 class RouteObserverProvider extends SingleChildStatefulWidget {
-  const RouteObserverProvider({
+  const new({
     required this.routeObserver,
     this.didPopNext,
     this.didPopNextWithArguments,

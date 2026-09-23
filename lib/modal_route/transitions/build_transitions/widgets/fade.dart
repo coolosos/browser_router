@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class Fade extends StatelessWidget {
-  const Fade({
+  const new({
     required this.animation,
     required this.child,
     super.key,

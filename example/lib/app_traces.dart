@@ -13,7 +13,7 @@ enum AppPath {
   intermediate('/intermediate'),
   deep('/deep');
 
-  const AppPath(this.path);
+  new(this.path);
   final String path;
 }
 
@@ -23,14 +23,14 @@ enum AppPath {
 /// event, bundling the path, arguments, and presentation (`TraceRoute`).
 class AppTrace extends Trace {
   /// Private constructor to be used by the factory constructors.
-  const AppTrace._({
+  const new _({
     required super.path,
     super.args,
     super.traceRoute,
   });
 
   /// Navigates to the push arguments screen.
-  factory AppTrace.toPushArgs({
+  factory toPushArgs({
     required String message,
     required String source,
     RouteTransition? transition,
@@ -45,32 +45,32 @@ class AppTrace extends Trace {
   }
 
   /// Navigates to the screen that demonstrates returning arguments via pop.
-  factory AppTrace.toPopArgs() => AppTrace._(path: AppPath.popArgs.path);
-  factory AppTrace.toSetPopArgs() =>
+  factory toPopArgs() => AppTrace._(path: AppPath.popArgs.path);
+  factory toSetPopArgs() =>
       AppTrace._(path: AppPath.toSetPopArgs.path);
 
   /// Navigates to the intermediate screen for the multi-level pop example.
-  factory AppTrace.toIntermediate() =>
+  factory toIntermediate() =>
       AppTrace._(path: AppPath.intermediate.path);
 
   /// Navigates to the deepest screen for the multi-level pop example.
-  factory AppTrace.toDeep() => AppTrace._(path: AppPath.deep.path);
+  factory toDeep() => AppTrace._(path: AppPath.deep.path);
 
   /// Presents a specific screen as a modal popup.
-  factory AppTrace.asPopup() {
+  factory asPopup() {
     return AppTrace._(
       path: AppPath.popupContent.path,
-      traceRoute: PopupTraceRoute(routeTransition: RouteTransition.fade),
+      traceRoute: const PopupTraceRoute(routeTransition: RouteTransition.fade),
     );
   }
 
   /// Presents the push-args screen as a swipeable bottom sheet.
-  factory AppTrace.asSheet() {
+  factory asSheet() {
     return AppTrace._(
       path: AppPath.pushArgs.path,
       args:
           PushArgs(message: 'Presented as a Sheet', source: 'SwipeTraceRoute'),
-      traceRoute: SwipeTraceRoute(
+      traceRoute: const SwipeTraceRoute(
         screenMaximumPercentage: 0.6,
         routeTransition: RouteTransition.none,
       ),

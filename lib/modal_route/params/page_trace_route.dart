@@ -1,7 +1,7 @@
 part of 'trace_route.dart';
 
 final class PageTraceRoute extends TraceRoute {
-  PageTraceRoute({
+  const new({
     super.routeTransition,
     super.opaque = true,
     super.maintainState = true,

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class PopupContentScreen extends StatelessWidget {
-  const PopupContentScreen({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

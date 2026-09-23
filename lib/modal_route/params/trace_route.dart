@@ -21,7 +21,7 @@ part 'swipe_trace_route.dart';
 /// It can be provided directly to a `Trace` object to override the default
 /// presentation style defined in the `BrowserRoute`.
 sealed class TraceRoute {
-  const TraceRoute({
+  const new({
     this.routeTransition,
     this.opaque = false,
     this.maintainState = true,
@@ -38,7 +38,7 @@ sealed class TraceRoute {
 
   /// Creates a [PageTraceRoute] for presenting a route as a standard,
   /// full-screen page.
-  factory TraceRoute.page({
+  factory page({
     RouteTransition? routeTransition,
     bool opaque = true,
     bool maintainState = true,
@@ -73,7 +73,7 @@ sealed class TraceRoute {
 
   /// Creates a [PopupTraceRoute] for presenting a route as a modal dialog
   /// or popup.
-  factory TraceRoute.popup({
+  factory popup({
     RouteTransition? routeTransition,
     bool opaque = false,
     bool maintainState = true,
@@ -104,7 +104,7 @@ sealed class TraceRoute {
 
   /// Creates a [SwipeTraceRoute] for presenting a route as a swipeable
   /// bottom sheet.
-  factory TraceRoute.swipe({
+  factory swipe({
     RouteTransition? routeTransition,
     bool opaque = false,
     bool maintainState = true,

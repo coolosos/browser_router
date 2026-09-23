@@ -1,7 +1,7 @@
 part of 'swipe.dart';
 
-class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
-  SwipeChildLayoutDelegate(
+final class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
+  const new(
     this.progress,
     this.screenPercentage,
     this.direction,
@@ -22,27 +22,22 @@ class SwipeChildLayoutDelegate extends SingleChildLayoutDelegate {
   }
 
   @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    switch (direction) {
-      case AxisDirection.up:
-        return Offset(0, size.height - childSize.height * progress);
-      case AxisDirection.down:
-        return Offset(
-          0,
-          size.height - (progress == 0 ? size.height : childSize.height),
-        );
-      case AxisDirection.right:
-        return Offset(
-          (childSize.width * progress) - size.width,
-          size.height - childSize.height,
-        );
-      case AxisDirection.left:
-        return Offset(
-          size.width - childSize.width * progress,
-          size.height - childSize.height,
-        );
-    }
-  }
+  Offset getPositionForChild(Size size, Size childSize) => switch (direction) {
+        AxisDirection.up =>
+          Offset(0, size.height - childSize.height * progress),
+        AxisDirection.down => Offset(
+            0,
+            size.height - (progress == 0 ? size.height : childSize.height),
+          ),
+        AxisDirection.right => Offset(
+            (childSize.width * progress) - size.width,
+            size.height - childSize.height,
+          ),
+        AxisDirection.left => Offset(
+            size.width - childSize.width * progress,
+            size.height - childSize.height,
+          ),
+      };
 
   @override
   bool shouldRelayout(SwipeChildLayoutDelegate oldDelegate) {

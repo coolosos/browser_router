@@ -4,7 +4,7 @@ part of 'sheet.dart';
 typedef ChangeDrawerSize = void Function({required bool isExpanded});
 
 abstract class ModalBase<T extends ModalBaseParams> {
-  const ModalBase({required this.params});
+  const new({required this.params});
 
   final T params;
 
@@ -29,12 +29,12 @@ abstract class ModalBase<T extends ModalBaseParams> {
 }
 
 final class ModalBaseSafeArea {
-  const ModalBaseSafeArea({
+  const new({
     required this.external,
     required this.internal,
   });
 
-  const ModalBaseSafeArea.cleanTopSafeArea()
+  const new cleanTopSafeArea()
       : external = const SafeAreaManager.fromLTRB(true, true, true, false),
         internal = const SafeAreaManager.all();
 
@@ -43,14 +43,14 @@ final class ModalBaseSafeArea {
 }
 
 final class SafeAreaManager {
-  const SafeAreaManager({
+  const new({
     required this.top,
     required this.right,
     required this.bottom,
     required this.left,
   });
 
-  const SafeAreaManager.fromLTRB(
+  const new fromLTRB(
     // ignore: avoid_positional_boolean_parameters this is standard on .fromLTRB
     this.left,
     this.top,
@@ -58,11 +58,13 @@ final class SafeAreaManager {
     this.bottom,
   );
 
-  const SafeAreaManager.all()
-      : top = true,
-        bottom = true,
-        left = true,
-        right = true;
+  const new all()
+      : this(
+          top: true,
+          bottom: true,
+          left: true,
+          right: true,
+        );
 
   final bool top;
   final bool bottom;

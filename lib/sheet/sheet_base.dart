@@ -6,7 +6,7 @@ typedef ScrollableBuilder = Widget Function(
 );
 
 abstract class SheetBase<T extends ModalBaseParams> extends StatelessWidget {
-  const SheetBase({
+  const new({
     required this.modal,
     super.key,
   });

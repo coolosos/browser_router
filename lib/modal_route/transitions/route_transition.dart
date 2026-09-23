@@ -36,7 +36,7 @@ enum RouteTransition {
   ),
   ;
 
-  const RouteTransition({required this.build});
+  new({required this.build});
 
   final BuildTransition build;
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 base class ModalBaseParams {
-  const ModalBaseParams();
+  const new();
 }
 
 base class ModalDraggableScrollableSheetParams extends ModalBaseParams {
-  const ModalDraggableScrollableSheetParams({
+  const new({
     this.initialHeightChildSize = 0.4,
     this.minHeightChildSize = 0.4,
     this.maxHeightChildSize = 0.6,
@@ -17,40 +17,71 @@ base class ModalDraggableScrollableSheetParams extends ModalBaseParams {
     this.shouldCloseOnMinExtent = true,
   });
 
-  const ModalDraggableScrollableSheetParams.small({
-    this.initialHeightChildSize = 0.35,
-    this.minHeightChildSize = 0.35,
-    this.maxHeightChildSize = 0.75,
-    this.withChildSize = 0.6,
-    this.expand = true,
-    this.snap = false,
-    this.snapSizes,
-    this.snapAnimationDuration,
-    this.shouldCloseOnMinExtent = true,
-  });
+  const new small({
+    double initialHeightChildSize = 0.35,
+    double minHeightChildSize = 0.35,
+    double maxHeightChildSize = 0.75,
+    double withChildSize = 0.6,
+    bool expand = true,
+    bool snap = false,
+    List<double>? snapSizes,
+    Duration? snapAnimationDuration,
+    bool shouldCloseOnMinExtent = true,
+  }) : this(
+          initialHeightChildSize: initialHeightChildSize,
+          minHeightChildSize: minHeightChildSize,
+          maxHeightChildSize: maxHeightChildSize,
+          withChildSize: withChildSize,
+          expand: expand,
+          snap: snap,
+          snapSizes: snapSizes,
+          snapAnimationDuration: snapAnimationDuration,
+          shouldCloseOnMinExtent: shouldCloseOnMinExtent,
+        );
 
-  const ModalDraggableScrollableSheetParams.medium({
-    this.initialHeightChildSize = 0.4,
-    this.minHeightChildSize = 0.4,
-    this.maxHeightChildSize = 0.6,
-    this.withChildSize = 0.6,
-    this.expand = true,
-    this.snap = false,
-    this.snapSizes,
-    this.snapAnimationDuration,
-    this.shouldCloseOnMinExtent = true,
-  });
-  const ModalDraggableScrollableSheetParams.large({
-    this.initialHeightChildSize = 0.45,
-    this.minHeightChildSize = 0.3,
-    this.maxHeightChildSize = 0.86,
-    this.withChildSize = 0.6,
-    this.expand = true,
-    this.snap = false,
-    this.snapSizes,
-    this.snapAnimationDuration,
-    this.shouldCloseOnMinExtent = true,
-  });
+  const new medium({
+    double initialHeightChildSize = 0.4,
+    double minHeightChildSize = 0.4,
+    double maxHeightChildSize = 0.6,
+    double withChildSize = 0.6,
+    bool expand = true,
+    bool snap = false,
+    List<double>? snapSizes,
+    Duration? snapAnimationDuration,
+    bool shouldCloseOnMinExtent = true,
+  }) : this(
+          initialHeightChildSize: initialHeightChildSize,
+          minHeightChildSize: minHeightChildSize,
+          maxHeightChildSize: maxHeightChildSize,
+          withChildSize: withChildSize,
+          expand: expand,
+          snap: snap,
+          snapSizes: snapSizes,
+          snapAnimationDuration: snapAnimationDuration,
+          shouldCloseOnMinExtent: shouldCloseOnMinExtent,
+        );
+
+  const new large({
+    double initialHeightChildSize = 0.45,
+    double minHeightChildSize = 0.3,
+    double maxHeightChildSize = 0.86,
+    double withChildSize = 0.6,
+    bool expand = true,
+    bool snap = false,
+    List<double>? snapSizes,
+    Duration? snapAnimationDuration,
+    bool shouldCloseOnMinExtent = true,
+  }) : this(
+          initialHeightChildSize: initialHeightChildSize,
+          minHeightChildSize: minHeightChildSize,
+          maxHeightChildSize: maxHeightChildSize,
+          withChildSize: withChildSize,
+          expand: expand,
+          snap: snap,
+          snapSizes: snapSizes,
+          snapAnimationDuration: snapAnimationDuration,
+          shouldCloseOnMinExtent: shouldCloseOnMinExtent,
+        );
 
   /// The initial fractional value of the parent container's height to use when
   /// displaying the widget.

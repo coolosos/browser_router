@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'pop_result_args.dart';
 
 class DeepScreen extends StatelessWidget {
-  const DeepScreen({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ part 'sheet_base.dart';
 part 'modal_base.dart';
 
 class Sheet extends StatelessWidget {
-  const Sheet({super.key});
+  const new({super.key});
 
   static const sheetPath = 'sheet';
 
@@ -43,7 +43,7 @@ class Sheet extends StatelessWidget {
 }
 
 final class SheetRouteParams extends RouteParams {
-  SheetRouteParams({
+  new({
     required this.child,
   });
 
