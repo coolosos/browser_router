@@ -1,3 +1,11 @@
+## 0.2.0
+
+*   **Feat**: Modernized codebase to Dart 3.13 syntax, leveraging concise constructor declarations (`new(...)`), dot shorthands, and cleaner expression bodies.
+*   **Fix**: Fixed alignment property propagation in `Modal` overlay (`lib/overlay/modal.dart`), ensuring custom `builderAlignment` values (e.g., `Alignment.bottomCenter`) are honored.
+*   **Test**: Expanded test coverage to 93.6% (74 passing unit & widget tests) covering `Browser`, `BrowserRoute`, `NavigatorX` extensions, `TraceRoute`, modal barriers, swipe physics/gestures, and overlay lifecycle.
+*   **Chore**: Added `tool/coverage.sh` for streamlined coverage generation and analysis.
+*   **Docs**: Enhanced `README.md` with complete architecture diagrams, usage guides for `Trace`, overlay managers, deep linking, and arguments validation.
+
 ## 0.1.0
 
 *   **BREAKING CHANGE**: Defined `ChangeDrawerSize` semantic typedef (`void Function({required bool isExpanded})`) and updated `ModalBase.body` signature to use named boolean parameters, complying with `avoid_positional_boolean_parameters` linter rule.

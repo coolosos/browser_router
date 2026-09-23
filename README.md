@@ -29,7 +29,7 @@ Add `browser_router` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  browser_router: ^0.1.0
+  browser_router: ^0.2.0
 ```
 
 Then run:
