@@ -15,6 +15,7 @@ class BrowserRoute extends Equatable {
     this.builderTrigger,
     this.validateArguments,
     this.routeTransition = RouteTransition.slide_right,
+    this.customTransition,
   });
 
   /// The unique path for this route (e.g., '/profile').
@@ -26,6 +27,10 @@ class BrowserRoute extends Equatable {
   /// The default transition animation for this route.
   /// This can be overridden by a [TraceRoute] during navigation.
   final RouteTransition routeTransition;
+
+  /// An optional custom [BuildTransition] to build custom animations for this route.
+  /// If provided, this takes precedence over [routeTransition].
+  final BuildTransition? customTransition;
 
   /// An optional function that is executed just before the [page] widget is
   /// built.
@@ -60,6 +65,7 @@ class BrowserRoute extends Equatable {
     String? path,
     Widget? page,
     RouteTransition? routeTransition,
+    BuildTransition? customTransition,
     void Function(BuildContext context)? builderTrigger,
     bool Function(Check checkArgument, GetArguments getArgument)?
         validateArguments,
@@ -68,6 +74,7 @@ class BrowserRoute extends Equatable {
       page: page ?? this.page,
       path: path ?? this.path,
       routeTransition: routeTransition ?? this.routeTransition,
+      customTransition: customTransition ?? this.customTransition,
       builderTrigger: builderTrigger ?? this.builderTrigger,
       validateArguments: validateArguments ?? this.validateArguments,
     );

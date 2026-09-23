@@ -29,7 +29,7 @@ Add `browser_router` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  browser_router: ^0.2.0
+  browser_router: ^0.3.0
 ```
 
 Then run:
@@ -313,28 +313,81 @@ Change how a route is presented without altering its widget implementation:
 - **`SwipeTraceRoute`**: Displays the route as an interactive bottom sheet with swipe-to-dismiss gestures.
 - **`OverlayTraceRoute`**: Displays the route in the overlay layer.
 
-### Available Transitions
+### Available Transitions (`RouteTransition`)
 
-- `RouteTransition.slide_right`
-- `RouteTransition.slide_left`
-- `RouteTransition.slide_up`
-- `RouteTransition.slide_down`
-- `RouteTransition.fade`
-- `RouteTransition.scale`
-- `RouteTransition.none`
+`browser_router` includes modern Material 3, iOS Cupertino, Web, and legacy presets:
+
+| Preset | Platform / Style | Motion Behavior |
+| :--- | :--- | :--- |
+| `RouteTransition.fade_through` | **Material 3 & Web** | Outgoing fades out & scales (1.0 -> 0.96), incoming fades in & scales (0.92 -> 1.0). Ideal for bottom nav bars and top-level destinations. |
+| `RouteTransition.fade_scale` | **Modern Web & M3** | Snappy zoom-fade (0.95 -> 1.0) with fast easing. Perfect for web SPAs, search overlays, and dialogs. |
+| `RouteTransition.shared_axis_x` | **Material 3** | Horizontal directional slide with subtle fade. Ideal for wizards and linear multi-step flows. |
+| `RouteTransition.shared_axis_y` | **Material 3** | Vertical directional slide with subtle fade. Ideal for form expansions and vertical progressions. |
+| `RouteTransition.shared_axis_z` | **Material 3** | Depth zoom (0.8 -> 1.0 / 1.0 -> 1.1) with fade. Ideal for drill-down hierarchies. |
+| `RouteTransition.slide_cupertino`| **Authentic iOS** | iOS native push with left-edge gradient drop shadow and 1/3 parallax on the exiting route. |
+| `RouteTransition.scale` | **Popup / Dialog** | Clean scale and fade animation for alerts and confirmation modals. |
+| `RouteTransition.slide_right` | **Legacy Slide** | Standard horizontal right slide. |
+| `RouteTransition.slide_left` | **Legacy Slide** | Standard horizontal left slide. |
+| `RouteTransition.slide_up` | **Legacy Slide** | Standard vertical upward slide. |
+| `RouteTransition.slide_down` | **Legacy Slide** | Standard vertical downward slide. |
+| `RouteTransition.fade` | **Legacy Fade** | Simple fade in / fade out. |
+| `RouteTransition.none` | **Instant** | Zero-duration transition without animation. |
+
+---
+
+### Custom Transitions (`CustomBuildTransition`)
+
+You can define custom transition builders at the route level or per navigation request:
+
+```dart
+// At BrowserRoute level
+BrowserRoute(
+  path: '/custom',
+  page: const CustomScreen(),
+  customTransition: CustomBuildTransition(
+    ({required animation, required secondaryAnimation, required child}) {
+      return RotationTransition(
+        turns: animation,
+        child: child,
+      );
+    },
+  ),
+);
+
+// Or per navigation request via TraceRoute
+context.pushNamed(
+  '/custom',
+  traceRoute: PageTraceRoute(
+    customTransition: CustomBuildTransition(
+      ({required animation, required secondaryAnimation, required child}) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+    ),
+  ),
+);
+```
+
+---
+
+### Accessibility & Reduced Motion (WCAG Compliance)
+
+All `BrowserPageRoute` and `BrowserPopupRoute` transitions automatically detect system accessibility settings:
+- `MediaQuery.disableAnimationsOf(context)`
+- `MediaQuery.accessibleNavigationOf(context)`
+
+When motion reduction is requested by the user, transitions bypass animations instantly with zero motion discomfort, requiring zero extra configuration.
+
+---
 
 ### Adaptive Transitions and Traces
 
-Configure global transition or presentation rules in `Browser`:
+Configure global platform-adaptive transition rules using built-in `Browser.defaultAdaptiveTransition`:
 
 ```dart
 Browser(
   routes: routes,
   defaultRoute: routes.first,
-  adaptiveTransition: (route) {
-    // Apply platform-specific transitions
-    return RouteTransition.slide_right;
-  },
+  adaptiveTransition: Browser.defaultAdaptiveTransition, // iOS: slide_cupertino, Android: shared_axis_x, Web/Desktop: fade_scale
   adaptiveTrace: (name) {
     // All routes under /modal/ open as popups automatically
     if (name?.startsWith('/modal/') ?? false) {

@@ -280,5 +280,49 @@ void main() {
       expect(headerWithSnap.maxExtent, equals(57));
       expect(headerWithSnap.minExtent, equals(57));
     });
+
+    test('ModalDraggableScrollableSheetParams named constructors instantiate with correct defaults', () {
+      const small = ModalDraggableScrollableSheetParams.small(
+        snapSizes: [0.5],
+        snapAnimationDuration: Duration(milliseconds: 200),
+        shouldCloseOnMinExtent: false,
+        expand: false,
+        snap: true,
+        withChildSize: 0.8,
+      );
+      expect(small.initialHeightChildSize, equals(0.35));
+      expect(small.minHeightChildSize, equals(0.35));
+      expect(small.maxHeightChildSize, equals(0.75));
+      expect(small.snapSizes, equals([0.5]));
+      expect(small.snapAnimationDuration, equals(const Duration(milliseconds: 200)));
+      expect(small.shouldCloseOnMinExtent, isFalse);
+      expect(small.expand, isFalse);
+      expect(small.snap, isTrue);
+      expect(small.withChildSize, equals(0.8));
+
+      const medium = ModalDraggableScrollableSheetParams.medium(
+        snapSizes: [0.5],
+        snapAnimationDuration: Duration(milliseconds: 200),
+        shouldCloseOnMinExtent: false,
+        expand: false,
+        snap: true,
+        withChildSize: 0.8,
+      );
+      expect(medium.initialHeightChildSize, equals(0.4));
+      expect(medium.minHeightChildSize, equals(0.4));
+      expect(medium.maxHeightChildSize, equals(0.6));
+
+      const large = ModalDraggableScrollableSheetParams.large(
+        snapSizes: [0.5],
+        snapAnimationDuration: Duration(milliseconds: 200),
+        shouldCloseOnMinExtent: false,
+        expand: false,
+        snap: true,
+        withChildSize: 0.8,
+      );
+      expect(large.initialHeightChildSize, equals(0.45));
+      expect(large.minHeightChildSize, equals(0.3));
+      expect(large.maxHeightChildSize, equals(0.86));
+    });
   });
 }

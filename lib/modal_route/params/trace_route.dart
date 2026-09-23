@@ -23,6 +23,7 @@ part 'swipe_trace_route.dart';
 sealed class TraceRoute {
   const new({
     this.routeTransition,
+    this.customTransition,
     this.opaque = false,
     this.maintainState = true,
     this.allowSnapshotting = false,
@@ -40,6 +41,7 @@ sealed class TraceRoute {
   /// full-screen page.
   factory page({
     RouteTransition? routeTransition,
+    BuildTransition? customTransition,
     bool opaque = true,
     bool maintainState = true,
     bool allowSnapshotting = true,
@@ -56,6 +58,7 @@ sealed class TraceRoute {
   }) =>
       PageTraceRoute(
         routeTransition: routeTransition,
+        customTransition: customTransition,
         opaque: opaque,
         maintainState: maintainState,
         allowSnapshotting: allowSnapshotting,
@@ -75,6 +78,7 @@ sealed class TraceRoute {
   /// or popup.
   factory popup({
     RouteTransition? routeTransition,
+    BuildTransition? customTransition,
     bool opaque = false,
     bool maintainState = true,
     bool allowSnapshotting = false,
@@ -89,6 +93,7 @@ sealed class TraceRoute {
   }) =>
       PopupTraceRoute(
         routeTransition: routeTransition,
+        customTransition: customTransition,
         opaque: opaque,
         maintainState: maintainState,
         allowSnapshotting: allowSnapshotting,
@@ -106,6 +111,7 @@ sealed class TraceRoute {
   /// bottom sheet.
   factory swipe({
     RouteTransition? routeTransition,
+    BuildTransition? customTransition,
     bool opaque = false,
     bool maintainState = true,
     bool allowSnapshotting = false,
@@ -125,6 +131,7 @@ sealed class TraceRoute {
   }) =>
       SwipeTraceRoute(
         routeTransition: routeTransition,
+        customTransition: customTransition,
         opaque: opaque,
         maintainState: maintainState,
         allowSnapshotting: allowSnapshotting,
@@ -146,6 +153,9 @@ sealed class TraceRoute {
   /// The transition animation to use when the route is pushed or popped.
   /// If null, the default transition from `BrowserRoute` is used.
   final RouteTransition? routeTransition;
+
+  /// An optional custom [BuildTransition] to override the transition animation.
+  final BuildTransition? customTransition;
 
   /// {@template flutter.widgets.ModalRoute.opaque}
   /// Whether this route obscures the route beneath it.

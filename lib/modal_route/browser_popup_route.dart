@@ -7,13 +7,21 @@ export 'params/trace_route.dart' show PopupTraceRoute;
 
 class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
     with BrowserModalBarrierMixin<T> {
-  /// A modal bottom sheet route.
+  /// A modal popup route.
   new({
     required this.traceRoute,
     required this.appRoute,
     super.settings,
-  })  : transitionDuration = traceRoute.transitionDuration,
-        reverseTransitionDuration = traceRoute.reverseTransitionDuration,
+  })  : transitionDuration =
+            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+                    RouteTransition.none
+                ? Duration.zero
+                : traceRoute.transitionDuration,
+        reverseTransitionDuration =
+            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+                    RouteTransition.none
+                ? Duration.zero
+                : traceRoute.reverseTransitionDuration,
         barrierLabel = traceRoute.barrierLabel,
         maintainState = traceRoute.maintainState,
         opaque = traceRoute.opaque,
@@ -79,11 +87,20 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final transitions = traceRoute.routeTransition ?? appRoute.routeTransition;
-    return transitions.build(
+    if (MediaQuery.disableAnimationsOf(context) ||
+        MediaQuery.accessibleNavigationOf(context)) {
+      return child;
+    }
+
+    final isolatedChild = RepaintBoundary(child: child);
+    final buildTransition = traceRoute.customTransition ??
+        appRoute.customTransition ??
+        (traceRoute.routeTransition ?? appRoute.routeTransition).build;
+
+    return buildTransition(
       animation: animation,
       secondaryAnimation: secondaryAnimation,
-      child: child,
+      child: isolatedChild,
     );
   }
 }

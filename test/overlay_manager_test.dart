@@ -196,5 +196,124 @@ void main() {
 
       expect(find.text('Overlay'), findsNothing);
     });
+
+    testWidgets('enqueueBanner displays banner and allows clicks and interaction on underlying widgets', (
+      tester,
+    ) async {
+      var underlyingButtonClicked = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: OverlayManager(
+            child: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          OverlayManager.enqueueBanner(
+                            context,
+                            content: (remove) => const ColoredBox(
+                              color: Colors.amber,
+                              child: Text('Top Banner Content'),
+                            ),
+                          );
+                        },
+                        child: const Text('Show Banner'),
+                      ),
+                      const SizedBox(height: 100),
+                      ElevatedButton(
+                        onPressed: () {
+                          underlyingButtonClicked = true;
+                        },
+                        child: const Text('Underlying Button'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Trigger banner
+      await tester.tap(find.text('Show Banner'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.text('Top Banner Content'), findsOneWidget);
+
+      // Click underlying button while banner is visible
+      await tester.tap(find.text('Underlying Button'));
+      await tester.pump();
+
+      expect(underlyingButtonClicked, isTrue);
+
+      // Settle timer
+      await tester.pump(const Duration(seconds: 6));
+      await tester.pump(const Duration(milliseconds: 350));
+    });
+
+    testWidgets('enqueueBanner with standard Flutter buttons works out of the box without special configuration', (
+      tester,
+    ) async {
+      var bannerActionClicked = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: OverlayManager(
+            child: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      OverlayManager.enqueueBanner(
+                        context,
+                        duration: Duration.zero,
+                        content: (remove) => Container(
+                          color: Colors.blue,
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              const Text('Notification'),
+                              ElevatedButton(
+                                onPressed: () {
+                                  bannerActionClicked = true;
+                                  remove();
+                                },
+                                child: const Text('Action'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Show Persistent Banner'),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Open banner
+      await tester.tap(find.text('Show Persistent Banner'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.text('Notification'), findsOneWidget);
+      expect(find.text('Action'), findsOneWidget);
+
+      // Tap standard button in banner
+      await tester.tap(find.text('Action'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(bannerActionClicked, isTrue);
+      expect(find.text('Notification'), findsNothing);
+    });
   });
 }

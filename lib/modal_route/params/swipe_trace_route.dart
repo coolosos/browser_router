@@ -3,6 +3,7 @@ part of 'trace_route.dart';
 final class SwipeTraceRoute extends PopupTraceRoute {
   const new({
     super.routeTransition,
+    super.customTransition,
     super.opaque,
     super.maintainState,
     super.allowSnapshotting,

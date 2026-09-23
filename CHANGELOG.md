@@ -1,3 +1,14 @@
+## 0.3.0
+
+*   **Feat (Transitions & Motion)**: Implemented modern **Material 3 Transitions** (`fade_through`, `fade_scale`, `shared_axis_x`, `shared_axis_y`, `shared_axis_z`, `scale`) and authentic **Cupertino iOS 16–18** transition (`slide_cupertino` with flat edges, 1/3 horizontal parallax, and left-edge drop shadow).
+*   **Feat (Custom Transitions)**: Added `CustomBuildTransition` and `customTransition` parameter to `BrowserRoute`, `TraceRoute`, `PageTraceRoute`, `PopupTraceRoute`, `SwipeTraceRoute`, and `OverlayTraceRoute`.
+*   **Feat (Platform Adaptivity)**: Added `Browser.defaultAdaptiveTransition` providing platform-native motion defaults (Cupertino on iOS/macOS, Shared Axis X on Android/Fuchsia, Fade Scale on Web/Windows/Linux).
+*   **Feat (Accessibility & WCAG)**: Implemented zero-configuration reduced motion support detecting `MediaQuery.disableAnimationsOf(context)` and `MediaQuery.accessibleNavigationOf(context)` to bypass animations immediately.
+*   **Perf**: Added `RepaintBoundary` rendering isolation in route transitions to avoid rebuilding ancestor tree rendering layers.
+*   **Fix (Overlay & Banners)**: Fixed secondary animation in `OverlayModal` to return `kAlwaysDismissedAnimation` (preventing visual offset / hit-test misalignment) and eliminated full-screen root opaque gesture detector in `Banner`, enabling seamless pass-through scrolling, clicks, and interactive banner buttons.
+*   **Test**: Expanded test coverage to 95.4% (99 passing unit & widget tests) covering modern transitions, accessibility, custom transitions, `Browser`, `BrowserRoute`, `NavigatorX` extensions, `TraceRoute`, modal barriers, swipe physics/gestures, and overlay lifecycle.
+*   **Docs & Example**: Enhanced `README.md` with complete transitions catalog, custom transitions guide, accessibility guide, and platform adaptive configuration. Converted `example/` into a 100% pure `package:flutter/widgets.dart` showcase with zero Material or Cupertino dependencies.
+
 ## 0.2.0
 
 *   **Feat**: Modernized codebase to Dart 3.13 syntax, leveraging concise constructor declarations (`new(...)`), dot shorthands, and cleaner expression bodies.

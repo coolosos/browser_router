@@ -3,6 +3,7 @@ part of 'trace_route.dart';
 final class PopupTraceRoute extends TraceRoute {
   const new({
     super.routeTransition,
+    super.customTransition,
     super.opaque = false,
     super.maintainState = true,
     super.allowSnapshotting = false,

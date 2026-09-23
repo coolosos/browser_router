@@ -33,7 +33,7 @@ abstract class OverlayModal {
   /// the child widget is a content wrapped with transition animation
   OverlayEntry _createModal(Widget child);
   Animation<double> _createAnimation() => _animationController.view;
-  Animation<double> _createSecondaryAnimation() => _animationController.view;
+  Animation<double> _createSecondaryAnimation() => kAlwaysDismissedAnimation;
 
   /// create animation and overlayEntry an insert to overlayState
   Future<void> insert() async {
@@ -53,7 +53,7 @@ abstract class OverlayModal {
 
     if (_isDisposed) return;
 
-    if (duration is Duration) {
+    if (duration is Duration && duration != Duration.zero) {
       timer = Timer(
         duration!,
         remove,
