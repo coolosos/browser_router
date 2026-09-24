@@ -1,5 +1,5 @@
 import 'package:browser_router/gestures/swipe/swipe.dart';
-import 'package:flutter/foundation.dart'; // Import for debugPrint
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../browser.dart';
@@ -13,11 +13,14 @@ class BrowserPageRoute<T> extends PageRoute<T>
     required this.appRoute,
     required this.traceRoute,
     super.settings,
-  })  : transitionDuration = appRoute.routeTransition == RouteTransition.none
-            ? Duration.zero
-            : traceRoute.transitionDuration,
+  })  : transitionDuration =
+            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+                    RouteTransition.none
+                ? Duration.zero
+                : traceRoute.transitionDuration,
         reverseTransitionDuration =
-            appRoute.routeTransition == RouteTransition.none
+            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+                    RouteTransition.none
                 ? Duration.zero
                 : traceRoute.reverseTransitionDuration,
         barrierLabel = traceRoute.barrierLabel,
@@ -89,8 +92,22 @@ class BrowserPageRoute<T> extends PageRoute<T>
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
+    // Accessibility: bypass animations if user preferences require reduced motion
+    if (MediaQuery.disableAnimationsOf(context) ||
+        MediaQuery.accessibleNavigationOf(context)) {
+      return child;
+    }
+
+    final isolatedChild = RepaintBoundary(child: child);
+    final buildTransition = traceRoute.customTransition ??
+        appRoute.customTransition ??
+        (traceRoute.routeTransition ?? appRoute.routeTransition).build;
+
+    final isSlide = appRoute.routeTransition == RouteTransition.slide_right ||
+        appRoute.routeTransition == RouteTransition.slide_cupertino;
+
     if (defaultTargetPlatform == TargetPlatform.iOS &&
-        appRoute.routeTransition == RouteTransition.slide_right &&
+        isSlide &&
         traceRoute.popGestureEnabled &&
         context.navigate.canPop()) {
       final swipeGestures = SwipeDownRightGestures(
@@ -113,18 +130,18 @@ class BrowserPageRoute<T> extends PageRoute<T>
         gestures: swipeGestures,
         disableAnimations: MediaQuery.disableAnimationsOf(context),
         animateChild: false,
-        child: appRoute.routeTransition.build(
+        child: buildTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
-          child: child,
+          child: isolatedChild,
         ),
       );
     }
 
-    return appRoute.routeTransition.build(
+    return buildTransition(
       animation: animation,
       secondaryAnimation: secondaryAnimation,
-      child: child,
+      child: isolatedChild,
     );
   }
 }

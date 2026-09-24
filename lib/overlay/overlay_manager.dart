@@ -44,11 +44,12 @@ class OverlayManager extends StatefulWidget {
     BuildContext context, {
     required ContentBuilder content,
     double? topPadding,
+    Duration? duration = const Duration(seconds: 5),
   }) {
     of(context)?.enqueue(
       Banner.fromContext(
         context: context,
-        duration: const Duration(seconds: 5),
+        duration: duration,
         transition: const OverlayTraceRoute(
           routeTransition: RouteTransition.slide_down,
           reverseTransitionDuration: Duration(milliseconds: 300),

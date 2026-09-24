@@ -3,6 +3,7 @@ part of 'trace_route.dart';
 final class PageTraceRoute extends TraceRoute {
   const new({
     super.routeTransition,
+    super.customTransition,
     super.opaque = true,
     super.maintainState = true,
     super.filter,

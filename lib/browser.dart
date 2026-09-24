@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nested/nested.dart';
 
@@ -131,6 +132,21 @@ class Browser extends StatelessWidget {
   /// See the example in the [Browser] class documentation.
   static final RouteObserver<ModalRoute<void>> routeObserver =
       RouteObserver<ModalRoute<void>>();
+
+  /// Default platform-adaptive route transition strategy:
+  /// - Web / Desktop (Windows, Linux): `RouteTransition.fade_scale` for a snappy SPA feel.
+  /// - iOS / macOS: `RouteTransition.slide_cupertino` for native parallax slide and edge shadow.
+  /// - Android / Fuchsia: `RouteTransition.shared_axis_x` for Material 3 directional motion.
+  static RouteTransition defaultAdaptiveTransition(BrowserRoute route) {
+    if (kIsWeb) {
+      return RouteTransition.fade_scale;
+    }
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.iOS || TargetPlatform.macOS => RouteTransition.slide_cupertino,
+      TargetPlatform.android || TargetPlatform.fuchsia => RouteTransition.shared_axis_x,
+      TargetPlatform.windows || TargetPlatform.linux => RouteTransition.fade_scale,
+    };
+  }
 
   /// The core route generation logic for the browser.
   ///
@@ -355,11 +371,13 @@ class Browser extends StatelessWidget {
     BuildContext context,
     ContentBuilder content, {
     double? topPadding,
+    Duration? duration = const Duration(seconds: 5),
   }) =>
       OverlayManager.enqueueBanner(
         context,
         content: content,
         topPadding: topPadding,
+        duration: duration,
       );
 
   /// Dismisses the currently visible overlay modal.
