@@ -11,10 +11,10 @@ class SwipeAnimation extends StatefulWidget {
     required this.animationDirection,
     super.key,
   }) : assert(
-          !enableDrag || animationController != null,
-          "'BottomSheet.animationController' can not be null when 'BottomSheet.enableDrag' is true. "
-          "Use 'BottomSheet.createAnimationController' to create one, or provide another AnimationController.",
-        );
+         !enableDrag || animationController != null,
+         "'BottomSheet.animationController' can not be null when 'BottomSheet.enableDrag' is true. "
+         "Use 'BottomSheet.createAnimationController' to create one, or provide another AnimationController.",
+       );
   final Animation<double> animation;
   final WidgetBuilder builder;
   final double screenMaximumPercentage;
@@ -34,35 +34,35 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
   SwipeGestures _generateSwipeGestures({required AxisDirection direction}) =>
       switch (direction) {
         AxisDirection.up => SwipeDownRightGestures(
-            animationController: widget.animationController!,
-            obtainSize: () => context.size?.height ?? 0,
-            canDragDone: () =>
-                widget.animationController?.status == AnimationStatus.reverse,
-            onClosing: widget.onClosing,
-          ),
+          animationController: widget.animationController!,
+          obtainSize: () => context.size?.height ?? 0,
+          canDragDone: () =>
+              widget.animationController?.status == AnimationStatus.reverse,
+          onClosing: widget.onClosing,
+        ),
         AxisDirection.left => SwipeDownRightGestures(
-            animationController: widget.animationController!,
-            obtainSize: () => context.size?.width ?? 0,
-            canDragDone: () =>
-                widget.animationController?.status == AnimationStatus.reverse,
-            onClosing: widget.onClosing,
-            closePercentage: 0.8,
-          ),
+          animationController: widget.animationController!,
+          obtainSize: () => context.size?.width ?? 0,
+          canDragDone: () =>
+              widget.animationController?.status == AnimationStatus.reverse,
+          onClosing: widget.onClosing,
+          closePercentage: 0.8,
+        ),
         AxisDirection.down => SwipeUpLeftGestures(
-            animationController: widget.animationController!,
-            obtainSize: () => context.size?.height ?? 0,
-            canDragDone: () =>
-                widget.animationController?.status == AnimationStatus.reverse,
-            onClosing: widget.onClosing,
-          ),
+          animationController: widget.animationController!,
+          obtainSize: () => context.size?.height ?? 0,
+          canDragDone: () =>
+              widget.animationController?.status == AnimationStatus.reverse,
+          onClosing: widget.onClosing,
+        ),
         AxisDirection.right => SwipeUpLeftGestures(
-            animationController: widget.animationController!,
-            obtainSize: () => context.size?.width ?? 0,
-            canDragDone: () =>
-                widget.animationController?.status == AnimationStatus.reverse,
-            onClosing: widget.onClosing,
-            closePercentage: 0.8,
-          ),
+          animationController: widget.animationController!,
+          obtainSize: () => context.size?.width ?? 0,
+          canDragDone: () =>
+              widget.animationController?.status == AnimationStatus.reverse,
+          onClosing: widget.onClosing,
+          closePercentage: 0.8,
+        ),
       };
 
   @override
@@ -78,9 +78,7 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
       direction: widget.animationDirection,
       animateChild: true,
       gestures: widget.enableDrag && widget.animationController != null
-          ? _generateSwipeGestures(
-              direction: widget.animationDirection,
-            )
+          ? _generateSwipeGestures(direction: widget.animationDirection)
           : null,
       onNotification: (notification) {
         if (notification.extent == notification.minExtent) {
@@ -89,10 +87,7 @@ class _SwipeAnimationState extends State<SwipeAnimation> {
         return false;
       },
       disableAnimations: MediaQuery.disableAnimationsOf(context),
-      child: KeyedSubtree(
-        key: _childKey,
-        child: widget.builder(context),
-      ),
+      child: KeyedSubtree(key: _childKey, child: widget.builder(context)),
     );
   }
 }

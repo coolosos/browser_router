@@ -14,10 +14,7 @@ part 'modal.dart';
 part 'overlay_modal.dart';
 
 class OverlayManager extends StatefulWidget {
-  const new({
-    required this.child,
-    super.key,
-  });
+  const new({required this.child, super.key});
 
   final Widget child;
 
@@ -75,9 +72,7 @@ class OverlayManagerState extends State<OverlayManager> {
   ///Show a [OverlayModal] in foreground
   ///
   ///Only one modal can be display at the same time if you want to insert multiple OverlayModal show [enqueue] function.
-  Future<void> showModal(
-    OverlayModal overlayModal,
-  ) async {
+  Future<void> showModal(OverlayModal overlayModal) async {
     if (mounted) {
       await dismissModal();
       modal = overlayModal;
@@ -106,9 +101,7 @@ class OverlayManagerState extends State<OverlayManager> {
     }
   }
 
-  Future<void> _work(
-    OverlayModal overlayModal,
-  ) async {
+  Future<void> _work(OverlayModal overlayModal) async {
     try {
       if (mounted) {
         poolCurrentOverlayModal = overlayModal;

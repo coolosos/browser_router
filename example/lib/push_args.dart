@@ -1,10 +1,7 @@
 import 'package:browser_router/browser.dart';
 
 final class PushArgs extends RouteParams {
-  const new({
-    required this.message,
-    required this.source,
-  });
+  const new({required this.message, required this.source});
 
   final String message;
   final String source;

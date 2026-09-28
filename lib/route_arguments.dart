@@ -27,9 +27,7 @@ abstract base class RouteParams {
 }
 
 final class DataParam<T> extends RouteParams {
-  const new(
-    this.data,
-  );
+  const new(this.data);
 
   final T? data;
 }
@@ -40,25 +38,19 @@ final class DataParam<T> extends RouteParams {
 /// an instance of [DeepLinkParam] containing `{'foo': 'bar'}` is automatically
 /// added to the route's arguments.
 final class DeepLinkParam extends RouteParams {
-  const new(
-    this.params,
-  );
+  const new(this.params);
 
   final Map<String, String> params;
 }
 
 final class _PopParam extends RouteParams {
-  const new(
-    this.popParams,
-  );
+  const new(this.popParams);
 
   final RouteParams popParams;
 }
 
 final class _PushParam extends RouteParams {
-  const new(
-    this.pushParams,
-  );
+  const new(this.pushParams);
 
   final RouteParams pushParams;
 }

@@ -8,30 +8,27 @@ export 'params/trace_route.dart' show PopupTraceRoute;
 class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
     with BrowserModalBarrierMixin<T> {
   /// A modal popup route.
-  new({
-    required this.traceRoute,
-    required this.appRoute,
-    super.settings,
-  })  : transitionDuration =
-            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
-                    RouteTransition.none
-                ? Duration.zero
-                : traceRoute.transitionDuration,
-        reverseTransitionDuration =
-            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
-                    RouteTransition.none
-                ? Duration.zero
-                : traceRoute.reverseTransitionDuration,
-        barrierLabel = traceRoute.barrierLabel,
-        maintainState = traceRoute.maintainState,
-        opaque = traceRoute.opaque,
-        barrierDismissible = traceRoute.barrierDismissible,
-        barrierColor = traceRoute.barrierColor,
-        allowSnapshotting = traceRoute.allowSnapshotting,
-        super(
-          filter: traceRoute.filter,
-          traversalEdgeBehavior: traceRoute.traversalEdgeBehavior,
-        );
+  new({required this.traceRoute, required this.appRoute, super.settings})
+    : transitionDuration =
+          (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+              RouteTransition.none
+          ? Duration.zero
+          : traceRoute.transitionDuration,
+      reverseTransitionDuration =
+          (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+              RouteTransition.none
+          ? Duration.zero
+          : traceRoute.reverseTransitionDuration,
+      barrierLabel = traceRoute.barrierLabel,
+      maintainState = traceRoute.maintainState,
+      opaque = traceRoute.opaque,
+      barrierDismissible = traceRoute.barrierDismissible,
+      barrierColor = traceRoute.barrierColor,
+      allowSnapshotting = traceRoute.allowSnapshotting,
+      super(
+        filter: traceRoute.filter,
+        traversalEdgeBehavior: traceRoute.traversalEdgeBehavior,
+      );
 
   final BrowserRoute appRoute;
   final P traceRoute;
@@ -93,7 +90,8 @@ class BrowserPopupRoute<T, P extends PopupTraceRoute> extends PopupRoute<T>
     }
 
     final isolatedChild = RepaintBoundary(child: child);
-    final buildTransition = traceRoute.customTransition ??
+    final buildTransition =
+        traceRoute.customTransition ??
         appRoute.customTransition ??
         (traceRoute.routeTransition ?? appRoute.routeTransition).build;
 

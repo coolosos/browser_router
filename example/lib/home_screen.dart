@@ -72,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   children: [
                     // --- Material 3 Motion ---
-                    const _SectionTitle(title: '✨ Material 3 Motion Transitions'),
+                    const _SectionTitle(
+                      title: '✨ Material 3 Motion Transitions',
+                    ),
                     _ExampleButton(
                       text: 'Fade Through (Top-Level Tabs / Bar)',
                       onTap: () => AppTrace.toPushArgs(
@@ -116,7 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     // --- Apple Cupertino iOS Motion ---
-                    const _SectionTitle(title: '🍎 iOS 16–18 Cupertino Native Motion'),
+                    const _SectionTitle(
+                      title: '🍎 iOS 16–18 Cupertino Native Motion',
+                    ),
                     _ExampleButton(
                       text: 'Slide Cupertino (Shadow + 1/3 Parallax)',
                       onTap: () => AppTrace.toPushArgs(
@@ -128,11 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     // --- Web Micro-Transitions ---
-                    const _SectionTitle(title: '🌐 Web Micro-Transitions (SPA)'),
+                    const _SectionTitle(
+                      title: '🌐 Web Micro-Transitions (SPA)',
+                    ),
                     _ExampleButton(
                       text: 'Fade Scale (Fast Zoom-Fade 0.95->1.0)',
                       onTap: () => AppTrace.toPushArgs(
-                        message: 'Snappy SPA Zoom-Fade (0.95->1.0) with fastEasing',
+                        message:
+                            'Snappy SPA Zoom-Fade (0.95->1.0) with fastEasing',
                         source: 'Web Micro-Transition',
                         transition: RouteTransition.fade_scale,
                       ).push(context),
@@ -150,7 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     // --- Adaptive Transitions ---
-                    const _SectionTitle(title: '📱 Platform-Adaptive Transition'),
+                    const _SectionTitle(
+                      title: '📱 Platform-Adaptive Transition',
+                    ),
                     _ExampleButton(
                       text: 'Browser.defaultAdaptiveTransition (Platform Auto-Detect)',
                       onTap: () {
@@ -161,7 +170,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                         AppTrace.toPushArgs(
-                          message: 'Auto-detected adaptive transition: ${adaptive.name}',
+                          message:
+                              'Auto-detected adaptive transition: ${adaptive.name}',
                           source: 'Browser.defaultAdaptiveTransition',
                           transition: adaptive,
                         ).push(context);
@@ -170,14 +180,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     // --- Presentations & Modals ---
-                    const _SectionTitle(title: '🪟 Presentation (TraceRoute) Styles'),
+                    const _SectionTitle(
+                      title: '🪟 Presentation (TraceRoute) Styles',
+                    ),
                     _ExampleButton(
                       text: 'Present as Popup (Scale Transition)',
-                      onTap: () => AppTrace.asPopup(transition: RouteTransition.scale).push(context),
+                      onTap: () =>
+                          AppTrace.asPopup(transition: RouteTransition.scale)
+                              .push(context),
                     ),
                     _ExampleButton(
                       text: 'Present as Popup (Fade Scale Transition)',
-                      onTap: () => AppTrace.asPopup(transition: RouteTransition.fade_scale).push(context),
+                      onTap: () => AppTrace.asPopup(
+                        transition: RouteTransition.fade_scale,
+                      ).push(context),
                     ),
                     _ExampleButton(
                       text: 'Present as Swipeable Bottom Sheet',
@@ -186,7 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     // --- Legacy Presets ---
-                    const _SectionTitle(title: '📦 Legacy Slide & Fade Presets'),
+                    const _SectionTitle(
+                      title: '📦 Legacy Slide & Fade Presets',
+                    ),
                     _ExampleButton(
                       text: 'Slide Right',
                       onTap: () => AppTrace.toPushArgs(
@@ -238,7 +256,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     // --- Argument Examples ---
-                    const _SectionTitle(title: '🔗 Arguments & DeepLink Examples'),
+                    const _SectionTitle(
+                      title: '🔗 Arguments & DeepLink Examples',
+                    ),
                     _ExampleButton(
                       text: '1. Push with Typed Arguments',
                       onTap: () => AppTrace.toPushArgs(
@@ -289,26 +309,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     const _SectionTitle(title: '📣 Overlay & Banners'),
                     _ExampleButton(
                       text: 'Enqueue Banner (Auto-dismiss 5s)',
-                      onTap: () => Browser.enqueueBanner(
-                        context,
-                        (removableCallback) {
-                          return const ColoredBox(
-                            color: Color(0xFFF59E0B),
-                            child: Padding(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                '🔔 Real-time Notification Banner (Auto-closes in 5s)',
-                                style: TextStyle(
-                                  color: Color(0xFF1E293B),
-                                  fontWeight: FontWeight.bold,
+                      onTap: () =>
+                          Browser.enqueueBanner(context, (removableCallback) {
+                            return const ColoredBox(
+                              color: Color(0xFFF59E0B),
+                              child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: Text(
+                                  '🔔 Real-time Notification Banner (Auto-closes in 5s)',
+                                  style: TextStyle(
+                                    color: Color(0xFF1E293B),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textDirection: TextDirection.ltr,
                                 ),
-                                textDirection: TextDirection.ltr,
                               ),
-                            ),
-                          );
-                        },
-                        topPadding: 0,
-                      ),
+                            );
+                          }, topPadding: 0),
                     ),
                     _ExampleButton(
                       text: 'Enqueue Interactive Banner (Duration 0 + Close Button)',

@@ -22,8 +22,9 @@ final class SessionArgs extends RouteParams {
 
 void main() {
   group('Route Arguments & Polymorphism Tests', () {
-    testWidgets('Exact type and polymorphic base class argument retrieval',
-        (tester) async {
+    testWidgets('Exact type and polymorphic base class argument retrieval', (
+      tester,
+    ) async {
       BaseUserArgs? retrievedAsBase;
       AdminUserArgs? retrievedAsExact;
       SessionArgs? retrievedSession;
@@ -35,10 +36,7 @@ void main() {
           page: Builder(
             builder: (context) {
               savedContext = context;
-              return const Text(
-                'Home',
-                textDirection: TextDirection.ltr,
-              );
+              return const Text('Home', textDirection: TextDirection.ltr);
             },
           ),
         ),
@@ -105,8 +103,9 @@ void main() {
       expect(retrievedSession?.token, 'tok_xyz123');
     });
 
-    testWidgets('getArgumentAndClean consumes argument on read',
-        (tester) async {
+    testWidgets('getArgumentAndClean consumes argument on read', (
+      tester,
+    ) async {
       SessionArgs? firstRead;
       SessionArgs? secondRead;
       late BuildContext savedContext;
@@ -163,9 +162,9 @@ void main() {
       expect(secondRead, isNull);
     });
 
-    testWidgets(
-        'getArgumentAndClean works polymorphically with base class',
-        (tester) async {
+    testWidgets('getArgumentAndClean works polymorphically with base class', (
+      tester,
+    ) async {
       BaseUserArgs? firstReadBase;
       AdminUserArgs? secondReadExact;
       late BuildContext savedContext;
@@ -224,8 +223,9 @@ void main() {
       expect(secondReadExact, isNull);
     });
 
-    testWidgets('Missing argument returns null without throwing',
-        (tester) async {
+    testWidgets('Missing argument returns null without throwing', (
+      tester,
+    ) async {
       SessionArgs? retrieved;
 
       final routes = [
@@ -259,59 +259,53 @@ void main() {
       expect(retrieved, isNull);
     });
 
-    testWidgets('DeepLinkParam is retrieved correctly from URL query parameters',
-        (tester) async {
-      DeepLinkParam? deepLink;
+    testWidgets(
+      'DeepLinkParam is retrieved correctly from URL query parameters',
+      (tester) async {
+        DeepLinkParam? deepLink;
 
-      final routes = [
-        BrowserRoute(
-          path: '/home',
-          page: Builder(
-            builder: (context) {
-              deepLink = context.getArgument<DeepLinkParam>();
-              return Text(
-                'DeepLink: ${deepLink?.params['code']}',
-                textDirection: TextDirection.ltr,
+        final routes = [
+          BrowserRoute(
+            path: '/home',
+            page: Builder(
+              builder: (context) {
+                deepLink = context.getArgument<DeepLinkParam>();
+                return Text(
+                  'DeepLink: ${deepLink?.params['code']}',
+                  textDirection: TextDirection.ltr,
+                );
+              },
+            ),
+          ),
+        ];
+
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            builder: (context, routeObserver, generate) {
+              return WidgetsApp(
+                color: const Color(0xFFFFFFFF),
+                navigatorObservers: [routeObserver],
+                onGenerateRoute: generate,
+                initialRoute: '/home?code=12345&source=email',
               );
             },
           ),
-        ),
-      ];
+        );
 
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          builder: (context, routeObserver, generate) {
-            return WidgetsApp(
-              color: const Color(0xFFFFFFFF),
-              navigatorObservers: [routeObserver],
-              onGenerateRoute: generate,
-              initialRoute: '/home?code=12345&source=email',
-            );
-          },
-        ),
-      );
+        await tester.pumpAndSettle();
+        expect(find.text('DeepLink: 12345'), findsOneWidget);
+        expect(deepLink, isNotNull);
+        expect(deepLink?.params['code'], '12345');
+        expect(deepLink?.params['source'], 'email');
+      },
+    );
 
-      await tester.pumpAndSettle();
-      expect(find.text('DeepLink: 12345'), findsOneWidget);
-      expect(deepLink, isNotNull);
-      expect(deepLink?.params['code'], '12345');
-      expect(deepLink?.params['source'], 'email');
-    });
-
-    test(
-        'generate handles unmodifiable map with TraceRoute without throwing UnsupportedError',
-        () {
+    test('generate handles unmodifiable map with TraceRoute without throwing UnsupportedError', () {
       final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: SizedBox(),
-        ),
-        const BrowserRoute(
-          path: '/detail',
-          page: SizedBox(),
-        ),
+        const BrowserRoute(path: '/home', page: SizedBox()),
+        const BrowserRoute(path: '/detail', page: SizedBox()),
       ];
 
       final browser = Browser(
@@ -327,19 +321,13 @@ void main() {
 
       expect(
         () => browser.generate(
-          RouteSettings(
-            name: '/detail',
-            arguments: unmodifiableArgs,
-          ),
+          RouteSettings(name: '/detail', arguments: unmodifiableArgs),
         ),
         returnsNormally,
       );
 
       final route = browser.generate(
-        RouteSettings(
-          name: '/detail',
-          arguments: unmodifiableArgs,
-        ),
+        RouteSettings(name: '/detail', arguments: unmodifiableArgs),
       );
 
       expect(route, isA<PageRoute<dynamic>>());
@@ -348,18 +336,10 @@ void main() {
       expect(generatedArgs?.containsKey(PageTraceRoute), isFalse);
     });
 
-    test(
-        'generate handles const map without throwing and cleans TraceRoute keys/values',
-        () {
+    test('generate handles const map without throwing and cleans TraceRoute keys/values', () {
       final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: SizedBox(),
-        ),
-        const BrowserRoute(
-          path: '/modal',
-          page: SizedBox(),
-        ),
+        const BrowserRoute(path: '/home', page: SizedBox()),
+        const BrowserRoute(path: '/modal', page: SizedBox()),
       ];
 
       final browser = Browser(
@@ -373,30 +353,22 @@ void main() {
       };
 
       final route = browser.generate(
-        const RouteSettings(
-          name: '/modal',
-          arguments: constArgs,
-        ),
+        const RouteSettings(name: '/modal', arguments: constArgs),
       );
 
       expect(route, isA<PageRoute<dynamic>>());
       final generatedArgs = route.settings.arguments as Map?;
       expect(generatedArgs?[AdminUserArgs], isA<AdminUserArgs>());
-      expect((generatedArgs?[AdminUserArgs] as AdminUserArgs?)?.id, 'adm_const');
+      expect(
+        (generatedArgs?[AdminUserArgs] as AdminUserArgs?)?.id,
+        'adm_const',
+      );
     });
 
-    test(
-        'generate handles unmodifiable map with polymorphic TraceRoute and selects PopupRoute',
-        () {
+    test('generate handles unmodifiable map with polymorphic TraceRoute and selects PopupRoute', () {
       final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: SizedBox(),
-        ),
-        const BrowserRoute(
-          path: '/modal',
-          page: SizedBox(),
-        ),
+        const BrowserRoute(path: '/home', page: SizedBox()),
+        const BrowserRoute(path: '/modal', page: SizedBox()),
       ];
 
       final browser = Browser(
@@ -410,10 +382,7 @@ void main() {
       });
 
       final route = browser.generate(
-        RouteSettings(
-          name: '/modal',
-          arguments: unmodifiableArgs,
-        ),
+        RouteSettings(name: '/modal', arguments: unmodifiableArgs),
       );
 
       expect(route, isA<PopupRoute<dynamic>>());
@@ -422,123 +391,126 @@ void main() {
     });
 
     testWidgets(
-        'Navigation with unmodifiable arguments Map retrieves arguments and does not throw',
-        (tester) async {
-      AdminUserArgs? retrievedAdmin;
-      late BuildContext savedContext;
+      'Navigation with unmodifiable arguments Map retrieves arguments and does not throw',
+      (tester) async {
+        AdminUserArgs? retrievedAdmin;
+        late BuildContext savedContext;
 
-      final routes = [
-        BrowserRoute(
-          path: '/home',
-          page: Builder(
-            builder: (context) {
-              savedContext = context;
-              return const Text('Home', textDirection: TextDirection.ltr);
-            },
+        final routes = [
+          BrowserRoute(
+            path: '/home',
+            page: Builder(
+              builder: (context) {
+                savedContext = context;
+                return const Text('Home', textDirection: TextDirection.ltr);
+              },
+            ),
           ),
-        ),
-        BrowserRoute(
-          path: '/detail',
-          page: Builder(
-            builder: (context) {
-              retrievedAdmin = context.getArgument<AdminUserArgs>();
-              return Text(
-                'Detail: ${retrievedAdmin?.role}',
-                textDirection: TextDirection.ltr,
+          BrowserRoute(
+            path: '/detail',
+            page: Builder(
+              builder: (context) {
+                retrievedAdmin = context.getArgument<AdminUserArgs>();
+                return Text(
+                  'Detail: ${retrievedAdmin?.role}',
+                  textDirection: TextDirection.ltr,
+                );
+              },
+            ),
+          ),
+        ];
+
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            builder: (context, routeObserver, generate) {
+              return WidgetsApp(
+                color: const Color(0xFFFFFFFF),
+                navigatorObservers: [routeObserver],
+                onGenerateRoute: generate,
+                initialRoute: '/home',
               );
             },
           ),
-        ),
-      ];
+        );
 
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          builder: (context, routeObserver, generate) {
-            return WidgetsApp(
-              color: const Color(0xFFFFFFFF),
-              navigatorObservers: [routeObserver],
-              onGenerateRoute: generate,
-              initialRoute: '/home',
-            );
-          },
-        ),
-      );
+        await tester.pumpAndSettle();
+        expect(find.text('Home'), findsOneWidget);
 
-      await tester.pumpAndSettle();
-      expect(find.text('Home'), findsOneWidget);
+        final unmodifiableArgs = Map<dynamic, dynamic>.unmodifiable({
+          PageTraceRoute: TraceRoute.page(),
+          AdminUserArgs: const AdminUserArgs(
+            id: 'adm_unmodifiable',
+            role: 'editor',
+          ),
+        });
 
-      final unmodifiableArgs = Map<dynamic, dynamic>.unmodifiable({
-        PageTraceRoute: TraceRoute.page(),
-        AdminUserArgs: const AdminUserArgs(id: 'adm_unmodifiable', role: 'editor'),
-      });
+        savedContext.navigate.pushNamed('/detail', arguments: unmodifiableArgs);
+        await tester.pumpAndSettle();
 
-      savedContext.navigate.pushNamed(
-        '/detail',
-        arguments: unmodifiableArgs,
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Detail: editor'), findsOneWidget);
-      expect(retrievedAdmin, isNotNull);
-      expect(retrievedAdmin?.id, 'adm_unmodifiable');
-      expect(retrievedAdmin?.role, 'editor');
-    });
+        expect(find.text('Detail: editor'), findsOneWidget);
+        expect(retrievedAdmin, isNotNull);
+        expect(retrievedAdmin?.id, 'adm_unmodifiable');
+        expect(retrievedAdmin?.role, 'editor');
+      },
+    );
 
     testWidgets(
-        'getArgumentAndClean on missing polymorphic argument in unmodifiable map does not throw',
-        (tester) async {
-      final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: SizedBox(),
-        ),
-      ];
+      'getArgumentAndClean on missing polymorphic argument in unmodifiable map does not throw',
+      (tester) async {
+        final routes = [const BrowserRoute(path: '/home', page: SizedBox())];
 
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          builder: (context, routeObserver, generate) {
-            return WidgetsApp(
-              color: const Color(0xFFFFFFFF),
-              navigatorObservers: [routeObserver],
-              onGenerateRoute: generate,
-              initialRoute: '/home',
-            );
-          },
-        ),
-      );
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            builder: (context, routeObserver, generate) {
+              return WidgetsApp(
+                color: const Color(0xFFFFFFFF),
+                navigatorObservers: [routeObserver],
+                onGenerateRoute: generate,
+                initialRoute: '/home',
+              );
+            },
+          ),
+        );
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      final unmodifiableArgs = Map<dynamic, dynamic>.unmodifiable({
-        const AdminUserArgs(id: 'adm_1', role: 'admin').runtimeType:
-            const AdminUserArgs(id: 'adm_1', role: 'admin'),
-      });
+        final unmodifiableArgs = Map<dynamic, dynamic>.unmodifiable({
+          const AdminUserArgs(id: 'adm_1', role: 'admin').runtimeType:
+              const AdminUserArgs(id: 'adm_1', role: 'admin'),
+        });
 
-      final settings = RouteSettings(name: '/home', arguments: unmodifiableArgs);
-      final element = tester.element(find.byType(SizedBox));
+        final settings = RouteSettings(
+          name: '/home',
+          arguments: unmodifiableArgs,
+        );
+        final element = tester.element(find.byType(SizedBox));
 
-      expect(
-        () => element.getArgumentAndClean<SessionArgs>(settings: settings),
-        returnsNormally,
-      );
-      expect(
-        element.getArgumentAndClean<SessionArgs>(settings: settings),
-        isNull,
-      );
-    });
+        expect(
+          () => element.getArgumentAndClean<SessionArgs>(settings: settings),
+          returnsNormally,
+        );
+        expect(
+          element.getArgumentAndClean<SessionArgs>(settings: settings),
+          isNull,
+        );
+      },
+    );
 
-    test('DataParam holds generic data and RouteParams defaults validate to true', () {
-      const dataParam = DataParam<int>(42);
-      expect(dataParam.data, equals(42));
-      expect(dataParam.validate(), isTrue);
+    test(
+      'DataParam holds generic data and RouteParams defaults validate to true',
+      () {
+        const dataParam = DataParam<int>(42);
+        expect(dataParam.data, equals(42));
+        expect(dataParam.validate(), isTrue);
 
-      const nullDataParam = DataParam<String>(null);
-      expect(nullDataParam.data, isNull);
-      expect(nullDataParam.validate(), isTrue);
-    });
+        const nullDataParam = DataParam<String>(null);
+        expect(nullDataParam.data, isNull);
+        expect(nullDataParam.validate(), isTrue);
+      },
+    );
   });
 }

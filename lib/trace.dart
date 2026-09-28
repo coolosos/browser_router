@@ -26,18 +26,10 @@ part of 'browser.dart';
 /// AppTraces.toProfile('123').push(context);
 /// ```
 class Trace<T extends TraceRoute> {
-  const new({
-    required this.path,
-    this.traceRoute,
-    this.args,
-  });
+  const new({required this.path, this.traceRoute, this.args});
 
   Future<dynamic> push(BuildContext context) {
-    return context.pushNamed(
-      path,
-      args: [args],
-      traceRoute: traceRoute,
-    );
+    return context.pushNamed(path, args: [args], traceRoute: traceRoute);
   }
 
   Future<void> pushAndReplacement(BuildContext context) {
@@ -49,24 +41,15 @@ class Trace<T extends TraceRoute> {
   }
 
   Future<void> cleanAndPush(BuildContext context) {
-    return context.popToFirstAndPushReplacementNamed(
-      path,
-      args: [args],
-    );
+    return context.popToFirstAndPushReplacementNamed(path, args: [args]);
   }
 
   Future<void> popToFirstAndPush(BuildContext context) {
-    return context.popToFirstAndPushNamed(
-      path,
-      args: [args],
-    );
+    return context.popToFirstAndPushNamed(path, args: [args]);
   }
 
   Future<void> findMeOrPush(BuildContext context) {
-    return context.popToSelectOrFirstAndPushNamed(
-      path,
-      args: [args],
-    );
+    return context.popToSelectOrFirstAndPushNamed(path, args: [args]);
   }
 
   final String path;

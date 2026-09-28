@@ -31,15 +31,15 @@ abstract class ModalBaseHeader extends SliverPersistentHeaderDelegate {
   double get maxExtent => (!kIsWeb && snap)
       ? 57
       : (parameters.title != null)
-          ? 57
-          : 27;
+      ? 57
+      : 27;
 
   @override
   double get minExtent => (!kIsWeb && snap)
       ? 57
       : (parameters.title != null)
-          ? 57
-          : 27;
+      ? 57
+      : 27;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
@@ -51,9 +51,5 @@ abstract class ModalBaseHeader extends SliverPersistentHeaderDelegate {
   final BorderRadiusGeometry? border;
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  );
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent);
 }

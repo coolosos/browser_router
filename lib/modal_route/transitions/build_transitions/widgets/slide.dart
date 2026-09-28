@@ -6,31 +6,15 @@ import 'package:flutter/widgets.dart';
 enum Positions {
   // Offset from offscreen below to fully on screen.
 
-  left(
-    primaryOffset: Offset(-1, 0),
-    secondaryOffset: Offset(1 / 3, 0),
-  ),
-  right(
-    primaryOffset: Offset(1, 0),
-    secondaryOffset: Offset(-1 / 3, 0),
-  ),
+  left(primaryOffset: Offset(-1, 0), secondaryOffset: Offset(1 / 3, 0)),
+  right(primaryOffset: Offset(1, 0), secondaryOffset: Offset(-1 / 3, 0)),
   //Esto esta seteado a 0, 0 para que las navegaciones no se rompan en las pantallas que se navega sobre ellas.
   //Estaría bien setear en la navegación el secondary del navegador anterior
   // Offset(0, -1 / 3),
-  up(
-    primaryOffset: Offset(0, 1),
-    secondaryOffset: Offset.zero,
-  ),
-  down(
-    primaryOffset: Offset(0, -1),
-    secondaryOffset: Offset(0, 1 / 3),
-  ),
-  ;
+  up(primaryOffset: Offset(0, 1), secondaryOffset: Offset.zero),
+  down(primaryOffset: Offset(0, -1), secondaryOffset: Offset(0, 1 / 3));
 
-  new({
-    required this.primaryOffset,
-    required this.secondaryOffset,
-  });
+  new({required this.primaryOffset, required this.secondaryOffset});
   final Offset primaryOffset;
   final Offset secondaryOffset;
 }
@@ -42,34 +26,24 @@ class Slide extends StatelessWidget {
     required Positions drive,
     required this.child,
     super.key,
-  })  : _primaryPositionAnimation = CurvedAnimation(
-          // The curves below have been rigorously derived from plots of native
-          // iOS animation frames. Specifically, a video was taken of a page
-          // transition animation and the distance in each frame that the page
-          // moved was measured. A best fit bezier curve was the fitted to the
-          // point set, which is linearToEaseIn. Conversely, easeInToLinear is the
-          // reflection over the origin of linearToEaseIn.
-          parent: primaryRouteAnimation,
-          // curve: Curves.linearToEaseOut,
-          // reverseCurve: Curves.easeInToLinear,
-          curve: Curves.fastEaseInToSlowEaseOut,
-          reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-        ).drive(
-          Tween<Offset>(
-            begin: drive.primaryOffset,
-            end: Offset.zero,
-          ),
-        ),
-        _secondaryPositionAnimation = CurvedAnimation(
-          parent: secondaryRouteAnimation,
-          curve: Curves.linearToEaseOut,
-          reverseCurve: Curves.easeInToLinear,
-        ).drive(
-          Tween<Offset>(
-            begin: Offset.zero,
-            end: drive.secondaryOffset,
-          ),
-        );
+  }) : _primaryPositionAnimation = CurvedAnimation(
+         // The curves below have been rigorously derived from plots of native
+         // iOS animation frames. Specifically, a video was taken of a page
+         // transition animation and the distance in each frame that the page
+         // moved was measured. A best fit bezier curve was the fitted to the
+         // point set, which is linearToEaseIn. Conversely, easeInToLinear is the
+         // reflection over the origin of linearToEaseIn.
+         parent: primaryRouteAnimation,
+         // curve: Curves.linearToEaseOut,
+         // reverseCurve: Curves.easeInToLinear,
+         curve: Curves.fastEaseInToSlowEaseOut,
+         reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+       ).drive(Tween<Offset>(begin: drive.primaryOffset, end: Offset.zero)),
+       _secondaryPositionAnimation = CurvedAnimation(
+         parent: secondaryRouteAnimation,
+         curve: Curves.linearToEaseOut,
+         reverseCurve: Curves.easeInToLinear,
+       ).drive(Tween<Offset>(begin: Offset.zero, end: drive.secondaryOffset));
   final Animation<double> primaryRouteAnimation;
 
   // When this page is coming in to cover another page.
@@ -95,9 +69,7 @@ class Slide extends StatelessWidget {
     ),
     end: BoxDecoration(
       color: const Color.fromARGB(0, 255, 255, 255),
-      border: Border.all(
-        style: BorderStyle.none,
-      ),
+      border: Border.all(style: BorderStyle.none),
       borderRadius: BorderRadius.zero,
       // No shadow.
     ),

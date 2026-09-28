@@ -42,7 +42,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -88,7 +91,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -99,110 +105,121 @@ void main() {
       expect(capturedTransition, equals(RouteTransition.fade));
     });
 
-    testWidgets('adaptiveTrace determines presentation style based on route name', (
-      tester,
-    ) async {
-      final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: Text('Home Screen', textDirection: TextDirection.ltr),
-        ),
-        const BrowserRoute(
-          path: '/popup_modal',
-          page: Text('Modal Content', textDirection: TextDirection.ltr),
-        ),
-      ];
-
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          adaptiveTrace: (name) {
-            if (name == '/popup_modal') {
-              return const PopupTraceRoute(
-                routeTransition: RouteTransition.fade,
-              );
-            }
-            return null;
-          },
-          builder: (context, routeObserver, generate) => WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            navigatorObservers: [routeObserver],
-            onGenerateRoute: generate,
-            onGenerateInitialRoutes: (path) => [
-              generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
-              ),
-            ],
+    testWidgets(
+      'adaptiveTrace determines presentation style based on route name',
+      (tester) async {
+        final routes = [
+          const BrowserRoute(
+            path: '/home',
+            page: Text('Home Screen', textDirection: TextDirection.ltr),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      final homeContext = tester.element(find.text('Home Screen'));
-      unawaited(homeContext.pushNamed('/popup_modal'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Modal Content'), findsOneWidget);
-    });
-
-    testWidgets('validateArguments redirects to defaultRoute when validation fails', (
-      tester,
-    ) async {
-      final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: Text('Home Screen', textDirection: TextDirection.ltr),
-        ),
-        BrowserRoute(
-          path: '/protected',
-          page: const Text('Protected Screen', textDirection: TextDirection.ltr),
-          validateArguments: (check, get) => check<ValidatedArgs>(),
-        ),
-      ];
-
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          builder: (context, routeObserver, generate) => WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            navigatorObservers: [routeObserver],
-            onGenerateRoute: generate,
-            onGenerateInitialRoutes: (path) => [
-              generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
-              ),
-            ],
+          const BrowserRoute(
+            path: '/popup_modal',
+            page: Text('Modal Content', textDirection: TextDirection.ltr),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        ];
 
-      final homeContext = tester.element(find.text('Home Screen'));
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            adaptiveTrace: (name) {
+              if (name == '/popup_modal') {
+                return const PopupTraceRoute(
+                  routeTransition: RouteTransition.fade,
+                );
+              }
+              return null;
+            },
+            builder: (context, routeObserver, generate) => WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+              onGenerateInitialRoutes: (path) => [
+                generate(
+                  RouteSettings(
+                    name: path,
+                    arguments: const <dynamic, dynamic>{},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      // 1. Invalid argument -> redirected to defaultRoute (/home)
-      unawaited(
-        homeContext.pushNamed(
-          '/protected',
-          args: [const ValidatedArgs('INVALID_CODE')],
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Protected Screen'), findsNothing);
-      expect(find.text('Home Screen'), findsOneWidget);
+        final homeContext = tester.element(find.text('Home Screen'));
+        unawaited(homeContext.pushNamed('/popup_modal'));
+        await tester.pumpAndSettle();
 
-      // 2. Valid argument -> loads protected screen
-      final homeContext2 = tester.element(find.text('Home Screen'));
-      unawaited(
-        homeContext2.pushNamed(
-          '/protected',
-          args: [const ValidatedArgs('VALID')],
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Protected Screen'), findsOneWidget);
-    });
+        expect(find.text('Modal Content'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'validateArguments redirects to defaultRoute when validation fails',
+      (tester) async {
+        final routes = [
+          const BrowserRoute(
+            path: '/home',
+            page: Text('Home Screen', textDirection: TextDirection.ltr),
+          ),
+          BrowserRoute(
+            path: '/protected',
+            page: const Text(
+              'Protected Screen',
+              textDirection: TextDirection.ltr,
+            ),
+            validateArguments: (check, get) => check<ValidatedArgs>(),
+          ),
+        ];
+
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            builder: (context, routeObserver, generate) => WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+              onGenerateInitialRoutes: (path) => [
+                generate(
+                  RouteSettings(
+                    name: path,
+                    arguments: const <dynamic, dynamic>{},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final homeContext = tester.element(find.text('Home Screen'));
+
+        // 1. Invalid argument -> redirected to defaultRoute (/home)
+        unawaited(
+          homeContext.pushNamed(
+            '/protected',
+            args: [const ValidatedArgs('INVALID_CODE')],
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Protected Screen'), findsNothing);
+        expect(find.text('Home Screen'), findsOneWidget);
+
+        // 2. Valid argument -> loads protected screen
+        final homeContext2 = tester.element(find.text('Home Screen'));
+        unawaited(
+          homeContext2.pushNamed(
+            '/protected',
+            args: [const ValidatedArgs('VALID')],
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Protected Screen'), findsOneWidget);
+      },
+    );
 
     testWidgets('DeepLinkParam extracts query parameters automatically', (
       tester,
@@ -266,7 +283,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -323,7 +343,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -361,80 +384,93 @@ void main() {
       );
     });
 
-    testWidgets('Browser overlay helpers showModalBottomSheet, showOverlay, dismissOverlay, enqueueBanner', (
-      tester,
-    ) async {
-      final routes = [
-        const BrowserRoute(
-          path: '/home',
-          page: Text('Home Screen', textDirection: TextDirection.ltr),
-        ),
-      ];
-
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          builder: (context, routeObserver, generate) => WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            navigatorObservers: [routeObserver],
-            onGenerateRoute: generate,
-            onGenerateInitialRoutes: (path) => [
-              generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
-              ),
-            ],
+    testWidgets(
+      'Browser overlay helpers showModalBottomSheet, showOverlay, dismissOverlay, enqueueBanner',
+      (tester) async {
+        final routes = [
+          const BrowserRoute(
+            path: '/home',
+            page: Text('Home Screen', textDirection: TextDirection.ltr),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        ];
 
-      final context = tester.element(find.text('Home Screen'));
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            builder: (context, routeObserver, generate) => WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+              onGenerateInitialRoutes: (path) => [
+                generate(
+                  RouteSettings(
+                    name: path,
+                    arguments: const <dynamic, dynamic>{},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      // 1. showOverlay & dismissOverlay
-      Browser.showOverlay(
-        context,
-        backgroundColor: const Color(0x80000000),
-        isDismissible: true,
-        builder: (dismiss) => const Text('Custom Overlay Text', textDirection: TextDirection.ltr),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Custom Overlay Text'), findsOneWidget);
+        final context = tester.element(find.text('Home Screen'));
 
-      Browser.dismissOverlay(context);
-      await tester.pumpAndSettle();
-      expect(find.text('Custom Overlay Text'), findsNothing);
+        // 1. showOverlay & dismissOverlay
+        Browser.showOverlay(
+          context,
+          backgroundColor: const Color(0x80000000),
+          isDismissible: true,
+          builder: (dismiss) => const Text(
+            'Custom Overlay Text',
+            textDirection: TextDirection.ltr,
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Custom Overlay Text'), findsOneWidget);
 
-      // 2. enqueueBanner
-      Browser.enqueueBanner(
-        context,
-        (dismiss) => const Text('Enqueued Banner Text', textDirection: TextDirection.ltr),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 350));
-      expect(find.text('Enqueued Banner Text'), findsOneWidget);
+        Browser.dismissOverlay(context);
+        await tester.pumpAndSettle();
+        expect(find.text('Custom Overlay Text'), findsNothing);
 
-      // Dismiss banner
-      OverlayManager.of(context)?.removeActual();
-      await tester.pumpAndSettle();
-      expect(find.text('Enqueued Banner Text'), findsNothing);
+        // 2. enqueueBanner
+        Browser.enqueueBanner(
+          context,
+          (dismiss) => const Text(
+            'Enqueued Banner Text',
+            textDirection: TextDirection.ltr,
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+        expect(find.text('Enqueued Banner Text'), findsOneWidget);
 
-      // 3. showModalBottomSheet
-      unawaited(
-        Browser.showModalBottomSheet<void>(
-          context: context,
-          backgroundColor: const Color(0xFFFFFFFF),
-          builder: (ctx) => const Text('Bottom Sheet Content', textDirection: TextDirection.ltr),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Bottom Sheet Content'), findsOneWidget);
+        // Dismiss banner
+        OverlayManager.of(context)?.removeActual();
+        await tester.pumpAndSettle();
+        expect(find.text('Enqueued Banner Text'), findsNothing);
 
-      // Pop bottom sheet
-      final sheetContext = tester.element(find.text('Bottom Sheet Content'));
-      unawaited(sheetContext.pop());
-      await tester.pumpAndSettle();
-      expect(find.text('Bottom Sheet Content'), findsNothing);
-    });
+        // 3. showModalBottomSheet
+        unawaited(
+          Browser.showModalBottomSheet<void>(
+            context: context,
+            backgroundColor: const Color(0xFFFFFFFF),
+            builder: (ctx) => const Text(
+              'Bottom Sheet Content',
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Bottom Sheet Content'), findsOneWidget);
+
+        // Pop bottom sheet
+        final sheetContext = tester.element(find.text('Bottom Sheet Content'));
+        unawaited(sheetContext.pop());
+        await tester.pumpAndSettle();
+        expect(find.text('Bottom Sheet Content'), findsNothing);
+      },
+    );
   });
 }

@@ -43,8 +43,7 @@ extension _Args on Map<dynamic, dynamic> {
 extension NavigatorX on BuildContext {
   Map<dynamic, dynamic> _createArguments(List<dynamic>? args) {
     final arguments = <dynamic, dynamic>{
-      for (final argument in (args ?? []))
-        argument.runtimeType: ?argument,
+      for (final argument in (args ?? [])) argument.runtimeType: ?argument,
     };
     return arguments;
   }
@@ -79,9 +78,7 @@ extension NavigatorX on BuildContext {
   /// See also:
   ///
   ///  * [getArgument], for reading an argument without consuming it.
-  T? getArgumentAndClean<T extends RouteParams?>({
-    RouteSettings? settings,
-  }) {
+  T? getArgumentAndClean<T extends RouteParams?>({RouteSettings? settings}) {
     final arguments =
         settings?.arguments ?? ModalRoute.of(this)?.settings.arguments;
 
@@ -90,9 +87,7 @@ extension NavigatorX on BuildContext {
     return arguments.getAndClean<T>();
   }
 
-  void cleanArguments({
-    RouteSettings? settings,
-  }) {
+  void cleanArguments({RouteSettings? settings}) {
     final arguments =
         settings?.arguments ?? ModalRoute.of(this)?.settings.arguments;
 
@@ -101,9 +96,9 @@ extension NavigatorX on BuildContext {
   }
 
   NavigatorState get navigate => Navigator.of(
-        this,
-        // rootNavigator: true
-      );
+    this,
+    // rootNavigator: true
+  );
 
   /// Navigates to a new route by its `path`.
   ///
@@ -118,15 +113,10 @@ extension NavigatorX on BuildContext {
     RouteSettings? settings,
     NavigatorState? navigator,
   }) {
-    final pushParams = getArgumentAndClean<_PushParam>(
-      settings: settings,
-    )?.pushParams;
+    final pushParams = getArgumentAndClean<_PushParam>(settings: settings)
+        ?.pushParams;
 
-    final argsMap = _createArguments([
-      ...args,
-      pushParams,
-      ?traceRoute,
-    ]);
+    final argsMap = _createArguments([...args, pushParams, ?traceRoute]);
     return (navigator ?? navigate).pushNamed(path, arguments: argsMap);
   }
 
@@ -137,16 +127,13 @@ extension NavigatorX on BuildContext {
     RouteSettings? settings,
     NavigatorState? navigator,
   }) {
-    final pushParams = getArgumentAndClean<_PushParam>(
-      settings: settings,
-    )?.pushParams;
-    final argsMap = _createArguments([
-      ...args,
-      pushParams,
-      ?traceRoute,
-    ]);
-    return (navigator ?? navigate)
-        .pushReplacementNamed(path, arguments: argsMap);
+    final pushParams = getArgumentAndClean<_PushParam>(settings: settings)
+        ?.pushParams;
+    final argsMap = _createArguments([...args, pushParams, ?traceRoute]);
+    return (navigator ?? navigate).pushReplacementNamed(
+      path,
+      arguments: argsMap,
+    );
   }
 
   /// Pops the current route off the navigator.
@@ -159,9 +146,8 @@ extension NavigatorX on BuildContext {
     T? args,
     RouteSettings? settings,
   }) async {
-    final popParams = getArgumentAndClean<_PopParam>(
-      settings: settings,
-    )?.popParams;
+    final popParams = getArgumentAndClean<_PopParam>(settings: settings)
+        ?.popParams;
     final navigator = navigate;
 
     if (navigator.canPop()) {
@@ -171,15 +157,13 @@ extension NavigatorX on BuildContext {
           return false;
         }
         if (route.settings.arguments is Map) {
-          _createArguments([args, popParams]).forEach(
-            (key, value) {
-              ((route.settings.arguments as Map?) ?? {}).update(
-                key,
-                (value) => value,
-                ifAbsent: () => value,
-              );
-            },
-          );
+          _createArguments([args, popParams]).forEach((key, value) {
+            ((route.settings.arguments as Map?) ?? {}).update(
+              key,
+              (value) => value,
+              ifAbsent: () => value,
+            );
+          });
         }
         return true;
       });
@@ -248,17 +232,13 @@ extension NavigatorX on BuildContext {
     List<T> args = const [],
     RouteSettings? settings,
   }) async {
-    final popParams = getArgumentAndClean<_PopParam>(
-      settings: settings,
-    )?.popParams;
+    final popParams = getArgumentAndClean<_PopParam>(settings: settings)
+        ?.popParams;
 
     if (!navigate.canPop()) {
       await pushNamed<T>(
         BrowserConfig.of(this).defaultRoute.path,
-        args: [
-          ...args,
-          if (popParams is T) popParams,
-        ],
+        args: [...args, if (popParams is T) popParams],
       );
       return;
     }
@@ -266,15 +246,13 @@ extension NavigatorX on BuildContext {
     return navigate.popUntil((route) {
       if (route.isFirst) {
         if (route.settings.arguments is Map) {
-          _createArguments([...args, popParams]).forEach(
-            (key, value) {
-              (route.settings.arguments! as Map).update(
-                key,
-                (value) => value,
-                ifAbsent: () => value,
-              );
-            },
-          );
+          _createArguments([...args, popParams]).forEach((key, value) {
+            (route.settings.arguments! as Map).update(
+              key,
+              (value) => value,
+              ifAbsent: () => value,
+            );
+          });
         }
         return true;
       } else {
@@ -290,11 +268,7 @@ extension NavigatorX on BuildContext {
 
     final argument = _PopParam(routeParams);
 
-    arguments.update(
-      _PopParam,
-      (value) => argument,
-      ifAbsent: () => argument,
-    );
+    arguments.update(_PopParam, (value) => argument, ifAbsent: () => argument);
   }
 
   void setPushArgument(RouteParams routeParams) {
@@ -304,11 +278,7 @@ extension NavigatorX on BuildContext {
 
     final argument = _PushParam(routeParams);
 
-    arguments.update(
-      _PushParam,
-      (value) => argument,
-      ifAbsent: () => argument,
-    );
+    arguments.update(_PushParam, (value) => argument, ifAbsent: () => argument);
   }
 
   bool canNavigate(String path) {

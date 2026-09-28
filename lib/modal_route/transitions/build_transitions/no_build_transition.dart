@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+
 import 'build_transition.dart';
 
 final class NoBuildTransition implements BuildTransition {

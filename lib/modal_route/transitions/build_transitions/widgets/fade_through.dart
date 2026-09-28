@@ -11,28 +11,40 @@ class FadeThrough extends StatelessWidget {
     required this.child,
     this.fillColor,
     super.key,
-  })  : _primaryOpacity = CurvedAnimation(
-          parent: animation,
-          curve: const Interval(0.35, 1, curve: Curves.fastEaseInToSlowEaseOut),
-        ),
-        _primaryScale = Tween<double>(begin: 0.92, end: 1).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: const Interval(0.35, 1, curve: Curves.fastEaseInToSlowEaseOut),
-          ),
-        ),
-        _secondaryOpacity = Tween<double>(begin: 1, end: 0).animate(
-          CurvedAnimation(
-            parent: secondaryAnimation,
-            curve: const Interval(0, 0.35, curve: Curves.fastEaseInToSlowEaseOut),
-          ),
-        ),
-        _secondaryScale = Tween<double>(begin: 1, end: 0.96).animate(
-          CurvedAnimation(
-            parent: secondaryAnimation,
-            curve: const Interval(0, 0.35, curve: Curves.fastEaseInToSlowEaseOut),
-          ),
-        );
+  }) : _primaryOpacity = CurvedAnimation(
+         parent: animation,
+         curve: const Interval(0.35, 1, curve: Curves.fastEaseInToSlowEaseOut),
+       ),
+       _primaryScale = Tween<double>(begin: 0.92, end: 1).animate(
+         CurvedAnimation(
+           parent: animation,
+           curve: const Interval(
+             0.35,
+             1,
+             curve: Curves.fastEaseInToSlowEaseOut,
+           ),
+         ),
+       ),
+       _secondaryOpacity = Tween<double>(begin: 1, end: 0).animate(
+         CurvedAnimation(
+           parent: secondaryAnimation,
+           curve: const Interval(
+             0,
+             0.35,
+             curve: Curves.fastEaseInToSlowEaseOut,
+           ),
+         ),
+       ),
+       _secondaryScale = Tween<double>(begin: 1, end: 0.96).animate(
+         CurvedAnimation(
+           parent: secondaryAnimation,
+           curve: const Interval(
+             0,
+             0.35,
+             curve: Curves.fastEaseInToSlowEaseOut,
+           ),
+         ),
+       );
 
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
@@ -46,18 +58,21 @@ class FadeThrough extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
+    Widget content = FadeTransition(
       opacity: _secondaryOpacity,
       child: ScaleTransition(
         scale: _secondaryScale,
         child: FadeTransition(
           opacity: _primaryOpacity,
-          child: ScaleTransition(
-            scale: _primaryScale,
-            child: child,
-          ),
+          child: ScaleTransition(scale: _primaryScale, child: child),
         ),
       ),
     );
+
+    if (fillColor != null) {
+      content = ColoredBox(color: fillColor!, child: content);
+    }
+
+    return content;
   }
 }

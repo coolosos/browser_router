@@ -13,20 +13,20 @@ class DeferredBrowserRoute extends BrowserRoute {
     super.builderTrigger,
     super.validateArguments,
     super.routeTransition,
-  })  : _initializeServiceLocator = initializeServiceLocator,
-        _loadPageLibrary = loadPageLibrary,
-        _page = pageBuilder,
-        super(
-          page: _DeferredPageLoader(
-            loadDeferredContent: _loadDeferred(
-              loadPageLibrary: loadPageLibrary,
-              initializeServiceLocator: initializeServiceLocator,
-            ),
-            onLoading: onLoading,
-            onError: onError,
-            page: pageBuilder,
-          ),
-        );
+  }) : _initializeServiceLocator = initializeServiceLocator,
+       _loadPageLibrary = loadPageLibrary,
+       _page = pageBuilder,
+       super(
+         page: _DeferredPageLoader(
+           loadDeferredContent: _loadDeferred(
+             loadPageLibrary: loadPageLibrary,
+             initializeServiceLocator: initializeServiceLocator,
+           ),
+           onLoading: onLoading,
+           onError: onError,
+           page: pageBuilder,
+         ),
+       );
 
   final Future<void> Function() _loadPageLibrary;
   final Future<void> Function()? _initializeServiceLocator;

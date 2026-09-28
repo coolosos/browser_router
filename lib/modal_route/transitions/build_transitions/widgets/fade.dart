@@ -1,11 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class Fade extends StatelessWidget {
-  const new({
-    required this.animation,
-    required this.child,
-    super.key,
-  });
+  const new({required this.animation, required this.child, super.key});
 
   final Animation<double> animation;
   final Widget child;
@@ -17,9 +13,6 @@ class Fade extends StatelessWidget {
       curve: Curves.easeIn,
       reverseCurve: Curves.easeIn,
     );
-    return FadeTransition(
-      opacity: curvedAnimation,
-      child: child,
-    );
+    return FadeTransition(opacity: curvedAnimation, child: child);
   }
 }

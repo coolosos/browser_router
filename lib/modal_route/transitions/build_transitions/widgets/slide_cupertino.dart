@@ -11,26 +11,25 @@ class SlideCupertino extends StatelessWidget {
     required this.child,
     this.hasShadow = true,
     super.key,
-  })  : _primaryPosition = Tween<Offset>(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastEaseInToSlowEaseOut,
-            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-          ),
-        ),
-        _secondaryPosition = Tween<Offset>(
-          begin: Offset.zero,
-          end: const Offset(-1 / 3, 0),
-        ).animate(
-          CurvedAnimation(
-            parent: secondaryAnimation,
-            curve: Curves.linearToEaseOut,
-            reverseCurve: Curves.easeInToLinear,
-          ),
-        );
+  }) : _primaryPosition =
+           Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).animate(
+             CurvedAnimation(
+               parent: animation,
+               curve: Curves.fastEaseInToSlowEaseOut,
+               reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+             ),
+           ),
+       _secondaryPosition =
+           Tween<Offset>(
+             begin: Offset.zero,
+             end: const Offset(-1 / 3, 0),
+           ).animate(
+             CurvedAnimation(
+               parent: secondaryAnimation,
+               curve: Curves.linearToEaseOut,
+               reverseCurve: Curves.easeInToLinear,
+             ),
+           );
 
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;

@@ -8,9 +8,7 @@ abstract class ModalBase<T extends ModalBaseParams> {
 
   final T params;
 
-  ModalBaseHeaderParameter contextParameters({
-    required BuildContext context,
-  });
+  ModalBaseHeaderParameter contextParameters({required BuildContext context});
 
   Widget body({
     required BuildContext context,
@@ -29,14 +27,11 @@ abstract class ModalBase<T extends ModalBaseParams> {
 }
 
 final class ModalBaseSafeArea {
-  const new({
-    required this.external,
-    required this.internal,
-  });
+  const new({required this.external, required this.internal});
 
   const new cleanTopSafeArea()
-      : external = const SafeAreaManager.fromLTRB(true, true, true, false),
-        internal = const SafeAreaManager.all();
+    : external = const SafeAreaManager.fromLTRB(true, true, true, false),
+      internal = const SafeAreaManager.all();
 
   final SafeAreaManager external;
   final SafeAreaManager internal;
@@ -58,13 +53,7 @@ final class SafeAreaManager {
     this.bottom,
   );
 
-  const new all()
-      : this(
-          top: true,
-          bottom: true,
-          left: true,
-          right: true,
-        );
+  const new all() : this(top: true, bottom: true, left: true, right: true);
 
   final bool top;
   final bool bottom;
@@ -72,10 +61,10 @@ final class SafeAreaManager {
   final bool right;
 
   SafeArea safeArea({required Widget child}) => SafeArea(
-        bottom: bottom,
-        left: left,
-        top: top,
-        right: right,
-        child: child,
-      );
+    bottom: bottom,
+    left: left,
+    top: top,
+    right: right,
+    child: child,
+  );
 }

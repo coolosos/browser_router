@@ -55,24 +55,23 @@ sealed class TraceRoute {
     String semanticsLabel = '',
     bool fullscreenDialog = false,
     bool popGestureEnabled = true,
-  }) =>
-      PageTraceRoute(
-        routeTransition: routeTransition,
-        customTransition: customTransition,
-        opaque: opaque,
-        maintainState: maintainState,
-        allowSnapshotting: allowSnapshotting,
-        filter: filter,
-        traversalEdgeBehavior: traversalEdgeBehavior,
-        barrierColor: barrierColor,
-        reverseTransitionDuration: reverseTransitionDuration,
-        transitionDuration: transitionDuration,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        semanticsLabel: semanticsLabel,
-        fullScreenDialog: fullscreenDialog,
-        popGestureEnabled: popGestureEnabled,
-      );
+  }) => PageTraceRoute(
+    routeTransition: routeTransition,
+    customTransition: customTransition,
+    opaque: opaque,
+    maintainState: maintainState,
+    allowSnapshotting: allowSnapshotting,
+    filter: filter,
+    traversalEdgeBehavior: traversalEdgeBehavior,
+    barrierColor: barrierColor,
+    reverseTransitionDuration: reverseTransitionDuration,
+    transitionDuration: transitionDuration,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel,
+    semanticsLabel: semanticsLabel,
+    fullScreenDialog: fullscreenDialog,
+    popGestureEnabled: popGestureEnabled,
+  );
 
   /// Creates a [PopupTraceRoute] for presenting a route as a modal dialog
   /// or popup.
@@ -90,22 +89,21 @@ sealed class TraceRoute {
     bool barrierDismissible = true,
     String barrierLabel = '',
     String semanticsLabel = '',
-  }) =>
-      PopupTraceRoute(
-        routeTransition: routeTransition,
-        customTransition: customTransition,
-        opaque: opaque,
-        maintainState: maintainState,
-        allowSnapshotting: allowSnapshotting,
-        filter: filter,
-        traversalEdgeBehavior: traversalEdgeBehavior,
-        barrierColor: barrierColor,
-        reverseTransitionDuration: reverseTransitionDuration,
-        transitionDuration: transitionDuration,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        semanticsLabel: semanticsLabel,
-      );
+  }) => PopupTraceRoute(
+    routeTransition: routeTransition,
+    customTransition: customTransition,
+    opaque: opaque,
+    maintainState: maintainState,
+    allowSnapshotting: allowSnapshotting,
+    filter: filter,
+    traversalEdgeBehavior: traversalEdgeBehavior,
+    barrierColor: barrierColor,
+    reverseTransitionDuration: reverseTransitionDuration,
+    transitionDuration: transitionDuration,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel,
+    semanticsLabel: semanticsLabel,
+  );
 
   /// Creates a [SwipeTraceRoute] for presenting a route as a swipeable
   /// bottom sheet.
@@ -128,27 +126,26 @@ sealed class TraceRoute {
     bool enableDrag = true,
     double screenMaximumPercentage = 1,
     Offset? anchorPoint,
-  }) =>
-      SwipeTraceRoute(
-        routeTransition: routeTransition,
-        customTransition: customTransition,
-        opaque: opaque,
-        maintainState: maintainState,
-        allowSnapshotting: allowSnapshotting,
-        filter: filter,
-        traversalEdgeBehavior: traversalEdgeBehavior,
-        barrierColor: barrierColor,
-        reverseTransitionDuration: reverseTransitionDuration,
-        transitionDuration: transitionDuration,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        semanticsLabel: semanticsLabel,
-        useSafeArea: useSafeArea,
-        animationDirection: animationDirection,
-        enableDrag: enableDrag,
-        screenMaximumPercentage: screenMaximumPercentage,
-        anchorPoint: anchorPoint,
-      );
+  }) => SwipeTraceRoute(
+    routeTransition: routeTransition,
+    customTransition: customTransition,
+    opaque: opaque,
+    maintainState: maintainState,
+    allowSnapshotting: allowSnapshotting,
+    filter: filter,
+    traversalEdgeBehavior: traversalEdgeBehavior,
+    barrierColor: barrierColor,
+    reverseTransitionDuration: reverseTransitionDuration,
+    transitionDuration: transitionDuration,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: barrierLabel,
+    semanticsLabel: semanticsLabel,
+    useSafeArea: useSafeArea,
+    animationDirection: animationDirection,
+    enableDrag: enableDrag,
+    screenMaximumPercentage: screenMaximumPercentage,
+    anchorPoint: anchorPoint,
+  );
 
   /// The transition animation to use when the route is pushed or popped.
   /// If null, the default transition from `BrowserRoute` is used.

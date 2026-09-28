@@ -1,10 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-enum SharedAxisDirection {
-  horizontal,
-  vertical,
-  scaled,
-}
+enum SharedAxisDirection { horizontal, vertical, scaled }
 
 /// Material 3 Shared Axis Transition.
 ///
@@ -16,16 +12,10 @@ class SharedAxis extends StatelessWidget {
     required this.child,
     this.direction = SharedAxisDirection.horizontal,
     super.key,
-  })  : _primaryOpacity = CurvedAnimation(
-          parent: animation,
-          curve: const Interval(0.1, 1, curve: Curves.fastEaseInToSlowEaseOut),
-        ),
-        _secondaryOpacity = Tween<double>(begin: 1, end: 0).animate(
-          CurvedAnimation(
-            parent: secondaryAnimation,
-            curve: const Interval(0, 0.4, curve: Curves.fastEaseInToSlowEaseOut),
-          ),
-        );
+  }) : _primaryOpacity = CurvedAnimation(
+         parent: animation,
+         curve: const Interval(0.1, 1, curve: Curves.fastEaseInToSlowEaseOut),
+       );
 
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
@@ -33,7 +23,6 @@ class SharedAxis extends StatelessWidget {
   final SharedAxisDirection direction;
 
   final Animation<double> _primaryOpacity;
-  final Animation<double> _secondaryOpacity;
 
   @override
   Widget build(BuildContext context) {
@@ -48,77 +37,67 @@ class SharedAxis extends StatelessWidget {
     final textDirection = Directionality.of(context);
     final isRtl = textDirection == TextDirection.rtl;
 
-    final primaryOffset = Tween<Offset>(
-      begin: Offset(isRtl ? -0.3 : 0.3, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: animation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final primaryOffset =
+        Tween<Offset>(
+          begin: Offset(isRtl ? -0.3 : 0.3, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
-    final secondaryOffset = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(isRtl ? 0.3 : -0.3, 0),
-    ).animate(
-      CurvedAnimation(
-        parent: secondaryAnimation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final secondaryOffset =
+        Tween<Offset>(
+          begin: Offset.zero,
+          end: Offset(isRtl ? 0.3 : -0.3, 0),
+        ).animate(
+          CurvedAnimation(
+            parent: secondaryAnimation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
     return SlideTransition(
       position: secondaryOffset,
-      child: FadeTransition(
-        opacity: _secondaryOpacity,
-        child: SlideTransition(
-          position: primaryOffset,
-          child: FadeTransition(
-            opacity: _primaryOpacity,
-            child: child,
-          ),
-        ),
+      textDirection: textDirection,
+      transformHitTests: false,
+      child: SlideTransition(
+        position: primaryOffset,
+        textDirection: textDirection,
+        child: FadeTransition(opacity: _primaryOpacity, child: child),
       ),
     );
   }
 
   Widget _buildVertical(BuildContext context) {
-    final primaryOffset = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: animation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final primaryOffset =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
-    final secondaryOffset = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0, -0.3),
-    ).animate(
-      CurvedAnimation(
-        parent: secondaryAnimation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final secondaryOffset =
+        Tween<Offset>(begin: Offset.zero, end: const Offset(0, -0.3)).animate(
+          CurvedAnimation(
+            parent: secondaryAnimation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
     return SlideTransition(
       position: secondaryOffset,
-      child: FadeTransition(
-        opacity: _secondaryOpacity,
-        child: SlideTransition(
-          position: primaryOffset,
-          child: FadeTransition(
-            opacity: _primaryOpacity,
-            child: child,
-          ),
-        ),
+      transformHitTests: false,
+      child: SlideTransition(
+        position: primaryOffset,
+        child: FadeTransition(opacity: _primaryOpacity, child: child),
       ),
     );
   }
@@ -142,15 +121,9 @@ class SharedAxis extends StatelessWidget {
 
     return ScaleTransition(
       scale: secondaryScale,
-      child: FadeTransition(
-        opacity: _secondaryOpacity,
-        child: ScaleTransition(
-          scale: primaryScale,
-          child: FadeTransition(
-            opacity: _primaryOpacity,
-            child: child,
-          ),
-        ),
+      child: ScaleTransition(
+        scale: primaryScale,
+        child: FadeTransition(opacity: _primaryOpacity, child: child),
       ),
     );
   }

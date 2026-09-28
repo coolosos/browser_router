@@ -27,17 +27,12 @@ class _TestHeader extends ModalBaseHeader {
 }
 
 class _TestModal extends ModalBase<_TestModalParams> {
-  const new({
-    required super.params,
-    this.onBodyBuilt,
-  });
+  const new({required super.params, this.onBodyBuilt});
 
   final void Function(ChangeDrawerSize? changeDrawerSize)? onBodyBuilt;
 
   @override
-  ModalBaseHeaderParameter contextParameters({
-    required BuildContext context,
-  }) {
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
     return const ModalBaseHeaderParameter(
       background: Colors.white,
       headerBackground: Colors.blue,
@@ -89,10 +84,7 @@ class _TestModal extends ModalBase<_TestModalParams> {
 }
 
 class _TestSheet extends SheetBase<_TestModalParams> {
-  const new({
-    required super.modal,
-    this.onAdjustSizeCalled,
-  });
+  const new({required super.modal, this.onAdjustSizeCalled});
 
   final VoidCallback? onAdjustSizeCalled;
 
@@ -121,45 +113,41 @@ class _TestSheet extends SheetBase<_TestModalParams> {
 
 void main() {
   group('ModalBase & SheetBase with ChangeDrawerSize', () {
-    testWidgets('renders modal structure and passes ChangeDrawerSize callback',
-        (tester) async {
-      var adjustSizeCalled = false;
-      ChangeDrawerSize? receivedCallback;
+    testWidgets(
+      'renders modal structure and passes ChangeDrawerSize callback',
+      (tester) async {
+        var adjustSizeCalled = false;
+        ChangeDrawerSize? receivedCallback;
 
-      final modal = _TestModal(
-        params: _TestModalParams(),
-        onBodyBuilt: (callback) {
-          receivedCallback = callback;
-        },
-      );
+        final modal = _TestModal(
+          params: _TestModalParams(),
+          onBodyBuilt: (callback) {
+            receivedCallback = callback;
+          },
+        );
 
-      final sheet = _TestSheet(
-        modal: modal,
-        onAdjustSizeCalled: () {
-          adjustSizeCalled = true;
-        },
-      );
+        final sheet = _TestSheet(
+          modal: modal,
+          onAdjustSizeCalled: () {
+            adjustSizeCalled = true;
+          },
+        );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: sheet,
-          ),
-        ),
-      );
+        await tester.pumpWidget(MaterialApp(home: Scaffold(body: sheet)));
 
-      expect(find.text('Test Title'), findsOneWidget);
-      expect(find.text('Modal Body Content'), findsOneWidget);
-      expect(find.text('Bottom Bar Content'), findsOneWidget);
-      expect(find.text('Expand Drawer'), findsOneWidget);
-      expect(receivedCallback, isNotNull);
+        expect(find.text('Test Title'), findsOneWidget);
+        expect(find.text('Modal Body Content'), findsOneWidget);
+        expect(find.text('Bottom Bar Content'), findsOneWidget);
+        expect(find.text('Expand Drawer'), findsOneWidget);
+        expect(receivedCallback, isNotNull);
 
-      // Tap button to invoke changeDrawerSize({required bool isExpanded})
-      await tester.tap(find.text('Expand Drawer'));
-      await tester.pump();
+        // Tap button to invoke changeDrawerSize({required bool isExpanded})
+        await tester.tap(find.text('Expand Drawer'));
+        await tester.pump();
 
-      expect(adjustSizeCalled, isTrue);
-    });
+        expect(adjustSizeCalled, isTrue);
+      },
+    );
 
     test('SafeAreaManager creates proper instances and widgets', () {
       const manager = SafeAreaManager(
@@ -180,7 +168,12 @@ void main() {
       expect(allManager.bottom, isTrue);
       expect(allManager.left, isTrue);
 
-      const fromLTRBManager = SafeAreaManager.fromLTRB(false, true, false, true);
+      const fromLTRBManager = SafeAreaManager.fromLTRB(
+        false,
+        true,
+        false,
+        true,
+      );
       expect(fromLTRBManager.left, isFalse);
       expect(fromLTRBManager.top, isTrue);
       expect(fromLTRBManager.right, isFalse);
@@ -214,7 +207,10 @@ void main() {
       expect(standard.expand, isFalse);
       expect(standard.snap, isTrue);
       expect(standard.snapSizes, equals([0.5, 0.9]));
-      expect(standard.snapAnimationDuration, equals(const Duration(milliseconds: 250)));
+      expect(
+        standard.snapAnimationDuration,
+        equals(const Duration(milliseconds: 250)),
+      );
       expect(standard.shouldCloseOnMinExtent, isFalse);
 
       const small = ModalDraggableScrollableSheetParams.small();
@@ -294,7 +290,10 @@ void main() {
       expect(small.minHeightChildSize, equals(0.35));
       expect(small.maxHeightChildSize, equals(0.75));
       expect(small.snapSizes, equals([0.5]));
-      expect(small.snapAnimationDuration, equals(const Duration(milliseconds: 200)));
+      expect(
+        small.snapAnimationDuration,
+        equals(const Duration(milliseconds: 200)),
+      );
       expect(small.shouldCloseOnMinExtent, isFalse);
       expect(small.expand, isFalse);
       expect(small.snap, isTrue);

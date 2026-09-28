@@ -21,10 +21,7 @@ class Modal extends OverlayModal {
   OverlayEntry _createModal(Widget child) {
     final overlay = ColoredBox(
       color: backgroundColor,
-      child: Align(
-        alignment: alignment,
-        child: child,
-      ),
+      child: Align(alignment: alignment, child: child),
     );
 
     return OverlayEntry(

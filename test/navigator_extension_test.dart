@@ -19,7 +19,8 @@ Widget createNavigationApp({
   BrowserRoute? defaultRoute,
   Future<void> Function(Uri)? openUrl,
 }) {
-  final effectiveRoutes = routes ??
+  final effectiveRoutes =
+      routes ??
       [
         const BrowserRoute(
           path: '/home',
@@ -73,10 +74,7 @@ void main() {
 
       final context = tester.element(find.text('Home Screen'));
       unawaited(
-        context.pushNamed(
-          '/detail',
-          args: [const TestUserArgs('user_42')],
-        ),
+        context.pushNamed('/detail', args: [const TestUserArgs('user_42')]),
       );
 
       await tester.pumpAndSettle();
@@ -127,28 +125,32 @@ void main() {
 
       expect(find.text('Target Screen'), findsOneWidget);
       final targetContext = tester.element(find.text('Target Screen'));
-      expect(targetContext.getArgument<TestUserArgs>()?.id, equals('staged_push'));
+      expect(
+        targetContext.getArgument<TestUserArgs>()?.id,
+        equals('staged_push'),
+      );
     });
 
-    testWidgets('pop sends return arguments and updates previous route settings', (
-      tester,
-    ) async {
-      await tester.pumpWidget(createNavigationApp());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'pop sends return arguments and updates previous route settings',
+      (tester) async {
+        await tester.pumpWidget(createNavigationApp());
+        await tester.pumpAndSettle();
 
-      final homeContext = tester.element(find.text('Home Screen'));
-      unawaited(homeContext.pushNamed('/detail'));
-      await tester.pumpAndSettle();
+        final homeContext = tester.element(find.text('Home Screen'));
+        unawaited(homeContext.pushNamed('/detail'));
+        await tester.pumpAndSettle();
 
-      final detailContext = tester.element(find.text('Detail Screen'));
-      await detailContext.pop(args: const TestResultArgs('success_result'));
-      await tester.pumpAndSettle();
+        final detailContext = tester.element(find.text('Detail Screen'));
+        await detailContext.pop(args: const TestResultArgs('success_result'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Home Screen'), findsOneWidget);
-      final currentHomeContext = tester.element(find.text('Home Screen'));
-      final result = currentHomeContext.getArgument<TestResultArgs>();
-      expect(result?.value, equals('success_result'));
-    });
+        expect(find.text('Home Screen'), findsOneWidget);
+        final currentHomeContext = tester.element(find.text('Home Screen'));
+        final result = currentHomeContext.getArgument<TestResultArgs>();
+        expect(result?.value, equals('success_result'));
+      },
+    );
 
     testWidgets('pop falls back to defaultRoute when canPop is false', (
       tester,
@@ -207,9 +209,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final step2Context = tester.element(find.text('Step 2 Screen'));
-      await step2Context.popToFirst(
-        args: [const TestResultArgs('from_lvl2')],
-      );
+      await step2Context.popToFirst(args: [const TestResultArgs('from_lvl2')]);
       await tester.pumpAndSettle();
 
       expect(find.text('Home Screen'), findsOneWidget);
@@ -231,9 +231,7 @@ void main() {
 
       final homeContext = tester.element(find.text('Home Screen'));
       unawaited(
-        homeContext.popToFirst(
-          args: [const TestResultArgs('root_pop_first')],
-        ),
+        homeContext.popToFirst(args: [const TestResultArgs('root_pop_first')]),
       );
       await tester.pumpAndSettle();
 
@@ -245,39 +243,40 @@ void main() {
       );
     });
 
-    testWidgets('popToFirstAndPushNamed pops to first and pushes target route', (
-      tester,
-    ) async {
-      await tester.pumpWidget(createNavigationApp());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'popToFirstAndPushNamed pops to first and pushes target route',
+      (tester) async {
+        await tester.pumpWidget(createNavigationApp());
+        await tester.pumpAndSettle();
 
-      final homeContext = tester.element(find.text('Home Screen'));
-      unawaited(homeContext.pushNamed('/step1'));
-      await tester.pumpAndSettle();
+        final homeContext = tester.element(find.text('Home Screen'));
+        unawaited(homeContext.pushNamed('/step1'));
+        await tester.pumpAndSettle();
 
-      final step1Context = tester.element(find.text('Step 1 Screen'));
-      unawaited(step1Context.pushNamed('/step2'));
-      await tester.pumpAndSettle();
+        final step1Context = tester.element(find.text('Step 1 Screen'));
+        unawaited(step1Context.pushNamed('/step2'));
+        await tester.pumpAndSettle();
 
-      final step2Context = tester.element(find.text('Step 2 Screen'));
-      unawaited(
-        step2Context.popToFirstAndPushNamed(
-          '/target',
-          args: [const TestUserArgs('direct_target')],
-        ),
-      );
-      await tester.pumpAndSettle();
+        final step2Context = tester.element(find.text('Step 2 Screen'));
+        unawaited(
+          step2Context.popToFirstAndPushNamed(
+            '/target',
+            args: [const TestUserArgs('direct_target')],
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Target Screen'), findsOneWidget);
-      expect(find.text('Step 1 Screen'), findsNothing);
-      expect(find.text('Step 2 Screen'), findsNothing);
+        expect(find.text('Target Screen'), findsOneWidget);
+        expect(find.text('Step 1 Screen'), findsNothing);
+        expect(find.text('Step 2 Screen'), findsNothing);
 
-      final targetContext = tester.element(find.text('Target Screen'));
-      expect(
-        targetContext.getArgument<TestUserArgs>()?.id,
-        equals('direct_target'),
-      );
-    });
+        final targetContext = tester.element(find.text('Target Screen'));
+        expect(
+          targetContext.getArgument<TestUserArgs>()?.id,
+          equals('direct_target'),
+        );
+      },
+    );
 
     testWidgets('popToFirstAndPushReplacementNamed replaces the first route', (
       tester,
@@ -366,17 +365,18 @@ void main() {
       expect(detailContext.getArgument<TestUserArgs>(), isNull);
     });
 
-    testWidgets('canNavigate returns true for registered paths and false otherwise', (
-      tester,
-    ) async {
-      await tester.pumpWidget(createNavigationApp());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'canNavigate returns true for registered paths and false otherwise',
+      (tester) async {
+        await tester.pumpWidget(createNavigationApp());
+        await tester.pumpAndSettle();
 
-      final context = tester.element(find.text('Home Screen'));
-      expect(context.canNavigate('/home'), isTrue);
-      expect(context.canNavigate('/detail'), isTrue);
-      expect(context.canNavigate('/unknown_route'), isFalse);
-    });
+        final context = tester.element(find.text('Home Screen'));
+        expect(context.canNavigate('/home'), isTrue);
+        expect(context.canNavigate('/detail'), isTrue);
+        expect(context.canNavigate('/unknown_route'), isFalse);
+      },
+    );
 
     testWidgets('openUrl invokes configured callback in BrowserConfig', (
       tester,
@@ -391,54 +391,65 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      tester.element(find.text('Home Screen')).openUrl(Uri.parse('https://flutter.dev'));
+      tester
+          .element(find.text('Home Screen'))
+          .openUrl(Uri.parse('https://flutter.dev'));
       expect(openedUri, equals(Uri.parse('https://flutter.dev')));
     });
 
-    testWidgets('launchAction handles external links, internal routes and navigateType', (
-      tester,
-    ) async {
-      Uri? openedUri;
-      await tester.pumpWidget(
-        createNavigationApp(
-          openUrl: (uri) async {
-            openedUri = uri;
-          },
-        ),
-      );
-      await tester.pumpAndSettle();
+    testWidgets(
+      'launchAction handles external links, internal routes and navigateType',
+      (tester) async {
+        Uri? openedUri;
+        await tester.pumpWidget(
+          createNavigationApp(
+            openUrl: (uri) async {
+              openedUri = uri;
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      // 1. External URL
-      tester.element(find.text('Home Screen')).launchAction('https://dart.dev');
-      expect(openedUri, equals(Uri.parse('https://dart.dev')));
+        // 1. External URL
+        tester
+            .element(find.text('Home Screen'))
+            .launchAction('https://dart.dev');
+        expect(openedUri, equals(Uri.parse('https://dart.dev')));
 
-      // 2. Default push
-      tester.element(find.text('Home Screen')).launchAction('/detail');
-      await tester.pumpAndSettle();
-      expect(find.text('Detail Screen'), findsOneWidget);
+        // 2. Default push
+        tester.element(find.text('Home Screen')).launchAction('/detail');
+        await tester.pumpAndSettle();
+        expect(find.text('Detail Screen'), findsOneWidget);
 
-      // 3. navigateType=pop
-      tester.element(find.text('Detail Screen')).launchAction('/?navigateType=pop');
-      await tester.pumpAndSettle();
-      expect(find.text('Home Screen'), findsOneWidget);
+        // 3. navigateType=pop
+        tester
+            .element(find.text('Detail Screen'))
+            .launchAction('/?navigateType=pop');
+        await tester.pumpAndSettle();
+        expect(find.text('Home Screen'), findsOneWidget);
 
-      // 4. navigateType=pushreplacement
-      tester.element(find.text('Home Screen')).launchAction('/step1?navigateType=pushreplacement');
-      await tester.pumpAndSettle();
-      expect(find.text('Step 1 Screen'), findsOneWidget);
-      expect(find.text('Home Screen'), findsNothing);
+        // 4. navigateType=pushreplacement
+        tester
+            .element(find.text('Home Screen'))
+            .launchAction('/step1?navigateType=pushreplacement');
+        await tester.pumpAndSettle();
+        expect(find.text('Step 1 Screen'), findsOneWidget);
+        expect(find.text('Home Screen'), findsNothing);
 
-      // 5. navigateType=popfirstandpush
-      tester.element(find.text('Step 1 Screen')).launchAction('/step2?navigateType=popfirstandpush');
-      await tester.pumpAndSettle();
-      expect(find.text('Step 2 Screen'), findsOneWidget);
+        // 5. navigateType=popfirstandpush
+        tester
+            .element(find.text('Step 1 Screen'))
+            .launchAction('/step2?navigateType=popfirstandpush');
+        await tester.pumpAndSettle();
+        expect(find.text('Step 2 Screen'), findsOneWidget);
 
-      // 6. Invalid or non-navigable action
-      tester.element(find.text('Step 2 Screen'))
-        ..launchAction(':::invalid_uri')
-        ..launchAction('/non_existent_route');
-      await tester.pumpAndSettle();
-      expect(find.text('Step 2 Screen'), findsOneWidget);
-    });
+        // 6. Invalid or non-navigable action
+        tester.element(find.text('Step 2 Screen'))
+          ..launchAction(':::invalid_uri')
+          ..launchAction('/non_existent_route');
+        await tester.pumpAndSettle();
+        expect(find.text('Step 2 Screen'), findsOneWidget);
+      },
+    );
   });
 }

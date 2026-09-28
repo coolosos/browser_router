@@ -23,9 +23,7 @@ class PopArgsScreen extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // Example 1: Pass arguments directly in pop()
-                context.pop(
-                  args: PopResultArgs(result: 'Result from pop()'),
-                );
+                context.pop(args: PopResultArgs(result: 'Result from pop()'));
               },
               child: Container(
                 color: const Color(0xFFFFFFFF),

@@ -5,65 +5,68 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('SwipeAnimation Tests', () {
     testWidgets(
-        'renders successfully when enableDrag is false and animationController is null',
-        (tester) async {
-      await tester.pumpWidget(
-        WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          home: SwipeAnimation(
-            animation: const AlwaysStoppedAnimation(1),
-            animationController: null,
-            enableDrag: false,
-            screenMaximumPercentage: 1,
-            animationDirection: AxisDirection.up,
-            onClosing: () {},
-            builder: (context) => const Text(
-              'Content without drag',
-              textDirection: TextDirection.ltr,
+      'renders successfully when enableDrag is false and animationController is null',
+      (tester) async {
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            home: SwipeAnimation(
+              animation: const AlwaysStoppedAnimation(1),
+              animationController: null,
+              enableDrag: false,
+              screenMaximumPercentage: 1,
+              animationDirection: AxisDirection.up,
+              onClosing: () {},
+              builder: (context) => const Text(
+                'Content without drag',
+                textDirection: TextDirection.ltr,
+              ),
+            ),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  builder(context),
             ),
           ),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                builder(context),
-          ),
-        ),
-      );
+        );
 
-      expect(find.text('Content without drag'), findsOneWidget);
-    });
+        expect(find.text('Content without drag'), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'renders successfully when enableDrag is true with animationController',
-        (tester) async {
-      late AnimationController controller;
+      'renders successfully when enableDrag is true with animationController',
+      (tester) async {
+        late AnimationController controller;
 
-      await tester.pumpWidget(
-        WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              return _TestSwipeWidget(
-                onControllerCreated: (c) => controller = c,
-              );
-            },
+        await tester.pumpWidget(
+          WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return _TestSwipeWidget(
+                  onControllerCreated: (c) => controller = c,
+                );
+              },
+            ),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  builder(context),
+            ),
           ),
-          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                builder(context),
-          ),
-        ),
-      );
+        );
 
-      expect(find.text('Content with drag'), findsOneWidget);
-      expect(controller.value, 1);
-    });
+        expect(find.text('Content with drag'), findsOneWidget);
+        expect(controller.value, 1);
+      },
+    );
   });
 
   group('SwipeGestures Tests', () {
-    testWidgets('SwipeDownRightGestures handles drag updates and edge cases',
-        (tester) async {
+    testWidgets('SwipeDownRightGestures handles drag updates and edge cases', (
+      tester,
+    ) async {
       var closed = false;
       late AnimationController controller;
 
@@ -72,10 +75,7 @@ void main() {
           color: const Color(0xFFFFFFFF),
           home: _GestureHostWidget(
             onInit: (vsync) {
-              controller = AnimationController(
-                vsync: vsync,
-                value: 1,
-              );
+              controller = AnimationController(vsync: vsync, value: 1);
             },
             child: const SizedBox(width: 200, height: 200),
           ),
@@ -87,27 +87,28 @@ void main() {
         ),
       );
 
-      final gestures = SwipeDownRightGestures(
-        obtainSize: () => 100,
-        animationController: controller,
-        canDragDone: () => false,
-        onClosing: () => closed = true,
-      )..handleDragUpdate(
-          DragUpdateDetails(
-            globalPosition: Offset.zero,
-            delta: const Offset(20, 0),
-            primaryDelta: 20,
-          ),
-        );
+      final gestures =
+          SwipeDownRightGestures(
+            obtainSize: () => 100,
+            animationController: controller,
+            canDragDone: () => false,
+            onClosing: () => closed = true,
+          )..handleDragUpdate(
+            DragUpdateDetails(
+              globalPosition: Offset.zero,
+              delta: const Offset(20, 0),
+              primaryDelta: 20,
+            ),
+          );
       expect(controller.value, 0.8); // 1.0 - (20 / 100) = 0.8
 
       // Zero size guard (should not produce NaN or change value)
       SwipeDownRightGestures(
-        obtainSize: () => 0,
-        animationController: controller,
-        canDragDone: () => false,
-        onClosing: () => closed = true,
-      )
+          obtainSize: () => 0,
+          animationController: controller,
+          canDragDone: () => false,
+          onClosing: () => closed = true,
+        )
         ..handleDragUpdate(
           DragUpdateDetails(
             globalPosition: Offset.zero,
@@ -116,10 +117,7 @@ void main() {
           ),
         )
         ..handleDragUpdate(
-          DragUpdateDetails(
-            globalPosition: Offset.zero,
-            primaryDelta: null,
-          ),
+          DragUpdateDetails(globalPosition: Offset.zero, primaryDelta: null),
         );
       expect(controller.value, 0.8);
 
@@ -134,8 +132,9 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('SwipeUpLeftGestures handles drag updates and edge cases',
-        (tester) async {
+    testWidgets('SwipeUpLeftGestures handles drag updates and edge cases', (
+      tester,
+    ) async {
       var closed = false;
       late AnimationController controller;
 
@@ -144,10 +143,7 @@ void main() {
           color: const Color(0xFFFFFFFF),
           home: _GestureHostWidget(
             onInit: (vsync) {
-              controller = AnimationController(
-                vsync: vsync,
-                value: 0,
-              );
+              controller = AnimationController(vsync: vsync, value: 0);
             },
             child: const SizedBox(width: 200, height: 200),
           ),
@@ -159,18 +155,19 @@ void main() {
         ),
       );
 
-      final gestures = SwipeUpLeftGestures(
-        obtainSize: () => 100,
-        animationController: controller,
-        canDragDone: () => false,
-        onClosing: () => closed = true,
-      )..handleDragUpdate(
-          DragUpdateDetails(
-            globalPosition: Offset.zero,
-            delta: const Offset(30, 0),
-            primaryDelta: 30,
-          ),
-        );
+      final gestures =
+          SwipeUpLeftGestures(
+            obtainSize: () => 100,
+            animationController: controller,
+            canDragDone: () => false,
+            onClosing: () => closed = true,
+          )..handleDragUpdate(
+            DragUpdateDetails(
+              globalPosition: Offset.zero,
+              delta: const Offset(30, 0),
+              primaryDelta: 30,
+            ),
+          );
       expect(controller.value, 0.3); // 0.0 + (30 / 100) = 0.3
 
       // Drag end below closePercentage forward or fling negative for pop
@@ -187,8 +184,7 @@ void main() {
 
   group('SwipeChildLayoutDelegate Tests', () {
     test('Calculates constraints and positions for each AxisDirection', () {
-      const delegateUp =
-          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
+      const delegateUp = SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
       final constraints = delegateUp.getConstraintsForChild(
         const BoxConstraints(maxWidth: 400, maxHeight: 800),
       );
@@ -203,8 +199,11 @@ void main() {
       expect(posUp, const Offset(0, 800 - 400 * 0.5));
 
       // Position down
-      const delegateDown =
-          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.down);
+      const delegateDown = SwipeChildLayoutDelegate(
+        0.5,
+        0.8,
+        AxisDirection.down,
+      );
       final posDown = delegateDown.getPositionForChild(
         const Size(400, 800),
         const Size(400, 400),
@@ -212,8 +211,11 @@ void main() {
       expect(posDown, const Offset(0, 800 - 400));
 
       // Position right
-      const delegateRight =
-          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.right);
+      const delegateRight = SwipeChildLayoutDelegate(
+        0.5,
+        0.8,
+        AxisDirection.right,
+      );
       final posRight = delegateRight.getPositionForChild(
         const Size(400, 800),
         const Size(400, 400),
@@ -221,8 +223,11 @@ void main() {
       expect(posRight, const Offset(400 * 0.5 - 400, 800 - 400));
 
       // Position left
-      const delegateLeft =
-          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.left);
+      const delegateLeft = SwipeChildLayoutDelegate(
+        0.5,
+        0.8,
+        AxisDirection.left,
+      );
       final posLeft = delegateLeft.getPositionForChild(
         const Size(400, 800),
         const Size(400, 400),
@@ -230,16 +235,21 @@ void main() {
       expect(posLeft, const Offset(400 - 400 * 0.5, 800 - 400));
 
       // shouldRelayout
-      const delegateSame =
-          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
+      const delegateSame = SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.up);
       expect(delegateUp.shouldRelayout(delegateSame), isFalse);
 
-      const delegateDiffProgress =
-          SwipeChildLayoutDelegate(0.7, 0.8, AxisDirection.up);
+      const delegateDiffProgress = SwipeChildLayoutDelegate(
+        0.7,
+        0.8,
+        AxisDirection.up,
+      );
       expect(delegateUp.shouldRelayout(delegateDiffProgress), isTrue);
 
-      const delegateDiffDirection =
-          SwipeChildLayoutDelegate(0.5, 0.8, AxisDirection.left);
+      const delegateDiffDirection = SwipeChildLayoutDelegate(
+        0.5,
+        0.8,
+        AxisDirection.left,
+      );
       expect(delegateUp.shouldRelayout(delegateDiffDirection), isTrue);
     });
   });
@@ -284,10 +294,8 @@ class _TestSwipeWidgetState extends State<_TestSwipeWidget>
       screenMaximumPercentage: 1,
       animationDirection: AxisDirection.up,
       onClosing: () {},
-      builder: (context) => const Text(
-        'Content with drag',
-        textDirection: TextDirection.ltr,
-      ),
+      builder: (context) =>
+          const Text('Content with drag', textDirection: TextDirection.ltr),
     );
   }
 }

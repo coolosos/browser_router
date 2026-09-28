@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _TestPageRoute extends PageRoute<void> {
   new({required this.child, required RouteSettings settings})
-      : super(settings: settings);
+    : super(settings: settings);
 
   final Widget child;
 
@@ -53,69 +53,65 @@ void main() {
     }
 
     testWidgets(
-        'shows loading widget then page when future completes successfully',
-        (tester) async {
-      var libraryLoaded = false;
-      final completer = Completer<void>();
+      'shows loading widget then page when future completes successfully',
+      (tester) async {
+        var libraryLoaded = false;
+        final completer = Completer<void>();
 
-      final route = createDeferredRoute(
-        loadPageLibrary: () async {
-          await completer.future;
-          libraryLoaded = true;
-        },
-        page: const Text(
-          'Deferred Page Content',
-          textDirection: TextDirection.ltr,
-        ),
-        onLoading: const Text('Loading...', textDirection: TextDirection.ltr),
-      );
-
-      await tester.pumpWidget(
-        WidgetsApp(
-          home: Navigator(
-            onGenerateRoute: (settings) {
-              if (settings.name == route.path) {
-                return _TestPageRoute(child: route.page, settings: settings);
-              }
-              return _TestPageRoute(
-                child: const Text(
-                  'Initial Page',
-                  textDirection: TextDirection.ltr,
-                ),
-                settings: settings,
-              );
-            },
-            initialRoute: route.path,
+        final route = createDeferredRoute(
+          loadPageLibrary: () async {
+            await completer.future;
+            libraryLoaded = true;
+          },
+          page: const Text(
+            'Deferred Page Content',
+            textDirection: TextDirection.ltr,
           ),
-          pageRouteBuilder:
-              <T>(settings, builder) =>
-                  PageRouteBuilder<T>(
-            settings: settings,
-            pageBuilder: (
-              context,
-              animation,
-              secondaryAnimation,
-            ) =>
-                builder(context),
+          onLoading: const Text('Loading...', textDirection: TextDirection.ltr),
+        );
+
+        await tester.pumpWidget(
+          WidgetsApp(
+            home: Navigator(
+              onGenerateRoute: (settings) {
+                if (settings.name == route.path) {
+                  return _TestPageRoute(child: route.page, settings: settings);
+                }
+                return _TestPageRoute(
+                  child: const Text(
+                    'Initial Page',
+                    textDirection: TextDirection.ltr,
+                  ),
+                  settings: settings,
+                );
+              },
+              initialRoute: route.path,
+            ),
+            pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  builder(context),
+            ),
+            color: const Color(0xFFFFFFFF),
           ),
-          color: const Color(0xFFFFFFFF),
-        ),
-      );
+        );
 
-      expect(find.text('Loading...'), findsOneWidget);
-      expect(find.text('Deferred Page Content'), findsNothing);
-      expect(libraryLoaded, isFalse);
+        expect(find.text('Loading...'), findsOneWidget);
+        expect(find.text('Deferred Page Content'), findsNothing);
+        expect(libraryLoaded, isFalse);
 
-      completer.complete();
-      await tester.pumpAndSettle();
+        completer.complete();
+        await tester.pumpAndSettle();
 
-      expect(find.text('Loading...'), findsNothing);
-      expect(find.text('Deferred Page Content'), findsOneWidget);
-      expect(libraryLoaded, isTrue);
-    });
+        expect(find.text('Loading...'), findsNothing);
+        expect(find.text('Deferred Page Content'), findsOneWidget);
+        expect(libraryLoaded, isTrue);
+      },
+    );
 
-    testWidgets('shows error widget when future completes with an error',
-        (tester) async {
+    testWidgets('shows error widget when future completes with an error', (
+      tester,
+    ) async {
       final completer = Completer<void>();
       final testError = Exception('Failed to load library');
 
@@ -150,15 +146,9 @@ void main() {
             },
             initialRoute: route.path,
           ),
-          pageRouteBuilder:
-              <T>(settings, builder) =>
-                  PageRouteBuilder<T>(
+          pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
             settings: settings,
-            pageBuilder: (
-              context,
-              animation,
-              secondaryAnimation,
-            ) =>
+            pageBuilder: (context, animation, secondaryAnimation) =>
                 builder(context),
           ),
           color: const Color(0xFFFFFFFF),
@@ -183,18 +173,14 @@ void main() {
       );
     });
 
-    test(
-        'toCompletedBrowserRoute loads content and returns synchronous BrowserRoute',
-        () async {
+    test('toCompletedBrowserRoute loads content and returns synchronous BrowserRoute', () async {
       var libraryLoaded = false;
       var serviceLocatorInitialized = false;
 
       final deferredRoute = DeferredBrowserRoute(
         path: '/deferred_sync',
         loadPageLibrary: () async {
-          await Future<void>.delayed(
-            const Duration(milliseconds: 10),
-          );
+          await Future<void>.delayed(const Duration(milliseconds: 10));
           libraryLoaded = true;
         },
         pageBuilder: () => const Text(
@@ -202,9 +188,7 @@ void main() {
           textDirection: TextDirection.ltr,
         ),
         initializeServiceLocator: () async {
-          await Future<void>.delayed(
-            const Duration(milliseconds: 5),
-          );
+          await Future<void>.delayed(const Duration(milliseconds: 5));
           serviceLocatorInitialized = true;
         },
       );
@@ -217,10 +201,7 @@ void main() {
       expect(completedRoute, isA<BrowserRoute>());
       expect(completedRoute.path, '/deferred_sync');
 
-      expect(
-        completedRoute.page,
-        isA<Text>(),
-      );
+      expect(completedRoute.page, isA<Text>());
       final textWidget = completedRoute.page as Text;
       expect(textWidget.data, 'Synchronous Page Content');
     });

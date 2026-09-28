@@ -142,9 +142,12 @@ class Browser extends StatelessWidget {
       return RouteTransition.fade_scale;
     }
     return switch (defaultTargetPlatform) {
-      TargetPlatform.iOS || TargetPlatform.macOS => RouteTransition.slide_cupertino,
-      TargetPlatform.android || TargetPlatform.fuchsia => RouteTransition.shared_axis_x,
-      TargetPlatform.windows || TargetPlatform.linux => RouteTransition.fade_scale,
+      TargetPlatform.iOS ||
+      TargetPlatform.macOS => RouteTransition.slide_cupertino,
+      TargetPlatform.android ||
+      TargetPlatform.fuchsia => RouteTransition.shared_axis_x,
+      TargetPlatform.windows ||
+      TargetPlatform.linux => RouteTransition.fade_scale,
     };
   }
 
@@ -167,7 +170,8 @@ class Browser extends StatelessWidget {
     final deepLinkParameter = uri?.queryParameters;
     final traceParameter = settings.arguments as Map<dynamic, dynamic>?;
 
-    final traceRoute = adaptiveTrace?.call(name) ??
+    final traceRoute =
+        adaptiveTrace?.call(name) ??
         traceParameter?.getArgument<TraceRoute>() ??
         const PageTraceRoute();
 
@@ -183,38 +187,37 @@ class Browser extends StatelessWidget {
     final appRoute = _obtainMainRoute(name, arguments);
     debugPrint('Browser.generate: appRoute: ${appRoute.path}');
 
-    final browserRouteWithCustomTransition =
-        _browserRouteTransition(traceRoute, appRoute);
+    final browserRouteWithCustomTransition = _browserRouteTransition(
+      traceRoute,
+      appRoute,
+    );
     debugPrint(
       'Browser.generate: browserRouteWithCustomTransition: ${browserRouteWithCustomTransition.path}',
     );
 
-    final newSettings = RouteSettings(
-      name: name,
-      arguments: arguments,
-    );
+    final newSettings = RouteSettings(name: name, arguments: arguments);
 
     final route = switch (traceRoute) {
       PageTraceRoute() => BrowserPageRoute<dynamic>(
-          traceRoute: traceRoute,
-          appRoute: browserRouteWithCustomTransition,
-          settings: newSettings,
-        ),
+        traceRoute: traceRoute,
+        appRoute: browserRouteWithCustomTransition,
+        settings: newSettings,
+      ),
       SwipeTraceRoute() => BrowserSwipePopupRoute<dynamic>(
-          traceRoute: traceRoute,
-          appRoute: browserRouteWithCustomTransition,
-          settings: newSettings,
-        ),
+        traceRoute: traceRoute,
+        appRoute: browserRouteWithCustomTransition,
+        settings: newSettings,
+      ),
       PopupTraceRoute() => BrowserPopupRoute<dynamic, PopupTraceRoute>(
-          traceRoute: traceRoute,
-          appRoute: browserRouteWithCustomTransition,
-          settings: newSettings,
-        ),
+        traceRoute: traceRoute,
+        appRoute: browserRouteWithCustomTransition,
+        settings: newSettings,
+      ),
       OverlayTraceRoute() => BrowserPageRoute<dynamic>(
-          appRoute: browserRouteWithCustomTransition,
-          traceRoute: const PageTraceRoute(),
-          settings: newSettings,
-        ),
+        appRoute: browserRouteWithCustomTransition,
+        traceRoute: const PageTraceRoute(),
+        settings: newSettings,
+      ),
     };
     debugPrint('Browser.generate: Returning route: $route');
     return route;
@@ -226,15 +229,13 @@ class Browser extends StatelessWidget {
   /// * When validate is incorrect default route will be return.
   ///
   /// In case of path is not found then will be use the default route.
-  BrowserRoute _obtainMainRoute(
-    String? name,
-    Map<dynamic, dynamic> arguments,
-  ) {
+  BrowserRoute _obtainMainRoute(String? name, Map<dynamic, dynamic> arguments) {
     debugPrint(
       'Browser._obtainMainRoute: Called with name: $name, arguments: $arguments',
     );
-    final appRoute =
-        routes.firstWhereOrNull((appRoute) => appRoute.path == name);
+    final appRoute = routes.firstWhereOrNull(
+      (appRoute) => appRoute.path == name,
+    );
     debugPrint('Browser._obtainMainRoute: Found appRoute: ${appRoute?.path}');
 
     final isValid = appRoute?.validateArguments?.call(
@@ -298,36 +299,35 @@ class Browser extends StatelessWidget {
     bool enableDrag = true,
     bool useSafeArea = false,
     List<BoxShadow>? boxShadow,
-  }) =>
-      Navigator.of(context).push<T>(
-        BrowserSwipePopupRoute<T>(
-          settings: routeSettings,
-          traceRoute: SwipeTraceRoute(
-            useSafeArea: useSafeArea,
-            enableDrag: enableDrag,
-            barrierColor: modalBarrierColor,
-            barrierDismissible: isDismissible,
-            screenMaximumPercentage: heightFactor,
-            animationDirection: animationDirection,
+  }) => Navigator.of(context).push<T>(
+    BrowserSwipePopupRoute<T>(
+      settings: routeSettings,
+      traceRoute: SwipeTraceRoute(
+        useSafeArea: useSafeArea,
+        enableDrag: enableDrag,
+        barrierColor: modalBarrierColor,
+        barrierDismissible: isDismissible,
+        screenMaximumPercentage: heightFactor,
+        animationDirection: animationDirection,
+      ),
+      appRoute: BrowserRoute(
+        path: '',
+        page: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            boxShadow: boxShadow,
           ),
-          appRoute: BrowserRoute(
-            path: '',
-            page: Container(
-              padding: padding,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                boxShadow: boxShadow,
-              ),
-              child: Builder(
-                builder: (context) {
-                  return builder.call(context);
-                },
-              ),
-            ),
-            routeTransition: RouteTransition.none,
+          child: Builder(
+            builder: (context) {
+              return builder.call(context);
+            },
           ),
         ),
-      );
+        routeTransition: RouteTransition.none,
+      ),
+    ),
+  );
 
   /// Provides a widget that can listen to page appearance and disappearance events.
   ///
@@ -349,10 +349,7 @@ class Browser extends StatelessWidget {
   static SingleChildStatelessWidget watch({
     Key? key,
     void Function(BuildContext context)? onDisappear,
-    void Function(
-      BuildContext context,
-      DeepLinkParam? deepLinkParam,
-    )? onAppear,
+    void Function(BuildContext context, DeepLinkParam? deepLinkParam)? onAppear,
     Widget? child,
   }) {
     return PageObserverProvider(
@@ -372,13 +369,12 @@ class Browser extends StatelessWidget {
     ContentBuilder content, {
     double? topPadding,
     Duration? duration = const Duration(seconds: 5),
-  }) =>
-      OverlayManager.enqueueBanner(
-        context,
-        content: content,
-        topPadding: topPadding,
-        duration: duration,
-      );
+  }) => OverlayManager.enqueueBanner(
+    context,
+    content: content,
+    topPadding: topPadding,
+    duration: duration,
+  );
 
   /// Dismisses the currently visible overlay modal.
   static void dismissOverlay(BuildContext context) =>
@@ -403,15 +399,12 @@ class Browser extends StatelessWidget {
         useSafeArea: useSafeArea,
         alignment: builderAlignment,
         duration: null,
-        transition: transitionParams ??
+        transition:
+            transitionParams ??
             const OverlayTraceRoute(
               routeTransition: RouteTransition.fade,
-              transitionDuration: Duration(
-                milliseconds: 300,
-              ),
-              reverseTransitionDuration: Duration(
-                milliseconds: 300,
-              ),
+              transitionDuration: Duration(milliseconds: 300),
+              reverseTransitionDuration: Duration(milliseconds: 300),
             ),
         overlayState: Overlay.of(context),
         backgroundColor: backgroundColor,
@@ -428,11 +421,7 @@ class Browser extends StatelessWidget {
       child: OverlayManager(
         child: Builder(
           builder: (context) {
-            return builder(
-              context,
-              routeObserver,
-              generate,
-            );
+            return builder(context, routeObserver, generate);
           },
         ),
       ),
