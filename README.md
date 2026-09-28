@@ -387,7 +387,7 @@ Configure global platform-adaptive transition rules using built-in `Browser.defa
 Browser(
   routes: routes,
   defaultRoute: routes.first,
-  adaptiveTransition: Browser.defaultAdaptiveTransition, // iOS: slide_cupertino, Android: shared_axis_x, Web/Desktop: fade_scale
+  adaptiveTransition: Browser.defaultAdaptiveTransition, // iOS/macOS: slide_cupertino, Android/Fuchsia: shared_axis_x, Web/Desktop: only_hero
   adaptiveTrace: (name) {
     // All routes under /modal/ open as popups automatically
     if (name?.startsWith('/modal/') ?? false) {
