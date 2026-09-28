@@ -164,3 +164,91 @@ base class ModalDraggableScrollableSheetParams extends ModalBaseParams {
   /// classes to properly read and handle this value.
   final bool shouldCloseOnMinExtent;
 }
+
+/// Parameters tailored for centered dialog sheets.
+///
+/// Extends [ModalDraggableScrollableSheetParams] with [BoxConstraints] and
+/// [showCloseIcon] configuration.
+base class ModalCenterParams extends ModalDraggableScrollableSheetParams {
+  const new({
+    this.constraints = const BoxConstraints(
+      maxHeight: 620,
+      maxWidth: 600,
+      minHeight: 300,
+      minWidth: 300,
+    ),
+    this.showCloseIcon = true,
+    super.initialHeightChildSize = 0.4,
+    super.minHeightChildSize = 0.4,
+    super.maxHeightChildSize = 0.6,
+    super.withChildSize = 0.6,
+    super.expand = true,
+    super.snap = false,
+    super.snapSizes,
+    super.snapAnimationDuration,
+    super.shouldCloseOnMinExtent = true,
+  });
+
+  const new small({
+    this.constraints = const BoxConstraints(
+      maxHeight: 650,
+      maxWidth: 600,
+      minHeight: 300,
+      minWidth: 300,
+    ),
+    this.showCloseIcon = true,
+    super.initialHeightChildSize = 0.35,
+    super.minHeightChildSize = 0.35,
+    super.maxHeightChildSize = 0.75,
+    super.withChildSize = 0.6,
+    super.expand = true,
+    super.snap = false,
+    super.snapSizes,
+    super.snapAnimationDuration,
+    super.shouldCloseOnMinExtent = true,
+  });
+
+  const new medium({
+    this.constraints = const BoxConstraints(
+      maxHeight: 1200,
+      minHeight: 300,
+      maxWidth: 800,
+      minWidth: 300,
+    ),
+    this.showCloseIcon = true,
+    super.initialHeightChildSize = 0.4,
+    super.minHeightChildSize = 0.4,
+    super.maxHeightChildSize = 0.6,
+    super.withChildSize = 0.6,
+    super.expand = true,
+    super.snap = false,
+    super.snapSizes,
+    super.snapAnimationDuration,
+    super.shouldCloseOnMinExtent = true,
+  });
+
+  const new large({
+    this.constraints = const BoxConstraints(
+      maxHeight: 1200,
+      minHeight: 300,
+      maxWidth: 1000,
+      minWidth: 300,
+    ),
+    this.showCloseIcon = true,
+    super.initialHeightChildSize = 0.45,
+    super.minHeightChildSize = 0.3,
+    super.maxHeightChildSize = 0.86,
+    super.withChildSize = 0.6,
+    super.expand = true,
+    super.snap = false,
+    super.snapSizes,
+    super.snapAnimationDuration,
+    super.shouldCloseOnMinExtent = true,
+  });
+
+  /// The size constraints for the centered dialog container.
+  final BoxConstraints constraints;
+
+  /// Whether to display the close icon in the header.
+  final bool showCloseIcon;
+}

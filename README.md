@@ -431,11 +431,11 @@ context.launchAction('https://flutter.dev');
 
 ## Overlays, Sequential Banners & Sheets
 
-Manage UI components that sit above the navigation stack using built-in overlay utilities:
+`browser_router` includes a complete suite of pure Flutter (`package:flutter/widgets.dart`) presentation primitives:
 
 ### 1. Sequential Banners Queue
 
-Display notification banners one after another in FIFO order:
+Display notification banners one after another in FIFO order with responsive width constraints on desktop/web:
 
 ```dart
 Browser.enqueueBanner(
@@ -444,53 +444,110 @@ Browser.enqueueBanner(
     padding: const EdgeInsets.all(16),
     color: const Color(0xFF008080),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text('Update available!'),
         GestureDetector(
           onTap: dismiss,
-          child: const Text(' Dismiss'),
+          child: const Text('Dismiss', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       ],
     ),
   ),
+  maxWidth: 500, // Clamped on wide screens
+  margin: const EdgeInsets.symmetric(horizontal: 16),
+  duration: const Duration(seconds: 4),
 );
 ```
 
-### 2. Custom Overlay Modals
+### 2. Loading Overlays & Custom Modals
 
-Show a modal overlay independent of the Navigator route stack:
+Show non-dismissible loading overlays or custom modals decoupled from the route stack:
 
 ```dart
+// Show blocking loading overlay
+Browser.showLoading(
+  context,
+  child: const LoadingSpinnerWidget(),
+  backgroundColor: const Color(0x80000000),
+);
+
+// Dismiss loading overlay
+Browser.dismissLoading(context);
+
+// Or show custom dismissible overlay modal
 Browser.showOverlay(
   context,
   backgroundColor: const Color(0x80000000),
   isDismissible: true,
-  builder: (dismiss) => Container(
-    width: 300,
-    height: 200,
-    color: const Color(0xFFFFFFFF),
-    child: Center(
-      child: GestureDetector(
-        onTap: dismiss,
-        child: const Text('Close Modal'),
+  builder: (dismiss) => Center(
+    child: Container(
+      width: 300,
+      height: 200,
+      color: const Color(0xFFFFFFFF),
+      child: Center(
+        child: GestureDetector(
+          onTap: dismiss,
+          child: const Text('Close Overlay'),
+        ),
       ),
     ),
   ),
 );
-
-// Dismiss programmatically
-Browser.dismissOverlay(context);
 ```
 
-### 3. Modal Bottom Sheet
+### 3. Concrete Sheets, Dialogs & Responsive Adapters (`Sheet`)
+
+Build structured modals using `ModalBase` and present them as draggable bottom sheets, centered dialogs, full-screen sheets, or dynamic responsive layouts:
 
 ```dart
-Browser.showModalBottomSheet(
-  context: context,
-  backgroundColor: const Color(0xFFFFFFFF),
-  heightFactor: 0.6,
-  builder: (context) => const SheetContentView(),
-);
+// 1. Define your modal using pure widgets
+class ProfileModal extends ModalBase<ModalCenterParams> {
+  const ProfileModal({super.params = const ModalCenterParams.medium()});
+
+  @override
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
+    return ModalBaseHeaderParameter(
+      background: const Color(0xFFFFFFFF),
+      headerBackground: const Color(0xFFF5F5F5),
+      dragBar: const Color(0xFFCCCCCC),
+      closeIcon: const Text('✕', style: TextStyle(fontSize: 18)),
+      title: const Text('User Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+
+  @override
+  Widget body({required BuildContext context, ChangeDrawerSize? changeDrawerSize}) {
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: Text('Profile form content...'),
+    );
+  }
+
+  @override
+  Widget? bottomBar(BuildContext context) => null;
+
+  @override
+  ScrollPhysics? scrollPhysics(BuildContext context) => null;
+
+  @override
+  ModalBaseHeader topBar(ModalBaseHeaderParameter headerParameter, BorderRadiusGeometry? border) {
+    return ModalHeader(
+      parameters: headerParameter,
+      shouldCloseOnMinExtent: true,
+      snap: false,
+      border: border,
+    );
+  }
+}
+
+// 2. Open as BottomSheet, CenterDialog, FullSheet, or Responsive
+await Sheet.bottom(context, profileModal);
+await Sheet.center(context, profileModal);
+await Sheet.full(context, profileModal);
+
+// Automatically switches between BottomSheet (< 600px) and CenterSheet (>= 600px):
+await Sheet.responsive(context, profileModal, breakpoint: 600);
 ```
 
 ---

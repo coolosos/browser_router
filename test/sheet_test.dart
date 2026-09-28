@@ -323,5 +323,256 @@ void main() {
       expect(large.minHeightChildSize, equals(0.3));
       expect(large.maxHeightChildSize, equals(0.86));
     });
+
+    test('ModalCenterParams named constructors instantiate with correct constraints', () {
+      const standard = ModalCenterParams();
+      expect(standard.constraints.maxWidth, equals(600));
+      expect(standard.constraints.maxHeight, equals(620));
+      expect(standard.showCloseIcon, isTrue);
+
+      const small = ModalCenterParams.small();
+      expect(small.constraints.maxWidth, equals(600));
+      expect(small.constraints.maxHeight, equals(650));
+      expect(small.initialHeightChildSize, equals(0.35));
+
+      const medium = ModalCenterParams.medium();
+      expect(medium.constraints.maxWidth, equals(800));
+      expect(medium.constraints.maxHeight, equals(1200));
+
+      const large = ModalCenterParams.large();
+      expect(large.constraints.maxWidth, equals(1000));
+      expect(large.constraints.maxHeight, equals(1200));
+    });
+
+    test('ModalBaseSafeArea constructors (.none, .all, .adaptive)', () {
+      const none = ModalBaseSafeArea.none();
+      expect(none.external.top, isFalse);
+      expect(none.external.bottom, isFalse);
+      expect(none.internal.left, isFalse);
+      expect(none.internal.right, isFalse);
+
+      const all = ModalBaseSafeArea.all();
+      expect(all.external.top, isTrue);
+      expect(all.external.bottom, isTrue);
+      expect(all.internal.left, isTrue);
+      expect(all.internal.right, isTrue);
+
+      final adaptive = ModalBaseSafeArea.adaptive();
+      expect(adaptive.external.top, isTrue);
+      expect(adaptive.external.bottom, isFalse);
+    });
+
+    test('EmptyHeader returns zero extent and empty widget', () {
+      const header = EmptyHeader(
+        parameters: ModalBaseHeaderParameter(
+          background: Colors.white,
+          headerBackground: Colors.blue,
+          dragBar: Colors.grey,
+          closeIcon: Icon(Icons.close),
+        ),
+        shouldCloseOnMinExtent: true,
+        snap: false,
+        border: null,
+      );
+
+      expect(header.maxExtent, equals(0));
+      expect(header.minExtent, equals(0));
+    });
+
+    testWidgets(
+      'ModalHeader renders title and triggers close callback on tap',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return CustomScrollView(
+                    slivers: [
+                      SliverPersistentHeader(
+                        delegate: ModalHeader(
+                          parameters: const ModalBaseHeaderParameter(
+                            background: Colors.white,
+                            headerBackground: Colors.blue,
+                            dragBar: Colors.grey,
+                            closeIcon: Icon(
+                              Icons.close,
+                              key: ValueKey('close_btn'),
+                            ),
+                            title: Text('Header Title'),
+                          ),
+                          shouldCloseOnMinExtent: true,
+                          snap: true,
+                          border: BorderRadius.circular(16),
+                          showCloseIcon: true,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        expect(find.text('Header Title'), findsOneWidget);
+        expect(find.byKey(const ValueKey('close_btn')), findsOneWidget);
+      },
+    );
+
+    testWidgets('BrowserBottomSheet renders and mounts draggable sheet', (
+      tester,
+    ) async {
+      const modal = _TestDraggableModal(
+        params: ModalDraggableScrollableSheetParams(),
+      );
+      final bottomSheet = BrowserBottomSheet(modal: modal);
+
+      await tester.pumpWidget(MaterialApp(home: Scaffold(body: bottomSheet)));
+
+      expect(find.text('Draggable Modal Body'), findsOneWidget);
+    });
+
+    testWidgets(
+      'BrowserCenterSheet renders with constraints and rounded corners',
+      (tester) async {
+        const centerModal = _TestCenterModal(params: ModalCenterParams());
+        final centerSheet = BrowserCenterSheet(modal: centerModal);
+
+        await tester.pumpWidget(MaterialApp(home: Scaffold(body: centerSheet)));
+
+        expect(find.text('Center Modal Body'), findsOneWidget);
+      },
+    );
+
+    testWidgets('BrowserFullSheet renders full-screen viewport', (
+      tester,
+    ) async {
+      const modal = _TestDraggableModal(
+        params: ModalDraggableScrollableSheetParams(),
+      );
+      final fullSheet = BrowserFullSheet(modal: modal);
+
+      await tester.pumpWidget(MaterialApp(home: Scaffold(body: fullSheet)));
+
+      expect(find.text('Draggable Modal Body'), findsOneWidget);
+    });
+
+    testWidgets(
+      'BrowserResponsiveSheet switches between BottomSheet and CenterSheet based on width',
+      (tester) async {
+        const centerModal = _TestCenterModal(params: ModalCenterParams());
+        final responsiveSheet = BrowserResponsiveSheet(
+          modal: centerModal,
+          breakpoint: 500,
+        );
+
+        // Narrow screen (< 500)
+        tester.view.physicalSize = const Size(400, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
+
+        await tester.pumpWidget(
+          MaterialApp(home: Scaffold(body: responsiveSheet)),
+        );
+
+        expect(find.byType(BrowserBottomSheet), findsOneWidget);
+        expect(find.byType(BrowserCenterSheet), findsNothing);
+
+        // Wide screen (>= 500)
+        tester.view.physicalSize = const Size(800, 800);
+        await tester.pumpWidget(
+          MaterialApp(home: Scaffold(body: responsiveSheet)),
+        );
+
+        expect(find.byType(BrowserCenterSheet), findsOneWidget);
+        expect(find.byType(BrowserBottomSheet), findsNothing);
+      },
+    );
   });
+}
+
+class _TestDraggableModal
+    extends ModalBase<ModalDraggableScrollableSheetParams> {
+  const new({required super.params});
+
+  @override
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
+    return const ModalBaseHeaderParameter(
+      background: Colors.white,
+      headerBackground: Colors.white,
+      dragBar: Colors.grey,
+      closeIcon: Icon(Icons.close),
+      title: Text('Draggable Title'),
+    );
+  }
+
+  @override
+  Widget body({
+    required BuildContext context,
+    ChangeDrawerSize? changeDrawerSize,
+  }) {
+    return const Text('Draggable Modal Body');
+  }
+
+  @override
+  Widget? bottomBar(BuildContext context) => null;
+
+  @override
+  ScrollPhysics? scrollPhysics(BuildContext context) => null;
+
+  @override
+  ModalBaseHeader topBar(
+    ModalBaseHeaderParameter headerParameter,
+    BorderRadiusGeometry? border,
+  ) {
+    return ModalHeader(
+      parameters: headerParameter,
+      shouldCloseOnMinExtent: true,
+      snap: false,
+      border: border,
+    );
+  }
+}
+
+class _TestCenterModal extends ModalBase<ModalCenterParams> {
+  const new({required super.params});
+
+  @override
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
+    return const ModalBaseHeaderParameter(
+      background: Colors.white,
+      headerBackground: Colors.white,
+      dragBar: Colors.grey,
+      closeIcon: Icon(Icons.close),
+      title: Text('Center Title'),
+    );
+  }
+
+  @override
+  Widget body({
+    required BuildContext context,
+    ChangeDrawerSize? changeDrawerSize,
+  }) {
+    return const Text('Center Modal Body');
+  }
+
+  @override
+  Widget? bottomBar(BuildContext context) => null;
+
+  @override
+  ScrollPhysics? scrollPhysics(BuildContext context) => null;
+
+  @override
+  ModalBaseHeader topBar(
+    ModalBaseHeaderParameter headerParameter,
+    BorderRadiusGeometry? border,
+  ) {
+    return ModalHeader(
+      parameters: headerParameter,
+      shouldCloseOnMinExtent: true,
+      snap: false,
+      border: border,
+    );
+  }
 }

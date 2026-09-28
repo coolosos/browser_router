@@ -316,5 +316,103 @@ void main() {
         expect(find.text('Notification'), findsNothing);
       },
     );
+
+    testWidgets('Banner respects maxWidth constraints and margin', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: OverlayManager(
+            child: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      Browser.enqueueBanner(
+                        context,
+                        (remove) => ElevatedButton(
+                          onPressed: remove,
+                          child: const Text('Constrained Banner'),
+                        ),
+                        maxWidth: 400,
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        duration: Duration.zero,
+                      );
+                    },
+                    child: const Text('Show Constrained Banner'),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Constrained Banner'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.text('Constrained Banner'), findsOneWidget);
+
+      final constrainedBoxFinder = find.ancestor(
+        of: find.text('Constrained Banner'),
+        matching: find.byType(ConstrainedBox),
+      );
+      final constrainedBoxes = tester.widgetList<ConstrainedBox>(
+        constrainedBoxFinder,
+      );
+      expect(
+        constrainedBoxes.any((cb) => cb.constraints.maxWidth == 400),
+        isTrue,
+      );
+
+      // Dismiss banner to clean up ticker
+      await tester.tap(find.text('Constrained Banner'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.text('Constrained Banner'), findsNothing);
+    });
+
+    testWidgets(
+      'Browser.showLoading and Browser.dismissLoading manage non-dismissible loading overlay',
+      (tester) async {
+        late BuildContext savedContext;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OverlayManager(
+              child: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    savedContext = context;
+                    return const Text('Main Screen');
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(find.text('Loading Spinner...'), findsNothing);
+
+        // Show loading
+        Browser.showLoading(
+          savedContext,
+          child: const Text('Loading Spinner...'),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Loading Spinner...'), findsOneWidget);
+
+        // Dismiss loading
+        Browser.dismissLoading(savedContext);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Loading Spinner...'), findsNothing);
+      },
+    );
   });
 }
