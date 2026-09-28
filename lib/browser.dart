@@ -134,12 +134,16 @@ class Browser extends StatelessWidget {
       RouteObserver<ModalRoute<void>>();
 
   /// Default platform-adaptive route transition strategy:
-  /// - Web / Desktop (Windows, Linux): `RouteTransition.fade_scale` for a snappy SPA feel.
+  /// - If the route specifies a non-default transition (e.g., `fade`, `scale`, `none`), it is preserved.
+  /// - Web / Desktop (Windows, Linux): `RouteTransition.only_hero` to avoid jarring side-slides.
   /// - iOS / macOS: `RouteTransition.slide_cupertino` for native parallax slide and edge shadow.
   /// - Android / Fuchsia: `RouteTransition.shared_axis_x` for Material 3 directional motion.
   static RouteTransition defaultAdaptiveTransition(BrowserRoute route) {
+    if (route.routeTransition != RouteTransition.slide_right) {
+      return route.routeTransition;
+    }
     if (kIsWeb) {
-      return RouteTransition.fade_scale;
+      return RouteTransition.only_hero;
     }
     return switch (defaultTargetPlatform) {
       TargetPlatform.iOS ||
@@ -147,7 +151,7 @@ class Browser extends StatelessWidget {
       TargetPlatform.android ||
       TargetPlatform.fuchsia => RouteTransition.shared_axis_x,
       TargetPlatform.windows ||
-      TargetPlatform.linux => RouteTransition.fade_scale,
+      TargetPlatform.linux => RouteTransition.only_hero,
     };
   }
 
