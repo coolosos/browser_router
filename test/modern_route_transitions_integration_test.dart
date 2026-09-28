@@ -420,4 +420,76 @@ void main() {
       expect(route3.path, equals('/r3'));
     });
   });
+
+  group('Modern Transitions Push and Pop Navigation Tests', () {
+    for (final transition in [
+      RouteTransition.shared_axis_x,
+      RouteTransition.shared_axis_y,
+      RouteTransition.shared_axis_z,
+      RouteTransition.fade_scale,
+      RouteTransition.scale,
+      RouteTransition.slide_cupertino,
+    ]) {
+      testWidgets('Push and Pop with ${transition.name} keeps underlying screen visible during pop', (
+        tester,
+      ) async {
+        final routes = [
+          BrowserRoute(
+            path: '/home',
+            page: const Text('Home Screen Page', textDirection: TextDirection.ltr),
+            routeTransition: transition,
+          ),
+          BrowserRoute(
+            path: '/detail',
+            page: const Text('Detail Screen Page', textDirection: TextDirection.ltr),
+            routeTransition: transition,
+          ),
+        ];
+
+        final browser = Browser(
+          routes: routes,
+          defaultRoute: routes.first,
+          builder: (context, routeObserver, generate) {
+            return WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+              initialRoute: '/home',
+            );
+          },
+        );
+
+        await tester.pumpWidget(browser);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home Screen Page'), findsOneWidget);
+
+        // Push detail screen
+        tester.state<NavigatorState>(find.byType(Navigator)).pushNamed('/detail');
+
+        // Halfway through push
+        await tester.pump(const Duration(milliseconds: 150));
+        expect(find.text('Detail Screen Page'), findsOneWidget);
+        expect(find.text('Home Screen Page'), findsOneWidget);
+
+        // Settle push
+        await tester.pumpAndSettle();
+        expect(find.text('Detail Screen Page'), findsOneWidget);
+
+        // Pop detail screen
+        tester.state<NavigatorState>(find.byType(Navigator)).pop();
+
+        // Halfway through pop
+        await tester.pump(const Duration(milliseconds: 150));
+        // Crucial check: Home screen MUST be present and visible during pop transition
+        expect(find.text('Home Screen Page'), findsOneWidget);
+        expect(find.text('Detail Screen Page'), findsOneWidget);
+
+        // Settle pop
+        await tester.pumpAndSettle();
+        expect(find.text('Home Screen Page'), findsOneWidget);
+        expect(find.text('Detail Screen Page'), findsNothing);
+      });
+    }
+  });
 }

@@ -22,13 +22,6 @@ class FadeScale extends StatelessWidget {
             reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
           ),
         ),
-        _secondaryOpacity = Tween<double>(begin: 1, end: 0).animate(
-          CurvedAnimation(
-            parent: secondaryAnimation,
-            curve: Curves.fastEaseInToSlowEaseOut,
-            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-          ),
-        ),
         _secondaryScale = Tween<double>(begin: 1, end: 0.95).animate(
           CurvedAnimation(
             parent: secondaryAnimation,
@@ -43,21 +36,17 @@ class FadeScale extends StatelessWidget {
 
   final Animation<double> _primaryOpacity;
   final Animation<double> _primaryScale;
-  final Animation<double> _secondaryOpacity;
   final Animation<double> _secondaryScale;
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _secondaryOpacity,
-      child: ScaleTransition(
-        scale: _secondaryScale,
-        child: FadeTransition(
-          opacity: _primaryOpacity,
-          child: ScaleTransition(
-            scale: _primaryScale,
-            child: child,
-          ),
+    return ScaleTransition(
+      scale: _secondaryScale,
+      child: FadeTransition(
+        opacity: _primaryOpacity,
+        child: ScaleTransition(
+          scale: _primaryScale,
+          child: child,
         ),
       ),
     );
