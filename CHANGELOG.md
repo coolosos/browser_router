@@ -1,3 +1,10 @@
+## 0.3.2
+
+*   **Feat (Platform Adaptive Transitions)**:
+    *   Preserved explicit non-default route transitions (e.g., `fade`, `scale`, `none`) in `Browser.defaultAdaptiveTransition`, ensuring custom route transitions are honored without needing custom adaptive callbacks.
+    *   Optimized default adaptive transition for Web and Desktop (Windows, Linux) to use `RouteTransition.only_hero`, preventing lateral slide transitions on wide viewport displays while preserving Hero animations.
+*   **Test**: Added unit and integration tests verifying platform-specific default adaptive transition behavior and custom route transition preservation across all platforms.
+
 ## 0.3.1
 
 *   **Fix (Transitions & Pop Visibility)**: Prevented underlying screen from disappearing or flashing black during push and pop route transitions by eliminating destructive secondary opacity fading in `Scale`, `FadeScale`, and `SharedAxis` widgets.

@@ -7,47 +7,89 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Browser.defaultAdaptiveTransition Tests', () {
-    test('returns platform-appropriate transitions', () {
-      const sampleRoute = BrowserRoute(path: '/test', page: SizedBox());
+    test(
+      'returns platform-appropriate transitions for default slide_right route',
+      () {
+        const sampleRoute = BrowserRoute(path: '/test', page: SizedBox());
 
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      expect(
-        Browser.defaultAdaptiveTransition(sampleRoute),
-        equals(RouteTransition.slide_cupertino),
-      );
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        expect(
+          Browser.defaultAdaptiveTransition(sampleRoute),
+          equals(RouteTransition.slide_cupertino),
+        );
 
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
-      expect(
-        Browser.defaultAdaptiveTransition(sampleRoute),
-        equals(RouteTransition.slide_cupertino),
-      );
+        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+        expect(
+          Browser.defaultAdaptiveTransition(sampleRoute),
+          equals(RouteTransition.slide_cupertino),
+        );
 
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      expect(
-        Browser.defaultAdaptiveTransition(sampleRoute),
-        equals(RouteTransition.shared_axis_x),
-      );
+        debugDefaultTargetPlatformOverride = TargetPlatform.android;
+        expect(
+          Browser.defaultAdaptiveTransition(sampleRoute),
+          equals(RouteTransition.shared_axis_x),
+        );
 
-      debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
-      expect(
-        Browser.defaultAdaptiveTransition(sampleRoute),
-        equals(RouteTransition.shared_axis_x),
-      );
+        debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+        expect(
+          Browser.defaultAdaptiveTransition(sampleRoute),
+          equals(RouteTransition.shared_axis_x),
+        );
 
-      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-      expect(
-        Browser.defaultAdaptiveTransition(sampleRoute),
-        equals(RouteTransition.fade_scale),
-      );
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+        expect(
+          Browser.defaultAdaptiveTransition(sampleRoute),
+          equals(RouteTransition.only_hero),
+        );
 
-      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
-      expect(
-        Browser.defaultAdaptiveTransition(sampleRoute),
-        equals(RouteTransition.fade_scale),
-      );
+        debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+        expect(
+          Browser.defaultAdaptiveTransition(sampleRoute),
+          equals(RouteTransition.only_hero),
+        );
 
-      debugDefaultTargetPlatformOverride = null;
-    });
+        debugDefaultTargetPlatformOverride = null;
+      },
+    );
+
+    test(
+      'preserves explicit non-default route transitions across all platforms',
+      () {
+        const explicitFadeRoute = BrowserRoute(
+          path: '/fade',
+          page: SizedBox(),
+          routeTransition: RouteTransition.fade,
+        );
+        const explicitScaleRoute = BrowserRoute(
+          path: '/scale',
+          page: SizedBox(),
+          routeTransition: RouteTransition.scale,
+        );
+        const explicitNoneRoute = BrowserRoute(
+          path: '/none',
+          page: SizedBox(),
+          routeTransition: RouteTransition.none,
+        );
+
+        for (final platform in TargetPlatform.values) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(
+            Browser.defaultAdaptiveTransition(explicitFadeRoute),
+            equals(RouteTransition.fade),
+          );
+          expect(
+            Browser.defaultAdaptiveTransition(explicitScaleRoute),
+            equals(RouteTransition.scale),
+          );
+          expect(
+            Browser.defaultAdaptiveTransition(explicitNoneRoute),
+            equals(RouteTransition.none),
+          );
+        }
+
+        debugDefaultTargetPlatformOverride = null;
+      },
+    );
   });
 
   group('Modern Transitions Integration in BrowserPageRoute', () {
