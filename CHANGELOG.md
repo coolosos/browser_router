@@ -1,3 +1,9 @@
+## 0.3.1
+
+*   **Fix (Transitions & Pop Visibility)**: Prevented underlying screen from disappearing or flashing black during push and pop route transitions by eliminating destructive secondary opacity fading in `Scale`, `FadeScale`, and `SharedAxis` widgets.
+*   **Feat (Transitions)**: Added optional `fillColor` property support in `FadeThrough` transition widget.
+*   **Test**: Added integration test suite verifying that underlying screens remain visible and mounted throughout transition lifecycle during push and pop operations.
+
 ## 0.3.0
 
 *   **Feat (Transitions & Motion)**: Implemented modern **Material 3 Transitions** (`fade_through`, `fade_scale`, `shared_axis_x`, `shared_axis_y`, `shared_axis_z`, `scale`) and authentic **Cupertino iOS 16–18** transition (`slide_cupertino` with flat edges, 1/3 horizontal parallax, and left-edge drop shadow).
