@@ -23,11 +23,7 @@ enum AppPath {
 /// event, bundling the path, arguments, and presentation (`TraceRoute`).
 class AppTrace extends Trace {
   /// Private constructor to be used by the factory constructors.
-  const new _({
-    required super.path,
-    super.args,
-    super.traceRoute,
-  });
+  const new _({required super.path, super.args, super.traceRoute});
 
   /// Navigates to the push arguments screen.
   factory toPushArgs({
@@ -86,27 +82,26 @@ class AppTrace extends Trace {
         source: 'CustomBuildTransition',
       ),
       traceRoute: PageTraceRoute(
-        customTransition: CustomBuildTransition(
-          ({
-            required animation,
-            required secondaryAnimation,
-            required child,
-          }) {
-            final curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOutBack,
-            );
-            return ScaleTransition(
-              scale: curvedAnimation,
-              child: RotationTransition(
-                turns: Tween<double>(begin: 0.85, end: 1).animate(
-                  curvedAnimation,
-                ),
-                child: child,
-              ),
-            );
-          },
-        ),
+        customTransition: CustomBuildTransition(({
+          required animation,
+          required secondaryAnimation,
+          required child,
+        }) {
+          final curvedAnimation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutBack,
+          );
+          return ScaleTransition(
+            scale: curvedAnimation,
+            child: RotationTransition(
+              turns: Tween<double>(
+                begin: 0.85,
+                end: 1,
+              ).animate(curvedAnimation),
+              child: child,
+            ),
+          );
+        }),
       ),
     );
   }

@@ -6,10 +6,7 @@ typedef ScrollableBuilder = Widget Function(
 );
 
 abstract class SheetBase<T extends ModalBaseParams> extends StatelessWidget {
-  const new({
-    required this.modal,
-    super.key,
-  });
+  const new({required this.modal, super.key});
 
   final ModalBase<T> modal;
 
@@ -29,29 +26,20 @@ abstract class SheetBase<T extends ModalBaseParams> extends StatelessWidget {
   PrimaryScrollController scrollController({
     required BuildContext context,
     required Widget child,
-  }) =>
-      PrimaryScrollController.none(child: child);
+  }) => PrimaryScrollController.none(child: child);
 
-  Widget sheetArea({
-    required BuildContext context,
-    required Widget child,
-  }) {
+  Widget sheetArea({required BuildContext context, required Widget child}) {
     final keyboard = MediaQuery.viewInsetsOf(context).bottom;
 
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: keyboard,
-      ),
+      padding: EdgeInsets.only(bottom: keyboard),
       child: child,
     );
   }
 
   BorderRadiusGeometry? get borderRadius;
 
-  EdgeInsets get bodyPadding => const EdgeInsets.only(
-        left: 16,
-        right: 16,
-      );
+  EdgeInsets get bodyPadding => const EdgeInsets.only(left: 16, right: 16);
 
   EdgeInsets get buttonBarPadding =>
       const EdgeInsets.only(left: 16, right: 16, bottom: 16);

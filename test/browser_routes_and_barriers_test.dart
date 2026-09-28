@@ -84,7 +84,10 @@ void main() {
               onGenerateRoute: generate,
               onGenerateInitialRoutes: (path) => [
                 generate(
-                  RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                  RouteSettings(
+                    name: path,
+                    arguments: const <dynamic, dynamic>{},
+                  ),
                 ),
               ],
             ),
@@ -107,9 +110,7 @@ void main() {
       }
     });
 
-    testWidgets('BrowserPopupRoute properties and debugLabel', (
-      tester,
-    ) async {
+    testWidgets('BrowserPopupRoute properties and debugLabel', (tester) async {
       const appRoute = BrowserRoute(
         path: '/popup',
         page: Text('Popup Content', textDirection: TextDirection.ltr),
@@ -132,67 +133,71 @@ void main() {
       expect(popupRoute.debugLabel, contains('/popup'));
     });
 
-    testWidgets('BrowserSwipePopupRoute buildPage with useSafeArea true and false', (
-      tester,
-    ) async {
-      const routes = [
-        BrowserRoute(
-          path: '/home',
-          page: Text('Home Screen', textDirection: TextDirection.ltr),
-        ),
-      ];
-
-      await tester.pumpWidget(
-        Browser(
-          routes: routes,
-          defaultRoute: routes.first,
-          builder: (context, routeObserver, generate) => WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            navigatorObservers: [routeObserver],
-            onGenerateRoute: generate,
-            onGenerateInitialRoutes: (path) => [
-              generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
-              ),
-            ],
+    testWidgets(
+      'BrowserSwipePopupRoute buildPage with useSafeArea true and false',
+      (tester) async {
+        const routes = [
+          BrowserRoute(
+            path: '/home',
+            page: Text('Home Screen', textDirection: TextDirection.ltr),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        ];
 
-      final context = tester.element(find.text('Home Screen'));
+        await tester.pumpWidget(
+          Browser(
+            routes: routes,
+            defaultRoute: routes.first,
+            builder: (context, routeObserver, generate) => WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+              onGenerateInitialRoutes: (path) => [
+                generate(
+                  RouteSettings(
+                    name: path,
+                    arguments: const <dynamic, dynamic>{},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      // 1. Swipe route with useSafeArea: true
-      final swipeRouteSafe = BrowserSwipePopupRoute<void>(
-        traceRoute: const SwipeTraceRoute(useSafeArea: true),
-        appRoute: const BrowserRoute(
-          path: '/sheet_safe',
-          page: Text('Safe Sheet', textDirection: TextDirection.ltr),
-        ),
-        settings: const RouteSettings(name: '/sheet_safe'),
-      );
-      Navigator.of(context).push(swipeRouteSafe);
-      await tester.pumpAndSettle();
-      expect(find.text('Safe Sheet'), findsOneWidget);
+        final context = tester.element(find.text('Home Screen'));
 
-      final safeContext = tester.element(find.text('Safe Sheet'));
-      await safeContext.pop();
-      await tester.pumpAndSettle();
+        // 1. Swipe route with useSafeArea: true
+        final swipeRouteSafe = BrowserSwipePopupRoute<void>(
+          traceRoute: const SwipeTraceRoute(useSafeArea: true),
+          appRoute: const BrowserRoute(
+            path: '/sheet_safe',
+            page: Text('Safe Sheet', textDirection: TextDirection.ltr),
+          ),
+          settings: const RouteSettings(name: '/sheet_safe'),
+        );
+        Navigator.of(context).push(swipeRouteSafe);
+        await tester.pumpAndSettle();
+        expect(find.text('Safe Sheet'), findsOneWidget);
 
-      // 2. Swipe route with useSafeArea: false
-      final swipeRouteUnsafe = BrowserSwipePopupRoute<void>(
-        traceRoute: const SwipeTraceRoute(useSafeArea: false),
-        appRoute: const BrowserRoute(
-          path: '/sheet_unsafe',
-          page: Text('Unsafe Sheet', textDirection: TextDirection.ltr),
-        ),
-        settings: const RouteSettings(name: '/sheet_unsafe'),
-      );
-      final currentContext = tester.element(find.text('Home Screen'));
-      Navigator.of(currentContext).push(swipeRouteUnsafe);
-      await tester.pumpAndSettle();
-      expect(find.text('Unsafe Sheet'), findsOneWidget);
-    });
+        final safeContext = tester.element(find.text('Safe Sheet'));
+        await safeContext.pop();
+        await tester.pumpAndSettle();
+
+        // 2. Swipe route with useSafeArea: false
+        final swipeRouteUnsafe = BrowserSwipePopupRoute<void>(
+          traceRoute: const SwipeTraceRoute(useSafeArea: false),
+          appRoute: const BrowserRoute(
+            path: '/sheet_unsafe',
+            page: Text('Unsafe Sheet', textDirection: TextDirection.ltr),
+          ),
+          settings: const RouteSettings(name: '/sheet_unsafe'),
+        );
+        final currentContext = tester.element(find.text('Home Screen'));
+        Navigator.of(currentContext).push(swipeRouteUnsafe);
+        await tester.pumpAndSettle();
+        expect(find.text('Unsafe Sheet'), findsOneWidget);
+      },
+    );
   });
 
   group('BrowserModalBarrierMixin & Modal/Banner Tests', () {
@@ -206,7 +211,9 @@ void main() {
         ),
         BrowserRoute(
           path: '/popup',
-          page: Center(child: Text('Popup Content', textDirection: TextDirection.ltr)),
+          page: Center(
+            child: Text('Popup Content', textDirection: TextDirection.ltr),
+          ),
         ),
       ];
 
@@ -220,7 +227,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -252,9 +262,7 @@ void main() {
       expect(find.text('Home Screen'), findsOneWidget);
     });
 
-    testWidgets('Modal alignment fix and properties', (
-      tester,
-    ) async {
+    testWidgets('Modal alignment fix and properties', (tester) async {
       const routes = [
         BrowserRoute(
           path: '/home',
@@ -272,7 +280,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -289,7 +300,8 @@ void main() {
         isDismissible: true,
         useSafeArea: true,
         builderAlignment: Alignment.bottomCenter,
-        builder: (dismiss) => const Text('Aligned Modal', textDirection: TextDirection.ltr),
+        builder: (dismiss) =>
+            const Text('Aligned Modal', textDirection: TextDirection.ltr),
       );
       await tester.pumpAndSettle();
 
@@ -310,9 +322,7 @@ void main() {
       expect(find.text('Aligned Modal'), findsNothing);
     });
 
-    testWidgets('Banner.fromContext and swipe dismiss up', (
-      tester,
-    ) async {
+    testWidgets('Banner.fromContext and swipe dismiss up', (tester) async {
       const routes = [
         BrowserRoute(
           path: '/home',
@@ -330,7 +340,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),
@@ -342,7 +355,8 @@ void main() {
       unawaited(
         Banner.fromContext(
           context: homeContext,
-          content: (dismiss) => const Text('Swipe Up Banner', textDirection: TextDirection.ltr),
+          content: (dismiss) =>
+              const Text('Swipe Up Banner', textDirection: TextDirection.ltr),
           transition: const OverlayTraceRoute(),
         ).insert(),
       );
@@ -350,7 +364,11 @@ void main() {
       expect(find.text('Swipe Up Banner'), findsOneWidget);
 
       // Dismiss by swiping up
-      await tester.fling(find.text('Swipe Up Banner'), const Offset(0, -300), 1000);
+      await tester.fling(
+        find.text('Swipe Up Banner'),
+        const Offset(0, -300),
+        1000,
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Swipe Up Banner'), findsNothing);
@@ -381,7 +399,10 @@ void main() {
             onGenerateRoute: generate,
             onGenerateInitialRoutes: (path) => [
               generate(
-                RouteSettings(name: path, arguments: const <dynamic, dynamic>{}),
+                RouteSettings(
+                  name: path,
+                  arguments: const <dynamic, dynamic>{},
+                ),
               ),
             ],
           ),

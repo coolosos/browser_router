@@ -54,12 +54,10 @@ class BrowserRoute extends Equatable {
   /// validateArguments: (check, get) => check<ProfileArgs>(),
   /// ```
   final bool Function(Check checkArgument, GetArguments getArgument)?
-      validateArguments;
+  validateArguments;
 
   @override
-  List<Object?> get props => [
-        path,
-      ];
+  List<Object?> get props => [path];
 
   BrowserRoute copyWith({
     String? path,
@@ -68,7 +66,7 @@ class BrowserRoute extends Equatable {
     BuildTransition? customTransition,
     void Function(BuildContext context)? builderTrigger,
     bool Function(Check checkArgument, GetArguments getArgument)?
-        validateArguments,
+    validateArguments,
   }) {
     return BrowserRoute(
       page: page ?? this.page,

@@ -8,9 +8,9 @@ part 'swipe_transition_builder.dart';
 
 extension GenericAxis on AxisDirection {
   Axis generic() => switch (this) {
-        AxisDirection.up || AxisDirection.down => Axis.vertical,
-        AxisDirection.right || AxisDirection.left => Axis.horizontal,
-      };
+    AxisDirection.up || AxisDirection.down => Axis.vertical,
+    AxisDirection.right || AxisDirection.left => Axis.horizontal,
+  };
 }
 
 class Swipe extends StatelessWidget {
@@ -26,32 +26,32 @@ class Swipe extends StatelessWidget {
     this.direction = AxisDirection.up,
     super.key,
   }) : _child = hasEnableGestures
-            ? NotificationListener<DraggableScrollableNotification>(
-                onNotification: onNotification,
-                child: GestureDetector(
-                  excludeFromSemantics: true,
-                  onVerticalDragStart: direction.generic() == Axis.vertical
-                      ? gestures?.handleDragStart
-                      : null,
-                  onVerticalDragEnd: direction.generic() == Axis.vertical
-                      ? gestures?.handleDragEnd
-                      : null,
-                  onVerticalDragUpdate: direction.generic() == Axis.vertical
-                      ? gestures?.handleDragUpdate
-                      : null,
-                  onHorizontalDragStart: direction.generic() == Axis.horizontal
-                      ? gestures?.handleDragStart
-                      : null,
-                  onHorizontalDragUpdate: direction.generic() == Axis.horizontal
-                      ? gestures?.handleDragUpdate
-                      : null,
-                  onHorizontalDragEnd: direction.generic() == Axis.horizontal
-                      ? gestures?.handleDragEnd
-                      : null,
-                  child: child,
-                ),
-              )
-            : child;
+           ? NotificationListener<DraggableScrollableNotification>(
+               onNotification: onNotification,
+               child: GestureDetector(
+                 excludeFromSemantics: true,
+                 onVerticalDragStart: direction.generic() == Axis.vertical
+                     ? gestures?.handleDragStart
+                     : null,
+                 onVerticalDragEnd: direction.generic() == Axis.vertical
+                     ? gestures?.handleDragEnd
+                     : null,
+                 onVerticalDragUpdate: direction.generic() == Axis.vertical
+                     ? gestures?.handleDragUpdate
+                     : null,
+                 onHorizontalDragStart: direction.generic() == Axis.horizontal
+                     ? gestures?.handleDragStart
+                     : null,
+                 onHorizontalDragUpdate: direction.generic() == Axis.horizontal
+                     ? gestures?.handleDragUpdate
+                     : null,
+                 onHorizontalDragEnd: direction.generic() == Axis.horizontal
+                     ? gestures?.handleDragEnd
+                     : null,
+                 child: child,
+               ),
+             )
+           : child;
 
   final Animation<double> animation;
   final Widget _child;

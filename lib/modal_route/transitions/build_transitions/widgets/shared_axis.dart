@@ -1,10 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-enum SharedAxisDirection {
-  horizontal,
-  vertical,
-  scaled,
-}
+enum SharedAxisDirection { horizontal, vertical, scaled }
 
 /// Material 3 Shared Axis Transition.
 ///
@@ -17,9 +13,9 @@ class SharedAxis extends StatelessWidget {
     this.direction = SharedAxisDirection.horizontal,
     super.key,
   }) : _primaryOpacity = CurvedAnimation(
-          parent: animation,
-          curve: const Interval(0.1, 1, curve: Curves.fastEaseInToSlowEaseOut),
-        );
+         parent: animation,
+         curve: const Interval(0.1, 1, curve: Curves.fastEaseInToSlowEaseOut),
+       );
 
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
@@ -41,27 +37,29 @@ class SharedAxis extends StatelessWidget {
     final textDirection = Directionality.of(context);
     final isRtl = textDirection == TextDirection.rtl;
 
-    final primaryOffset = Tween<Offset>(
-      begin: Offset(isRtl ? -0.3 : 0.3, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: animation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final primaryOffset =
+        Tween<Offset>(
+          begin: Offset(isRtl ? -0.3 : 0.3, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
-    final secondaryOffset = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(isRtl ? 0.3 : -0.3, 0),
-    ).animate(
-      CurvedAnimation(
-        parent: secondaryAnimation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final secondaryOffset =
+        Tween<Offset>(
+          begin: Offset.zero,
+          end: Offset(isRtl ? 0.3 : -0.3, 0),
+        ).animate(
+          CurvedAnimation(
+            parent: secondaryAnimation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
     return SlideTransition(
       position: secondaryOffset,
@@ -70,46 +68,36 @@ class SharedAxis extends StatelessWidget {
       child: SlideTransition(
         position: primaryOffset,
         textDirection: textDirection,
-        child: FadeTransition(
-          opacity: _primaryOpacity,
-          child: child,
-        ),
+        child: FadeTransition(opacity: _primaryOpacity, child: child),
       ),
     );
   }
 
   Widget _buildVertical(BuildContext context) {
-    final primaryOffset = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: animation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final primaryOffset =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
-    final secondaryOffset = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0, -0.3),
-    ).animate(
-      CurvedAnimation(
-        parent: secondaryAnimation,
-        curve: Curves.fastEaseInToSlowEaseOut,
-        reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-      ),
-    );
+    final secondaryOffset =
+        Tween<Offset>(begin: Offset.zero, end: const Offset(0, -0.3)).animate(
+          CurvedAnimation(
+            parent: secondaryAnimation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+          ),
+        );
 
     return SlideTransition(
       position: secondaryOffset,
       transformHitTests: false,
       child: SlideTransition(
         position: primaryOffset,
-        child: FadeTransition(
-          opacity: _primaryOpacity,
-          child: child,
-        ),
+        child: FadeTransition(opacity: _primaryOpacity, child: child),
       ),
     );
   }
@@ -135,10 +123,7 @@ class SharedAxis extends StatelessWidget {
       scale: secondaryScale,
       child: ScaleTransition(
         scale: primaryScale,
-        child: FadeTransition(
-          opacity: _primaryOpacity,
-          child: child,
-        ),
+        child: FadeTransition(opacity: _primaryOpacity, child: child),
       ),
     );
   }

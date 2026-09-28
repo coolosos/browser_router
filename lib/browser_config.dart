@@ -14,22 +14,17 @@ class BrowserConfig extends InheritedWidget {
   final List<BrowserRoute> routes;
   final Future<void> Function(Uri uri)? openUrl;
 
-  static BrowserConfig of(
-    BuildContext context, {
-    bool build = false,
-  }) {
+  static BrowserConfig of(BuildContext context, {bool build = false}) {
     final conf = build
         ? context.dependOnInheritedWidgetOfExactType<BrowserConfig>()
         : context.findAncestorWidgetOfExactType<BrowserConfig>();
 
     if (conf == null) {
-      throw FlutterError(
-        '''
+      throw FlutterError('''
         BrowserConfig.of() called with a context that does not contain a config.
         
         The widget used was: ${context.widget.runtimeType}.
-        ''',
-      );
+        ''');
     }
 
     return conf;

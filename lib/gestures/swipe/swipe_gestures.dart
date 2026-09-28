@@ -83,8 +83,8 @@ final class SwipeDownRightGestures extends SwipeGestures {
     }
 
     if (delta > 0 || animationController.value > 0) {
-      animationController.value =
-          (animationController.value - delta / size).clamp(0.0, 1.0);
+      animationController.value = (animationController.value - delta / size)
+          .clamp(0.0, 1.0);
     }
   }
 
@@ -142,8 +142,8 @@ final class SwipeUpLeftGestures extends SwipeGestures {
     }
 
     if (delta > 0 || animationController.value > 0) {
-      animationController.value =
-          (animationController.value + delta / size).clamp(0.0, 1.0);
+      animationController.value = (animationController.value + delta / size)
+          .clamp(0.0, 1.0);
     }
   }
 }

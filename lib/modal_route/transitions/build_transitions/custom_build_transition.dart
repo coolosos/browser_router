@@ -18,7 +18,8 @@ final class CustomBuildTransition implements BuildTransition {
     required Animation<double> animation,
     required Animation<double> secondaryAnimation,
     required Widget child,
-  }) builder;
+  })
+  builder;
 
   @override
   Widget call({

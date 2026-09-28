@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
+
 import 'build_transition.dart';
 import 'widgets/slide.dart';
 
 final class SlideBuildTransition implements BuildTransition {
-  const new({
-    required this.position,
-  });
+  const new({required this.position});
 
   final Positions position;
 

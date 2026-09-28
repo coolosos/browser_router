@@ -11,12 +11,12 @@ abstract class OverlayModal {
     required this._content,
     required this.transition,
     required OverlayState overlayState,
-  })  : _overlayState = overlayState,
-        _animationController = AnimationController(
-          vsync: overlayState,
-          duration: transition.transitionDuration,
-          reverseDuration: transition.reverseTransitionDuration,
-        );
+  }) : _overlayState = overlayState,
+       _animationController = AnimationController(
+         vsync: overlayState,
+         duration: transition.transitionDuration,
+         reverseDuration: transition.reverseTransitionDuration,
+       );
 
   //constructor fields
   final OverlayState _overlayState;
@@ -54,10 +54,7 @@ abstract class OverlayModal {
     if (_isDisposed) return;
 
     if (duration is Duration && duration != Duration.zero) {
-      timer = Timer(
-        duration!,
-        remove,
-      );
+      timer = Timer(duration!, remove);
     }
 
     await completer?.future;

@@ -25,15 +25,12 @@ class Sheet extends StatelessWidget {
   }
 
   static BrowserRoute get route => const BrowserRoute(
-        path: sheetPath,
-        page: Sheet(),
-        routeTransition: RouteTransition.none,
-      );
+    path: sheetPath,
+    page: Sheet(),
+    routeTransition: RouteTransition.none,
+  );
 
-  static Future<void> show(
-    BuildContext context,
-    Widget child,
-  ) async {
+  static Future<void> show(BuildContext context, Widget child) async {
     await Trace(
       path: sheetPath,
       traceRoute: TraceRoute.popup(),
@@ -43,9 +40,7 @@ class Sheet extends StatelessWidget {
 }
 
 final class SheetRouteParams extends RouteParams {
-  new({
-    required this.child,
-  });
+  new({required this.child});
 
   final Widget child;
 }

@@ -143,7 +143,10 @@ void main() {
             ),
           );
 
-          expect(find.text('SharedAxis ${type.name} ${direction.name}'), findsOneWidget);
+          expect(
+            find.text('SharedAxis ${type.name} ${direction.name}'),
+            findsOneWidget,
+          );
 
           primaryController.value = 0.0;
           await tester.pump();
@@ -188,7 +191,9 @@ void main() {
                     animation: primaryController,
                     secondaryAnimation: secondaryController,
                     hasShadow: hasShadow,
-                    child: Text('SlideCupertino shadow=$hasShadow dir=${direction.name}'),
+                    child: Text(
+                      'SlideCupertino shadow=$hasShadow dir=${direction.name}',
+                    ),
                   );
                 },
               ),
@@ -216,9 +221,7 @@ void main() {
       }
     });
 
-    testWidgets('Scale renders scale and fade', (
-      tester,
-    ) async {
+    testWidgets('Scale renders scale and fade', (tester) async {
       late AnimationController primaryController;
       late AnimationController secondaryController;
 
@@ -329,11 +332,7 @@ void main() {
                       required animation,
                       required secondaryAnimation,
                       required child,
-                    }) =>
-                        Opacity(
-                      opacity: 0.5,
-                      child: child,
-                    ),
+                    }) => Opacity(opacity: 0.5, child: child),
                   ).call(
                     animation: dummyAnim,
                     secondaryAnimation: dummySecAnim,
@@ -350,12 +349,27 @@ void main() {
     });
 
     test('RouteTransition enum contains all modern transitions and correctly maps to BuildTransitions', () {
-      expect(RouteTransition.fade_through.build, isA<FadeThroughBuildTransition>());
+      expect(
+        RouteTransition.fade_through.build,
+        isA<FadeThroughBuildTransition>(),
+      );
       expect(RouteTransition.fade_scale.build, isA<FadeScaleBuildTransition>());
-      expect(RouteTransition.shared_axis_x.build, isA<SharedAxisBuildTransition>());
-      expect(RouteTransition.shared_axis_y.build, isA<SharedAxisBuildTransition>());
-      expect(RouteTransition.shared_axis_z.build, isA<SharedAxisBuildTransition>());
-      expect(RouteTransition.slide_cupertino.build, isA<SlideCupertinoBuildTransition>());
+      expect(
+        RouteTransition.shared_axis_x.build,
+        isA<SharedAxisBuildTransition>(),
+      );
+      expect(
+        RouteTransition.shared_axis_y.build,
+        isA<SharedAxisBuildTransition>(),
+      );
+      expect(
+        RouteTransition.shared_axis_z.build,
+        isA<SharedAxisBuildTransition>(),
+      );
+      expect(
+        RouteTransition.slide_cupertino.build,
+        isA<SlideCupertinoBuildTransition>(),
+      );
       expect(RouteTransition.scale.build, isA<ScaleBuildTransition>());
 
       // Legacy transitions are preserved

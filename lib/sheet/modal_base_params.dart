@@ -28,16 +28,16 @@ base class ModalDraggableScrollableSheetParams extends ModalBaseParams {
     Duration? snapAnimationDuration,
     bool shouldCloseOnMinExtent = true,
   }) : this(
-          initialHeightChildSize: initialHeightChildSize,
-          minHeightChildSize: minHeightChildSize,
-          maxHeightChildSize: maxHeightChildSize,
-          withChildSize: withChildSize,
-          expand: expand,
-          snap: snap,
-          snapSizes: snapSizes,
-          snapAnimationDuration: snapAnimationDuration,
-          shouldCloseOnMinExtent: shouldCloseOnMinExtent,
-        );
+         initialHeightChildSize: initialHeightChildSize,
+         minHeightChildSize: minHeightChildSize,
+         maxHeightChildSize: maxHeightChildSize,
+         withChildSize: withChildSize,
+         expand: expand,
+         snap: snap,
+         snapSizes: snapSizes,
+         snapAnimationDuration: snapAnimationDuration,
+         shouldCloseOnMinExtent: shouldCloseOnMinExtent,
+       );
 
   const new medium({
     double initialHeightChildSize = 0.4,
@@ -50,16 +50,16 @@ base class ModalDraggableScrollableSheetParams extends ModalBaseParams {
     Duration? snapAnimationDuration,
     bool shouldCloseOnMinExtent = true,
   }) : this(
-          initialHeightChildSize: initialHeightChildSize,
-          minHeightChildSize: minHeightChildSize,
-          maxHeightChildSize: maxHeightChildSize,
-          withChildSize: withChildSize,
-          expand: expand,
-          snap: snap,
-          snapSizes: snapSizes,
-          snapAnimationDuration: snapAnimationDuration,
-          shouldCloseOnMinExtent: shouldCloseOnMinExtent,
-        );
+         initialHeightChildSize: initialHeightChildSize,
+         minHeightChildSize: minHeightChildSize,
+         maxHeightChildSize: maxHeightChildSize,
+         withChildSize: withChildSize,
+         expand: expand,
+         snap: snap,
+         snapSizes: snapSizes,
+         snapAnimationDuration: snapAnimationDuration,
+         shouldCloseOnMinExtent: shouldCloseOnMinExtent,
+       );
 
   const new large({
     double initialHeightChildSize = 0.45,
@@ -72,16 +72,16 @@ base class ModalDraggableScrollableSheetParams extends ModalBaseParams {
     Duration? snapAnimationDuration,
     bool shouldCloseOnMinExtent = true,
   }) : this(
-          initialHeightChildSize: initialHeightChildSize,
-          minHeightChildSize: minHeightChildSize,
-          maxHeightChildSize: maxHeightChildSize,
-          withChildSize: withChildSize,
-          expand: expand,
-          snap: snap,
-          snapSizes: snapSizes,
-          snapAnimationDuration: snapAnimationDuration,
-          shouldCloseOnMinExtent: shouldCloseOnMinExtent,
-        );
+         initialHeightChildSize: initialHeightChildSize,
+         minHeightChildSize: minHeightChildSize,
+         maxHeightChildSize: maxHeightChildSize,
+         withChildSize: withChildSize,
+         expand: expand,
+         snap: snap,
+         snapSizes: snapSizes,
+         snapAnimationDuration: snapAnimationDuration,
+         shouldCloseOnMinExtent: shouldCloseOnMinExtent,
+       );
 
   /// The initial fractional value of the parent container's height to use when
   /// displaying the widget.

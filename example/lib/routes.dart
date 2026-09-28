@@ -23,10 +23,7 @@ final routes = [
       return true;
     },
   ),
-  BrowserRoute(
-    path: AppPath.popArgs.path,
-    page: const PopArgsScreen(),
-  ),
+  BrowserRoute(path: AppPath.popArgs.path, page: const PopArgsScreen()),
   BrowserRoute(
     path: AppPath.toSetPopArgs.path,
     page: const ToSetPopArgsScreen(),
@@ -39,8 +36,5 @@ final routes = [
     path: AppPath.intermediate.path,
     page: const IntermediateScreen(),
   ),
-  BrowserRoute(
-    path: AppPath.deep.path,
-    page: const DeepScreen(),
-  ),
+  BrowserRoute(path: AppPath.deep.path, page: const DeepScreen()),
 ];

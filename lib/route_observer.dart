@@ -9,14 +9,10 @@ class PageObserverProvider extends SingleChildStatelessWidget {
     super.child,
   });
 
-  final void Function(
-    BuildContext context,
-    DeepLinkParam? deepLinkParam,
-  )? onAppear;
+  final void Function(BuildContext context, DeepLinkParam? deepLinkParam)?
+  onAppear;
 
-  final void Function(
-    BuildContext context,
-  )? onDisappear;
+  final void Function(BuildContext context)? onDisappear;
 
   final RouteObserver<ModalRoute<void>> routeObserver;
 
@@ -50,44 +46,35 @@ class RouteObserverProvider extends SingleChildStatefulWidget {
   /// Called when the top route has been popped off, and the current route
   /// shows up.
   /// !appears
-  final void Function(
-    BuildContext context,
-  )? didPopNext;
+  final void Function(BuildContext context)? didPopNext;
 
   /// Called when the top route has been popped off, and the current route
   /// shows up with arguments.
   /// !appears
-  final void Function(
-    BuildContext context,
-    DeepLinkParam? deepLinkParam,
-  )? didPopNextWithArguments;
+  final void Function(BuildContext context, DeepLinkParam? deepLinkParam)?
+  didPopNextWithArguments;
 
   /// Called when the current route has been pushed.
   /// !appears
-  final void Function(
-    BuildContext context,
-    DeepLinkParam? deepLinkParam,
-  )? didPush;
+  final void Function(BuildContext context, DeepLinkParam? deepLinkParam)?
+  didPush;
 
   /// Called when the current route has been popped off.
   /// !disappear
-  final void Function(
-    BuildContext context,
-  )? didPop;
+  final void Function(BuildContext context)? didPop;
 
   /// Called when a new route has been pushed, and the current route is no
   /// longer visible.
   /// !disappear
-  final void Function(
-    BuildContext context,
-  )? didPushNext;
+  final void Function(BuildContext context)? didPushNext;
 
   @override
   State<RouteObserverProvider> createState() => _RouteObserverProviderState();
 }
 
 class _RouteObserverProviderState
-    extends SingleChildState<RouteObserverProvider> with RouteAware {
+    extends SingleChildState<RouteObserverProvider>
+    with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

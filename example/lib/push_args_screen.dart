@@ -41,8 +41,10 @@ class PushArgsScreen extends StatelessWidget {
                 child: Text(
                   'Message: "${args.message}"\n(From: ${args.source})',
                   textAlign: TextAlign.center,
-                  style:
-                      const TextStyle(color: Color(0xFFFFFFFF), fontSize: 18),
+                  style: const TextStyle(
+                    color: Color(0xFFFFFFFF),
+                    fontSize: 18,
+                  ),
                   textDirection: TextDirection.ltr,
                 ),
               ),

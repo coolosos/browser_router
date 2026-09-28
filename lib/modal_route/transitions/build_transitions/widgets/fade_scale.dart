@@ -10,25 +10,25 @@ class FadeScale extends StatelessWidget {
     required this.secondaryAnimation,
     required this.child,
     super.key,
-  })  : _primaryOpacity = CurvedAnimation(
-          parent: animation,
-          curve: Curves.fastEaseInToSlowEaseOut,
-          reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-        ),
-        _primaryScale = Tween<double>(begin: 0.95, end: 1).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastEaseInToSlowEaseOut,
-            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-          ),
-        ),
-        _secondaryScale = Tween<double>(begin: 1, end: 0.95).animate(
-          CurvedAnimation(
-            parent: secondaryAnimation,
-            curve: Curves.fastEaseInToSlowEaseOut,
-            reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
-          ),
-        );
+  }) : _primaryOpacity = CurvedAnimation(
+         parent: animation,
+         curve: Curves.fastEaseInToSlowEaseOut,
+         reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+       ),
+       _primaryScale = Tween<double>(begin: 0.95, end: 1).animate(
+         CurvedAnimation(
+           parent: animation,
+           curve: Curves.fastEaseInToSlowEaseOut,
+           reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+         ),
+       ),
+       _secondaryScale = Tween<double>(begin: 1, end: 0.95).animate(
+         CurvedAnimation(
+           parent: secondaryAnimation,
+           curve: Curves.fastEaseInToSlowEaseOut,
+           reverseCurve: Curves.fastEaseInToSlowEaseOut.flipped,
+         ),
+       );
 
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
@@ -44,10 +44,7 @@ class FadeScale extends StatelessWidget {
       scale: _secondaryScale,
       child: FadeTransition(
         opacity: _primaryOpacity,
-        child: ScaleTransition(
-          scale: _primaryScale,
-          child: child,
-        ),
+        child: ScaleTransition(scale: _primaryScale, child: child),
       ),
     );
   }

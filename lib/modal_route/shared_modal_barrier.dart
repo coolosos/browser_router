@@ -14,11 +14,7 @@ mixin BrowserModalBarrierMixin<T> on ModalRoute<T> {
         ColorTween(
           begin: barrierColor?.withValues(alpha: 0),
           end: barrierColor,
-        ).chain(
-          CurveTween(
-            curve: barrierCurve,
-          ),
-        ),
+        ).chain(CurveTween(curve: barrierCurve)),
       );
       barrier = Builder(
         builder: (context) {

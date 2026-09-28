@@ -9,29 +9,26 @@ export 'params/trace_route.dart' show PageTraceRoute;
 
 class BrowserPageRoute<T> extends PageRoute<T>
     with BrowserModalBarrierMixin<T> {
-  new({
-    required this.appRoute,
-    required this.traceRoute,
-    super.settings,
-  })  : transitionDuration =
-            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
-                    RouteTransition.none
-                ? Duration.zero
-                : traceRoute.transitionDuration,
-        reverseTransitionDuration =
-            (traceRoute.routeTransition ?? appRoute.routeTransition) ==
-                    RouteTransition.none
-                ? Duration.zero
-                : traceRoute.reverseTransitionDuration,
-        barrierLabel = traceRoute.barrierLabel,
-        maintainState = traceRoute.maintainState,
-        opaque = traceRoute.opaque,
-        barrierDismissible = traceRoute.barrierDismissible,
-        barrierColor = traceRoute.barrierColor,
-        super(
-          allowSnapshotting: traceRoute.allowSnapshotting,
-          fullscreenDialog: traceRoute.fullScreenDialog,
-        ) {
+  new({required this.appRoute, required this.traceRoute, super.settings})
+    : transitionDuration =
+          (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+              RouteTransition.none
+          ? Duration.zero
+          : traceRoute.transitionDuration,
+      reverseTransitionDuration =
+          (traceRoute.routeTransition ?? appRoute.routeTransition) ==
+              RouteTransition.none
+          ? Duration.zero
+          : traceRoute.reverseTransitionDuration,
+      barrierLabel = traceRoute.barrierLabel,
+      maintainState = traceRoute.maintainState,
+      opaque = traceRoute.opaque,
+      barrierDismissible = traceRoute.barrierDismissible,
+      barrierColor = traceRoute.barrierColor,
+      super(
+        allowSnapshotting: traceRoute.allowSnapshotting,
+        fullscreenDialog: traceRoute.fullScreenDialog,
+      ) {
     debugPrint('BrowserPageRoute: Constructor called for ${settings.name}');
   }
 
@@ -99,11 +96,13 @@ class BrowserPageRoute<T> extends PageRoute<T>
     }
 
     final isolatedChild = RepaintBoundary(child: child);
-    final buildTransition = traceRoute.customTransition ??
+    final buildTransition =
+        traceRoute.customTransition ??
         appRoute.customTransition ??
         (traceRoute.routeTransition ?? appRoute.routeTransition).build;
 
-    final isSlide = appRoute.routeTransition == RouteTransition.slide_right ||
+    final isSlide =
+        appRoute.routeTransition == RouteTransition.slide_right ||
         appRoute.routeTransition == RouteTransition.slide_cupertino;
 
     if (defaultTargetPlatform == TargetPlatform.iOS &&

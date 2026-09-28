@@ -11,8 +11,9 @@ final class TestArgs extends RouteParams {
 
 void main() {
   group('RouteObserverProvider and Browser.watch Tests', () {
-    testWidgets('triggers onAppear and onDisappear on push and pop',
-        (tester) async {
+    testWidgets('triggers onAppear and onDisappear on push and pop', (
+      tester,
+    ) async {
       var homeAppearCount = 0;
       var homeDisappearCount = 0;
       var detailAppearCount = 0;
@@ -89,8 +90,9 @@ void main() {
       expect(homeAppearCount, 2);
     });
 
-    testWidgets('Trace navigation helper methods push and pop properly',
-        (tester) async {
+    testWidgets('Trace navigation helper methods push and pop properly', (
+      tester,
+    ) async {
       late BuildContext savedContext;
       TestArgs? receivedArgs;
 
@@ -148,9 +150,7 @@ void main() {
       expect(receivedArgs?.value, 'arg1');
 
       // Trace.pushAndReplacement
-      const trace2 = Trace<PageTraceRoute>(
-        path: '/step2',
-      );
+      const trace2 = Trace<PageTraceRoute>(path: '/step2');
       unawaited(trace2.pushAndReplacement(savedContext));
       await tester.pumpAndSettle();
       expect(find.text('Step 2'), findsOneWidget);
