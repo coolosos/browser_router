@@ -20,20 +20,18 @@ class MyApp extends StatelessWidget {
         log(uri.toString());
       },
       builder: (context, routeObserver, generate) {
-        return OverlayManager(
-          child: WidgetsApp(
-            color: const Color(0xFFFFFFFF),
-            navigatorObservers: [routeObserver],
-            onGenerateRoute: generate,
-            onGenerateInitialRoutes: (routePath) => [
-              generate(
-                RouteSettings(
-                  name: routePath,
-                  arguments: const <dynamic, dynamic>{},
-                ),
+        return WidgetsApp(
+          color: const Color(0xFFFFFFFF),
+          navigatorObservers: [routeObserver],
+          onGenerateRoute: generate,
+          onGenerateInitialRoutes: (routePath) => [
+            generate(
+              RouteSettings(
+                name: routePath,
+                arguments: const <dynamic, dynamic>{},
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

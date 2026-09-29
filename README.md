@@ -437,7 +437,34 @@ context.launchAction('https://flutter.dev');
 
 ## Overlays, Sequential Banners & Sheets
 
-`browser_router` includes a complete suite of pure Flutter (`package:flutter/widgets.dart`) presentation primitives:
+`browser_router` includes a complete suite of pure Flutter (`package:flutter/widgets.dart`) presentation primitives.
+
+> [!NOTE]
+> **Automatic Injection**: When you use `Browser(...)` at the root of your application, **`OverlayManager` is automatically injected** into the widget tree. You do not need to wrap your app in `OverlayManager` manually when using `Browser`. You can call `Browser.enqueueBanner`, `Browser.showLoading`, `Browser.dismissLoading`, and `Browser.showOverlay` directly anywhere in your context!
+
+### Standalone `OverlayManager` (Without `Browser`)
+
+If your project is using a standard `MaterialApp`, `CupertinoApp`, or `WidgetsApp` without the `Browser` root widget, you can still use the sequential banner, loading, and overlay system by wrapping your app in `OverlayManager`:
+
+```dart
+import 'package:browser_router/browser.dart';
+import 'package:flutter/widgets.dart';
+
+void main() {
+  runApp(
+    OverlayManager(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        onGenerateRoute: (settings) => ...,
+      ),
+    ),
+  );
+}
+
+// Then in your widgets:
+OverlayManager.enqueueBanner(context, content: (dismiss) => ...);
+OverlayManager.of(context)?.showModal(...);
+```
 
 ### 1. Sequential Banners Queue
 
