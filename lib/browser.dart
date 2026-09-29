@@ -17,6 +17,7 @@ import 'overlay/overlay_manager.dart';
 
 export 'modal_route/params/trace_route.dart';
 export 'modal_route/transitions/route_transition.dart';
+export 'overlay/overlay_manager.dart';
 export 'sheet/sheet.dart';
 
 part 'browser_config.dart';
@@ -372,17 +373,44 @@ class Browser extends StatelessWidget {
     BuildContext context,
     ContentBuilder content, {
     double? topPadding,
+    double? maxWidth,
+    EdgeInsetsGeometry? margin,
+    DismissDirection dismissDirection = DismissDirection.up,
     Duration? duration = const Duration(seconds: 5),
+    OverlayTraceRoute? transition,
   }) => OverlayManager.enqueueBanner(
     context,
     content: content,
     topPadding: topPadding,
+    maxWidth: maxWidth,
+    margin: margin,
+    dismissDirection: dismissDirection,
     duration: duration,
+    transition: transition,
   );
 
   /// Dismisses the currently visible overlay modal.
   static void dismissOverlay(BuildContext context) =>
       OverlayManager.of(context)?.dismissModal();
+
+  /// Shows a non-dismissible loading overlay containing [child].
+  static void showLoading(
+    BuildContext context, {
+    required Widget child,
+    Color backgroundColor = const Color(0x80000000),
+    bool useSafeArea = false,
+  }) {
+    showOverlay(
+      context,
+      builder: (_) => Center(child: child),
+      backgroundColor: backgroundColor,
+      isDismissible: false,
+      useSafeArea: useSafeArea,
+    );
+  }
+
+  /// Dismisses the active loading overlay.
+  static void dismissLoading(BuildContext context) => dismissOverlay(context);
 
   /// Shows a custom overlay modal.
   ///

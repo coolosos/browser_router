@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:browser_router/browser.dart';
-import 'package:browser_router/overlay/overlay_manager.dart';
 import 'package:flutter/material.dart' hide Banner;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -314,6 +313,185 @@ void main() {
 
         expect(bannerActionClicked, isTrue);
         expect(find.text('Notification'), findsNothing);
+      },
+    );
+
+    testWidgets('Banner respects maxWidth constraints and margin', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: OverlayManager(
+            child: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      Browser.enqueueBanner(
+                        context,
+                        (remove) => ElevatedButton(
+                          onPressed: remove,
+                          child: const Text('Constrained Banner'),
+                        ),
+                        maxWidth: 400,
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        duration: Duration.zero,
+                      );
+                    },
+                    child: const Text('Show Constrained Banner'),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Constrained Banner'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.text('Constrained Banner'), findsOneWidget);
+
+      final constrainedBoxFinder = find.ancestor(
+        of: find.text('Constrained Banner'),
+        matching: find.byType(ConstrainedBox),
+      );
+      final constrainedBoxes = tester.widgetList<ConstrainedBox>(
+        constrainedBoxFinder,
+      );
+      expect(
+        constrainedBoxes.any((cb) => cb.constraints.maxWidth == 400),
+        isTrue,
+      );
+
+      // Dismiss banner to clean up ticker
+      await tester.tap(find.text('Constrained Banner'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.text('Constrained Banner'), findsNothing);
+    });
+
+    testWidgets(
+      'Browser.showLoading and Browser.dismissLoading manage non-dismissible loading overlay',
+      (tester) async {
+        late BuildContext savedContext;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OverlayManager(
+              child: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    savedContext = context;
+                    return const Text('Main Screen');
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(find.text('Loading Spinner...'), findsNothing);
+
+        // Show loading
+        Browser.showLoading(
+          savedContext,
+          child: const Text('Loading Spinner...'),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Loading Spinner...'), findsOneWidget);
+
+        // Dismiss loading
+        Browser.dismissLoading(savedContext);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Loading Spinner...'), findsNothing);
+
+        // Calling dismissLoading again when no loading is shown is a safe no-op
+        expect(() => Browser.dismissLoading(savedContext), returnsNormally);
+      },
+    );
+
+    testWidgets(
+      'OverlayManager handles dismissModal when no modal is showing without error',
+      (tester) async {
+        late BuildContext savedContext;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OverlayManager(
+              child: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    savedContext = context;
+                    return const Text('Test Screen');
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        final manager = OverlayManager.of(savedContext);
+        expect(manager, isNotNull);
+
+        await manager!.dismissModal();
+        Browser.dismissLoading(savedContext);
+      },
+    );
+
+    testWidgets(
+      'Banner with custom margin and dismissDirection renders correctly',
+      (tester) async {
+        late BuildContext savedContext;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OverlayManager(
+              child: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    savedContext = context;
+                    return const Text('Test Screen');
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Browser.enqueueBanner(
+          savedContext,
+          (remove) => GestureDetector(
+            onTap: remove,
+            child: const Text('Custom Margin Banner'),
+          ),
+          margin: const EdgeInsets.all(24),
+          dismissDirection: DismissDirection.horizontal,
+          duration: const Duration(seconds: 2),
+        );
+
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Custom Margin Banner'), findsOneWidget);
+
+        final dismissibleFinder = find.byType(Dismissible);
+        expect(dismissibleFinder, findsOneWidget);
+        final dismissible = tester.widget<Dismissible>(dismissibleFinder);
+        expect(dismissible.direction, DismissDirection.horizontal);
+
+        // Dismiss banner
+        await tester.tap(find.text('Custom Margin Banner'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Custom Margin Banner'), findsNothing);
       },
     );
   });

@@ -9,6 +9,9 @@ class Banner extends OverlayModal {
     required super.transition,
     required super.overlayState,
     this.topPadding = kAppbarHeight,
+    this.maxWidth,
+    this.margin,
+    this.dismissDirection = DismissDirection.up,
   });
 
   factory fromContext({
@@ -17,6 +20,9 @@ class Banner extends OverlayModal {
     required OverlayTraceRoute transition,
     Duration? duration,
     double? topPadding,
+    double? maxWidth,
+    EdgeInsetsGeometry? margin,
+    DismissDirection dismissDirection = DismissDirection.up,
   }) {
     return Banner(
       content: content,
@@ -24,16 +30,24 @@ class Banner extends OverlayModal {
       transition: transition,
       overlayState: Overlay.of(context),
       topPadding: topPadding ?? kAppbarHeight,
+      maxWidth: maxWidth,
+      margin: margin,
+      dismissDirection: dismissDirection,
     );
   }
 
   final double topPadding;
+  final double? maxWidth;
+  final EdgeInsetsGeometry? margin;
+  final DismissDirection dismissDirection;
 
   @override
   OverlayEntry _createModal(Widget child) {
     return OverlayEntry(
       builder: (context) {
         return SafeArea(
+          top: true,
+          bottom: false,
           child: Padding(
             padding: EdgeInsets.only(top: topPadding),
             child: Align(
@@ -43,8 +57,16 @@ class Banner extends OverlayModal {
                   remove();
                 },
                 key: UniqueKey(),
-                direction: DismissDirection.up,
-                child: child,
+                direction: dismissDirection,
+                child: Padding(
+                  padding: margin ?? EdgeInsets.zero,
+                  child: maxWidth != null
+                      ? ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: maxWidth!),
+                          child: child,
+                        )
+                      : child,
+                ),
               ),
             ),
           ),

@@ -33,6 +33,19 @@ final class ModalBaseSafeArea {
     : external = const SafeAreaManager.fromLTRB(true, true, true, false),
       internal = const SafeAreaManager.all();
 
+  const new none()
+    : external = const SafeAreaManager.fromLTRB(false, false, false, false),
+      internal = const SafeAreaManager.fromLTRB(false, false, false, false);
+
+  const new all()
+    : external = const SafeAreaManager.all(),
+      internal = const SafeAreaManager.all();
+
+  /// Platform-adaptive safe area: disabled on web/desktop, clean top safe area on mobile.
+  factory adaptive() => kIsWeb
+      ? const ModalBaseSafeArea.none()
+      : const ModalBaseSafeArea.cleanTopSafeArea();
+
   final SafeAreaManager external;
   final SafeAreaManager internal;
 }

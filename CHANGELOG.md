@@ -1,3 +1,21 @@
+## 0.4.0
+
+*   **Feat (Concrete Sheets & Modals)**:
+    *   Added [`BrowserBottomSheet`](lib/sheet/browser_bottom_sheet.dart) (aliased as `ModalBottomSheet`) with dynamic content size adjustment (`adjustSize`) and smooth clamping.
+    *   Added [`BrowserCenterSheet`](lib/sheet/browser_center_sheet.dart) (aliased as `ModalCenterSheet`) with box constraints and vertical gesture absorption tailored for dialogs on desktop, web, and tablet viewports.
+    *   Added [`BrowserFullSheet`](lib/sheet/browser_full_sheet.dart) (aliased as `ModalFullSheet`) for full-viewport scrollable modals.
+    *   Added [`BrowserResponsiveSheet`](lib/sheet/browser_responsive_sheet.dart) (aliased as `ModalResponsiveSheet`) for dynamic switching between bottom sheet on compact viewports (< breakpoint) and centered modal on wide viewports (>= breakpoint).
+    *   Added unified semantic facade methods on `Sheet`: `Sheet.bottom(...)`, `Sheet.center(...)`, `Sheet.full(...)`, and `Sheet.responsive(...)`.
+*   **Feat (Modal Headers & Parameters)**:
+    *   Added [`ModalHeader`](lib/sheet/modal_base_header.dart) with drag pill handle (mobile/snap), title with text overflow protection, close button, and dynamic scroll elevation shadow.
+    *   Added [`EmptyHeader`](lib/sheet/modal_base_header.dart) for headerless modals.
+    *   Added [`ModalCenterParams`](lib/sheet/modal_base_params.dart) with `.small()`, `.medium()`, and `.large()` constraints presets.
+    *   Added `ModalBaseSafeArea.none()`, `ModalBaseSafeArea.all()`, and `ModalBaseSafeArea.adaptive()`.
+*   **Feat (Overlays & Banners)**:
+    *   Added `maxWidth`, `margin`, and `dismissDirection` configuration to `Banner` and `Browser.enqueueBanner`.
+    *   Added `Browser.showLoading(...)` and `Browser.dismissLoading(...)` for managing non-dismissible loading overlays.
+*   **Test**: Expanded test coverage to 92.5% across 125 passing unit and widget tests covering all new concrete sheets, modal headers, responsive breakpoints, banner constraints, and overlay loading lifecycles.
+
 ## 0.3.2
 
 *   **Feat (Platform Adaptive Transitions)**:

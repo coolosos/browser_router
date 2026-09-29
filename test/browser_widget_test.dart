@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:browser_router/browser.dart';
-import 'package:browser_router/overlay/overlay_manager.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 

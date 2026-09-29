@@ -29,7 +29,7 @@ Add `browser_router` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  browser_router: ^0.3.0
+  browser_router: ^0.4.0
 ```
 
 Then run:
@@ -44,7 +44,7 @@ flutter pub get
 
 ### 1. Define Routes
 
-Create a list of `BrowserRoute` instances:
+Create a list of `BrowserRoute` instances. If you plan to use `Sheet.bottom`, `Sheet.center`, or `Sheet.responsive`, include `Sheet.route`:
 
 ```dart
 import 'package:browser_router/browser.dart';
@@ -61,12 +61,13 @@ final routes = [
     page: const ProfileScreen(),
     routeTransition: RouteTransition.slide_right,
   ),
+  Sheet.route, // Enables Sheet.bottom, Sheet.center, Sheet.responsive
 ];
 ```
 
-### 2. Wrap Your App with `Browser`
+### 2. Wrap Your App with `Browser` and `OverlayManager`
 
-Place `Browser` at the root of your application widget hierarchy:
+Place `Browser` at the root and wrap `WidgetsApp` (or `MaterialApp`) with `OverlayManager` to enable top-level banners and loading overlays:
 
 ```dart
 import 'package:browser_router/browser.dart';
@@ -86,21 +87,26 @@ class MyApp extends StatelessWidget {
       routes: routes,
       defaultRoute: routes.first,
       builder: (context, routeObserver, generate) {
-        return WidgetsApp(
-          color: const Color(0xFFFFFFFF),
-          navigatorObservers: [routeObserver],
-          onGenerateRoute: generate,
-          onGenerateInitialRoutes: (routePath) => [
-            generate(
-              RouteSettings(name: routePath, arguments: const <dynamic, dynamic>{}),
-            ),
-          ],
+        return OverlayManager(
+          child: WidgetsApp(
+            color: const Color(0xFFFFFFFF),
+            navigatorObservers: [routeObserver],
+            onGenerateRoute: generate,
+            onGenerateInitialRoutes: (routePath) => [
+              generate(
+                RouteSettings(name: routePath, arguments: const <dynamic, dynamic>{}),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 }
 ```
+
+> [!TIP]
+> Wrapping your app with `OverlayManager` enables non-blocking sequential notification banners (`Browser.enqueueBanner`) and blocking loading spinners (`Browser.showLoading`) anywhere across your application without extra boilerplate.
 
 ### 3. Basic Navigation
 
@@ -431,11 +437,38 @@ context.launchAction('https://flutter.dev');
 
 ## Overlays, Sequential Banners & Sheets
 
-Manage UI components that sit above the navigation stack using built-in overlay utilities:
+`browser_router` includes a complete suite of pure Flutter (`package:flutter/widgets.dart`) presentation primitives.
+
+> [!NOTE]
+> **Automatic Injection**: When you use `Browser(...)` at the root of your application, **`OverlayManager` is automatically injected** into the widget tree. You do not need to wrap your app in `OverlayManager` manually when using `Browser`. You can call `Browser.enqueueBanner`, `Browser.showLoading`, `Browser.dismissLoading`, and `Browser.showOverlay` directly anywhere in your context!
+
+### Standalone `OverlayManager` (Without `Browser`)
+
+If your project is using a standard `MaterialApp`, `CupertinoApp`, or `WidgetsApp` without the `Browser` root widget, you can still use the sequential banner, loading, and overlay system by wrapping your app in `OverlayManager`:
+
+```dart
+import 'package:browser_router/browser.dart';
+import 'package:flutter/widgets.dart';
+
+void main() {
+  runApp(
+    OverlayManager(
+      child: WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        onGenerateRoute: (settings) => ...,
+      ),
+    ),
+  );
+}
+
+// Then in your widgets:
+OverlayManager.enqueueBanner(context, content: (dismiss) => ...);
+OverlayManager.of(context)?.showModal(...);
+```
 
 ### 1. Sequential Banners Queue
 
-Display notification banners one after another in FIFO order:
+Display notification banners one after another in FIFO order with responsive width constraints on desktop/web:
 
 ```dart
 Browser.enqueueBanner(
@@ -444,54 +477,165 @@ Browser.enqueueBanner(
     padding: const EdgeInsets.all(16),
     color: const Color(0xFF008080),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text('Update available!'),
         GestureDetector(
           onTap: dismiss,
-          child: const Text(' Dismiss'),
+          child: const Text('Dismiss', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       ],
     ),
   ),
+  maxWidth: 500, // Clamped on wide screens
+  margin: const EdgeInsets.symmetric(horizontal: 16),
+  duration: const Duration(seconds: 4),
 );
 ```
 
-### 2. Custom Overlay Modals
+### 2. Loading Overlays & Custom Modals
 
-Show a modal overlay independent of the Navigator route stack:
+Show non-dismissible loading overlays or custom modals decoupled from the route stack:
 
 ```dart
+// Show blocking loading overlay
+Browser.showLoading(
+  context,
+  child: const LoadingSpinnerWidget(),
+  backgroundColor: const Color(0x80000000),
+);
+
+// Dismiss loading overlay
+Browser.dismissLoading(context);
+
+// Or show custom dismissible overlay modal
 Browser.showOverlay(
   context,
   backgroundColor: const Color(0x80000000),
   isDismissible: true,
-  builder: (dismiss) => Container(
-    width: 300,
-    height: 200,
-    color: const Color(0xFFFFFFFF),
-    child: Center(
-      child: GestureDetector(
-        onTap: dismiss,
-        child: const Text('Close Modal'),
+  builder: (dismiss) => Center(
+    child: Container(
+      width: 300,
+      height: 200,
+      color: const Color(0xFFFFFFFF),
+      child: Center(
+        child: GestureDetector(
+          onTap: dismiss,
+          child: const Text('Close Overlay'),
+        ),
       ),
     ),
   ),
 );
-
-// Dismiss programmatically
-Browser.dismissOverlay(context);
 ```
 
-### 3. Modal Bottom Sheet
+### 3. Concrete Sheets, Dialogs & Responsive Adapters (`Sheet`)
+
+`browser_router` provides a complete, collision-safe, pure-widget modal architecture built on `ModalBase<T>`:
+
+| Widget | Alias | Facade Method | Description |
+| :--- | :--- | :--- | :--- |
+| `BrowserBottomSheet` | `ModalBottomSheet` | `Sheet.bottom(...)` | Draggable bottom sheet with automatic size adjustment (`adjustSize`) and native swipe-to-dismiss. |
+| `BrowserCenterSheet` | `ModalCenterSheet` | `Sheet.center(...)` | Centered modal dialog with `BoxConstraints` and vertical drag absorption. |
+| `BrowserFullSheet` | `ModalFullSheet` | `Sheet.full(...)` | Full-viewport modal sheet for immersive workflows. |
+| `BrowserResponsiveSheet` | `ModalResponsiveSheet` | `Sheet.responsive(...)` | Adapts dynamically: renders `BrowserBottomSheet` on compact screens (`< breakpoint`) and `BrowserCenterSheet` on wide/desktop screens (`>= breakpoint`). |
+
+#### Step 1: Register `Sheet.route`
+
+Include `Sheet.route` in your `Browser` route list:
 
 ```dart
-Browser.showModalBottomSheet(
-  context: context,
-  backgroundColor: const Color(0xFFFFFFFF),
-  heightFactor: 0.6,
-  builder: (context) => const SheetContentView(),
-);
+final routes = [
+  BrowserRoute(path: '/', page: const HomeScreen()),
+  Sheet.route, // Enables Sheet.bottom, Sheet.center, Sheet.full, Sheet.responsive
+];
 ```
+
+#### Step 2: Define your Modal with `ModalBase`
+
+```dart
+import 'package:browser_router/browser.dart';
+import 'package:flutter/widgets.dart';
+
+class ProfileModal extends ModalBase<ModalCenterParams> {
+  const ProfileModal({super.params = const ModalCenterParams.medium()});
+
+  @override
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
+    return const ModalBaseHeaderParameter(
+      background: Color(0xFFFFFFFF),
+      headerBackground: Color(0xFFF8FAFC),
+      dragBar: Color(0xFFCBD5E1),
+      closeIcon: Text('✕', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      title: Text('User Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+
+  @override
+  Widget body({required BuildContext context, ChangeDrawerSize? changeDrawerSize}) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          const Text('Profile details content...'),
+          const SizedBox(height: 12),
+          // Programmatically expand/collapse the sheet if supported
+          GestureDetector(
+            onTap: () => changeDrawerSize?.call(isExpanded: true),
+            child: const Text('Expand Details'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget? bottomBar(BuildContext context) => null;
+
+  @override
+  ScrollPhysics? scrollPhysics(BuildContext context) => const BouncingScrollPhysics();
+
+  @override
+  ModalBaseSafeArea get safeArea => ModalBaseSafeArea.adaptive();
+
+  @override
+  ModalBaseHeader topBar(ModalBaseHeaderParameter headerParameter, BorderRadiusGeometry? border) {
+    return ModalHeader(
+      parameters: headerParameter,
+      shouldCloseOnMinExtent: true,
+      snap: false,
+      border: border,
+    );
+  }
+}
+```
+
+#### Step 3: Open Modal with Semantic Helpers
+
+```dart
+// 1. Draggable Bottom Sheet
+await Sheet.bottom(context, const ProfileModal());
+
+// 2. Centered Modal Dialog
+await Sheet.center(context, const ProfileModal());
+
+// 3. Full-Screen Viewport Modal
+await Sheet.full(context, const ProfileModal());
+
+// 4. Responsive (Phone: BottomSheet, Desktop/Tablet >= 600px: CenterDialog)
+await Sheet.responsive(context, const ProfileModal(), breakpoint: 600);
+```
+
+#### Header Customization (`ModalHeader` & `EmptyHeader`)
+
+- **`ModalHeader`**: Includes a rounded drag pill handle, centered title, dismiss close icon (`Navigator.maybePop`), and auto-elevating bottom shadow on scroll.
+- **`EmptyHeader`**: Delegate with zero extent (`minExtent = 0`, `maxExtent = 0`) for headerless modals.
+
+#### Size & Constraint Parameters
+
+- **`ModalCenterParams`**: Presets (`.small()`, `.medium()`, `.large()`) or custom `BoxConstraints(maxWidth: ..., maxHeight: ...)`.
+- **`ModalDraggableScrollableSheetParams`**: Controls `initialHeightChildSize`, `minHeightChildSize`, `maxHeightChildSize`, `snap`, and `snapSizes`.
+- **`ModalBaseSafeArea`**: Configures screen insets (`.none()`, `.all()`, `.cleanTopSafeArea()`, or `.adaptive()`).
 
 ---
 

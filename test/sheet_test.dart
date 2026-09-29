@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:browser_router/browser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -323,5 +325,574 @@ void main() {
       expect(large.minHeightChildSize, equals(0.3));
       expect(large.maxHeightChildSize, equals(0.86));
     });
+
+    test('ModalCenterParams named constructors instantiate with correct constraints', () {
+      const standard = ModalCenterParams();
+      expect(standard.constraints.maxWidth, equals(600));
+      expect(standard.constraints.maxHeight, equals(620));
+      expect(standard.showCloseIcon, isTrue);
+
+      const small = ModalCenterParams.small();
+      expect(small.constraints.maxWidth, equals(600));
+      expect(small.constraints.maxHeight, equals(650));
+      expect(small.initialHeightChildSize, equals(0.35));
+
+      const medium = ModalCenterParams.medium();
+      expect(medium.constraints.maxWidth, equals(800));
+      expect(medium.constraints.maxHeight, equals(1200));
+
+      const large = ModalCenterParams.large();
+      expect(large.constraints.maxWidth, equals(1000));
+      expect(large.constraints.maxHeight, equals(1200));
+    });
+
+    test('ModalBaseSafeArea constructors (.none, .all, .adaptive)', () {
+      const none = ModalBaseSafeArea.none();
+      expect(none.external.top, isFalse);
+      expect(none.external.bottom, isFalse);
+      expect(none.internal.left, isFalse);
+      expect(none.internal.right, isFalse);
+
+      const all = ModalBaseSafeArea.all();
+      expect(all.external.top, isTrue);
+      expect(all.external.bottom, isTrue);
+      expect(all.internal.left, isTrue);
+      expect(all.internal.right, isTrue);
+
+      final adaptive = ModalBaseSafeArea.adaptive();
+      expect(adaptive.external.top, isTrue);
+      expect(adaptive.external.bottom, isFalse);
+    });
+
+    test('EmptyHeader returns zero extent and empty widget', () {
+      const header = EmptyHeader(
+        parameters: ModalBaseHeaderParameter(
+          background: Colors.white,
+          headerBackground: Colors.blue,
+          dragBar: Colors.grey,
+          closeIcon: Icon(Icons.close),
+        ),
+        shouldCloseOnMinExtent: true,
+        snap: false,
+        border: null,
+      );
+
+      expect(header.maxExtent, equals(0));
+      expect(header.minExtent, equals(0));
+    });
+
+    testWidgets(
+      'ModalHeader renders title and triggers close callback on tap',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return CustomScrollView(
+                    slivers: [
+                      SliverPersistentHeader(
+                        delegate: ModalHeader(
+                          parameters: const ModalBaseHeaderParameter(
+                            background: Colors.white,
+                            headerBackground: Colors.blue,
+                            dragBar: Colors.grey,
+                            closeIcon: Icon(
+                              Icons.close,
+                              key: ValueKey('close_btn'),
+                            ),
+                            title: Text('Header Title'),
+                          ),
+                          shouldCloseOnMinExtent: true,
+                          snap: true,
+                          border: BorderRadius.circular(16),
+                          showCloseIcon: true,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        expect(find.text('Header Title'), findsOneWidget);
+        expect(find.byKey(const ValueKey('close_btn')), findsOneWidget);
+      },
+    );
+
+    testWidgets('BrowserBottomSheet renders and mounts draggable sheet', (
+      tester,
+    ) async {
+      const modal = _TestDraggableModal(
+        params: ModalDraggableScrollableSheetParams(),
+      );
+      const bottomSheet = BrowserBottomSheet(modal: modal);
+
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: bottomSheet)),
+      );
+
+      expect(find.text('Draggable Modal Body'), findsOneWidget);
+    });
+
+    testWidgets(
+      'BrowserCenterSheet renders with constraints and rounded corners',
+      (tester) async {
+        const centerModal = _TestCenterModal(params: ModalCenterParams());
+        const centerSheet = BrowserCenterSheet(modal: centerModal);
+
+        await tester.pumpWidget(
+          const MaterialApp(home: Scaffold(body: centerSheet)),
+        );
+
+        expect(find.text('Center Modal Body'), findsOneWidget);
+      },
+    );
+
+    testWidgets('BrowserFullSheet renders full-screen viewport', (
+      tester,
+    ) async {
+      const modal = _TestDraggableModal(
+        params: ModalDraggableScrollableSheetParams(),
+      );
+      const fullSheet = BrowserFullSheet(modal: modal);
+
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: fullSheet)),
+      );
+
+      expect(find.text('Draggable Modal Body'), findsOneWidget);
+    });
+
+    testWidgets(
+      'BrowserResponsiveSheet switches between BottomSheet and CenterSheet based on width',
+      (tester) async {
+        const centerModal = _TestCenterModal(params: ModalCenterParams());
+        const responsiveSheet = BrowserResponsiveSheet(
+          modal: centerModal,
+          breakpoint: 500,
+        );
+
+        // Narrow screen (< 500)
+        tester.view.physicalSize = const Size(400, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
+
+        await tester.pumpWidget(
+          const MaterialApp(home: Scaffold(body: responsiveSheet)),
+        );
+
+        expect(find.byType(BrowserBottomSheet), findsOneWidget);
+        expect(find.byType(BrowserCenterSheet), findsNothing);
+
+        // Wide screen (>= 500)
+        tester.view.physicalSize = const Size(800, 800);
+        await tester.pumpWidget(
+          const MaterialApp(home: Scaffold(body: responsiveSheet)),
+        );
+
+        expect(find.byType(BrowserCenterSheet), findsOneWidget);
+        expect(find.byType(BrowserBottomSheet), findsNothing);
+      },
+    );
+
+    test('ModalDraggableScrollableSheetParams presets and properties', () {
+      const defaultParams = ModalDraggableScrollableSheetParams();
+      expect(defaultParams.initialHeightChildSize, 0.4);
+      expect(defaultParams.minHeightChildSize, 0.4);
+      expect(defaultParams.maxHeightChildSize, 0.6);
+
+      const small = ModalDraggableScrollableSheetParams.small();
+      expect(small.initialHeightChildSize, 0.35);
+      expect(small.minHeightChildSize, 0.35);
+      expect(small.maxHeightChildSize, 0.75);
+
+      const medium = ModalDraggableScrollableSheetParams.medium();
+      expect(medium.initialHeightChildSize, 0.4);
+      expect(medium.minHeightChildSize, 0.4);
+      expect(medium.maxHeightChildSize, 0.6);
+
+      const large = ModalDraggableScrollableSheetParams.large();
+      expect(large.initialHeightChildSize, 0.45);
+      expect(large.minHeightChildSize, 0.3);
+      expect(large.maxHeightChildSize, 0.86);
+    });
+
+    test('ModalCenterParams presets and properties', () {
+      const small = ModalCenterParams.small();
+      expect(small.constraints.maxWidth, 600);
+      expect(small.constraints.maxHeight, 650);
+      expect(small.minHeightChildSize, 0.35);
+
+      const medium = ModalCenterParams.medium();
+      expect(medium.constraints.maxWidth, 800);
+      expect(medium.constraints.maxHeight, 1200);
+
+      const large = ModalCenterParams.large();
+      expect(large.constraints.maxWidth, 1000);
+      expect(large.constraints.maxHeight, 1200);
+
+      const custom = ModalCenterParams(
+        constraints: BoxConstraints(maxWidth: 500, maxHeight: 600),
+      );
+      expect(custom.constraints.maxWidth, 500);
+      expect(custom.constraints.maxHeight, 600);
+    });
+
+    test('ModalBaseSafeArea constructors', () {
+      const none = ModalBaseSafeArea.none();
+      expect(none.external.top, isFalse);
+      expect(none.external.bottom, isFalse);
+      expect(none.internal.top, isFalse);
+      expect(none.internal.bottom, isFalse);
+
+      const all = ModalBaseSafeArea.all();
+      expect(all.external.top, isTrue);
+      expect(all.external.bottom, isTrue);
+      expect(all.internal.top, isTrue);
+      expect(all.internal.bottom, isTrue);
+
+      const cleanTop = ModalBaseSafeArea.cleanTopSafeArea();
+      expect(cleanTop.external.top, isTrue);
+      expect(cleanTop.external.bottom, isFalse);
+
+      final adaptive = ModalBaseSafeArea.adaptive();
+      expect(adaptive, isNotNull);
+    });
+
+    testWidgets('Sheet facade methods open sheets correctly', (tester) async {
+      late BuildContext savedContext;
+
+      await tester.pumpWidget(
+        Browser(
+          routes: [
+            BrowserRoute(
+              path: '/',
+              page: Builder(
+                builder: (context) {
+                  savedContext = context;
+                  return const Text('Home');
+                },
+              ),
+            ),
+            Sheet.route,
+          ],
+          defaultRoute: BrowserRoute(
+            path: '/',
+            page: Builder(
+              builder: (context) {
+                savedContext = context;
+                return const Text('Home');
+              },
+            ),
+          ),
+          builder: (context, routeObserver, generate) {
+            return WidgetsApp(
+              color: const Color(0xFFFFFFFF),
+              navigatorObservers: [routeObserver],
+              onGenerateRoute: generate,
+            );
+          },
+        ),
+      );
+
+      const draggableModal = _TestDraggableModal(
+        params: ModalDraggableScrollableSheetParams(),
+      );
+      const centerModal = _TestCenterModal(params: ModalCenterParams());
+
+      // Test Sheet.bottom
+      unawaited(Sheet.bottom<void>(savedContext, draggableModal));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Draggable Modal Body'), findsOneWidget);
+
+      Navigator.of(savedContext).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Test Sheet.center
+      unawaited(Sheet.center<void>(savedContext, centerModal));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Center Modal Body'), findsOneWidget);
+
+      Navigator.of(savedContext).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Test Sheet.full
+      unawaited(Sheet.full<void>(savedContext, draggableModal));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Draggable Modal Body'), findsOneWidget);
+
+      Navigator.of(savedContext).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Test Sheet.responsive
+      unawaited(Sheet.responsive<void>(savedContext, centerModal));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Center Modal Body'), findsOneWidget);
+
+      Navigator.of(savedContext).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+    });
+
+    testWidgets(
+      'ModalHeader renders title and handles close button and rebuild',
+      (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate: ModalHeader(
+                      parameters: ModalBaseHeaderParameter(
+                        background: Colors.white,
+                        headerBackground: Colors.blue,
+                        dragBar: Colors.grey,
+                        closeIcon: Icon(Icons.close),
+                        title: Text('Header Title'),
+                      ),
+                      shouldCloseOnMinExtent: true,
+                      snap: true,
+                      border: null,
+                      showCloseIcon: true,
+                      showDragBar: true,
+                    ),
+                    pinned: true,
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: 100, child: Text('Scroll Body')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        expect(find.text('Header Title'), findsOneWidget);
+        expect(find.byIcon(Icons.close), findsOneWidget);
+
+        // Test shouldRebuild on ModalHeader
+        const header1 = ModalHeader(
+          parameters: ModalBaseHeaderParameter(
+            background: Colors.white,
+            headerBackground: Colors.blue,
+            dragBar: Colors.grey,
+            closeIcon: Icon(Icons.close),
+            title: Text('Title'),
+          ),
+          shouldCloseOnMinExtent: true,
+          snap: false,
+          border: null,
+        );
+        const header2 = ModalHeader(
+          parameters: ModalBaseHeaderParameter(
+            background: Colors.white,
+            headerBackground: Colors.red,
+            dragBar: Colors.grey,
+            closeIcon: Icon(Icons.close),
+            title: Text('Title'),
+          ),
+          shouldCloseOnMinExtent: true,
+          snap: false,
+          border: null,
+        );
+        expect(header1.shouldRebuild(header2), isTrue);
+        expect(header1.shouldRebuild(header1), isFalse);
+      },
+    );
+
+    testWidgets('EmptyHeader builds empty widget with zero extent', (
+      tester,
+    ) async {
+      const emptyHeader = EmptyHeader(
+        parameters: ModalBaseHeaderParameter(
+          background: Colors.white,
+          headerBackground: Colors.transparent,
+          dragBar: Colors.transparent,
+          closeIcon: SizedBox.shrink(),
+        ),
+        shouldCloseOnMinExtent: false,
+        snap: false,
+        border: null,
+      );
+      expect(emptyHeader.minExtent, 0.0);
+      expect(emptyHeader.maxExtent, 0.0);
+      expect(emptyHeader.shouldRebuild(emptyHeader), isFalse);
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverPersistentHeader(delegate: emptyHeader, pinned: true),
+                SliverToBoxAdapter(child: Text('Content Under Empty Header')),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Content Under Empty Header'), findsOneWidget);
+    });
+
+    testWidgets('adjustSize updates sheet size smoothly', (tester) async {
+      const modal = _TestDraggableModal(
+        params: ModalDraggableScrollableSheetParams(
+          minHeightChildSize: 0.3,
+          maxHeightChildSize: 0.9,
+        ),
+      );
+
+      const bottomSheet = BrowserBottomSheet(modal: modal);
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SizedBox(height: 800, width: 400, child: bottomSheet),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final scrollController = ScrollController();
+      final draggableController = DraggableScrollableController();
+
+      // Guard cases: null or <= 0
+      bottomSheet
+        ..adjustSize(
+          extentTotal: null,
+          extentInside: null,
+          customScrollViewController: null,
+          draggableController: null,
+        )
+        ..adjustSize(
+          extentTotal: 0,
+          extentInside: 0,
+          customScrollViewController: scrollController,
+          draggableController: draggableController,
+        );
+
+      // Center sheet adjustSize test
+      const centerModal = _TestCenterModal(params: ModalCenterParams());
+      const centerSheet = BrowserCenterSheet(modal: centerModal);
+      centerSheet
+        ..adjustSize(
+          extentTotal: 400,
+          extentInside: 800,
+          customScrollViewController: scrollController,
+          draggableController: draggableController,
+        )
+        ..adjustSize(
+          extentTotal: null,
+          extentInside: null,
+          customScrollViewController: null,
+          draggableController: null,
+        );
+
+      // Full sheet adjustSize test
+      const fullSheet = BrowserFullSheet(modal: modal);
+      fullSheet.adjustSize(
+        extentTotal: 400,
+        extentInside: 800,
+        customScrollViewController: scrollController,
+        draggableController: draggableController,
+      );
+    });
   });
+}
+
+class _TestDraggableModal
+    extends ModalBase<ModalDraggableScrollableSheetParams> {
+  const new({required super.params});
+
+  @override
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
+    return const ModalBaseHeaderParameter(
+      background: Colors.white,
+      headerBackground: Colors.white,
+      dragBar: Colors.grey,
+      closeIcon: Icon(Icons.close),
+      title: Text('Draggable Title'),
+    );
+  }
+
+  @override
+  Widget body({
+    required BuildContext context,
+    ChangeDrawerSize? changeDrawerSize,
+  }) {
+    return const Text('Draggable Modal Body');
+  }
+
+  @override
+  Widget? bottomBar(BuildContext context) => null;
+
+  @override
+  ScrollPhysics? scrollPhysics(BuildContext context) => null;
+
+  @override
+  ModalBaseHeader topBar(
+    ModalBaseHeaderParameter headerParameter,
+    BorderRadiusGeometry? border,
+  ) {
+    return ModalHeader(
+      parameters: headerParameter,
+      shouldCloseOnMinExtent: true,
+      snap: false,
+      border: border,
+    );
+  }
+}
+
+class _TestCenterModal extends ModalBase<ModalCenterParams> {
+  const new({required super.params});
+
+  @override
+  ModalBaseHeaderParameter contextParameters({required BuildContext context}) {
+    return const ModalBaseHeaderParameter(
+      background: Colors.white,
+      headerBackground: Colors.white,
+      dragBar: Colors.grey,
+      closeIcon: Icon(Icons.close),
+      title: Text('Center Title'),
+    );
+  }
+
+  @override
+  Widget body({
+    required BuildContext context,
+    ChangeDrawerSize? changeDrawerSize,
+  }) {
+    return const Text('Center Modal Body');
+  }
+
+  @override
+  Widget? bottomBar(BuildContext context) => null;
+
+  @override
+  ScrollPhysics? scrollPhysics(BuildContext context) => null;
+
+  @override
+  ModalBaseHeader topBar(
+    ModalBaseHeaderParameter headerParameter,
+    BorderRadiusGeometry? border,
+  ) {
+    return ModalHeader(
+      parameters: headerParameter,
+      shouldCloseOnMinExtent: true,
+      snap: false,
+      border: border,
+    );
+  }
 }

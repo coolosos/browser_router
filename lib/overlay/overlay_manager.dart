@@ -41,19 +41,28 @@ class OverlayManager extends StatefulWidget {
     BuildContext context, {
     required ContentBuilder content,
     double? topPadding,
+    double? maxWidth,
+    EdgeInsetsGeometry? margin,
+    DismissDirection dismissDirection = DismissDirection.up,
     Duration? duration = const Duration(seconds: 5),
+    OverlayTraceRoute? transition,
   }) {
     of(context)?.enqueue(
       Banner.fromContext(
         context: context,
         duration: duration,
-        transition: const OverlayTraceRoute(
-          routeTransition: RouteTransition.slide_down,
-          reverseTransitionDuration: Duration(milliseconds: 300),
-          transitionDuration: Duration(milliseconds: 300),
-        ),
+        transition:
+            transition ??
+            const OverlayTraceRoute(
+              routeTransition: RouteTransition.slide_down,
+              reverseTransitionDuration: Duration(milliseconds: 300),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
         content: content,
         topPadding: topPadding,
+        maxWidth: maxWidth,
+        margin: margin,
+        dismissDirection: dismissDirection,
       ),
     );
   }
