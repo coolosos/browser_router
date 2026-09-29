@@ -1,4 +1,5 @@
 import 'package:browser_example/app_traces.dart';
+import 'package:browser_example/example_modals.dart';
 import 'package:browser_example/pop_result_args.dart';
 import 'package:browser_example/push_args.dart';
 import 'package:browser_router/browser.dart';
@@ -305,8 +306,75 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // --- Overlay ---
-                    const _SectionTitle(title: '📣 Overlay & Banners'),
+                    // --- Concrete Sheets & Modals (ModalBase) ---
+                    const _SectionTitle(
+                      title: '📑 Sheets & Modals (ModalBase)',
+                    ),
+                    _ExampleButton(
+                      text: 'Draggable Bottom Sheet (BrowserBottomSheet)',
+                      onTap: () => Sheet.bottom<void>(
+                        context,
+                        const ExampleBottomModal(),
+                      ),
+                    ),
+                    _ExampleButton(
+                      text: 'Centered Modal Dialog (BrowserCenterSheet)',
+                      onTap: () => Sheet.center<void>(
+                        context,
+                        const ExampleCenterModal(),
+                      ),
+                    ),
+                    _ExampleButton(
+                      text: 'Responsive Adaptive Sheet (Phone Bottom / Desktop Center)',
+                      onTap: () => Sheet.responsive<void>(
+                        context,
+                        const ExampleCenterModal(),
+                        breakpoint: 600,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // --- Overlay & Banners ---
+                    const _SectionTitle(title: '📣 Overlay, Loaders & Banners'),
+                    _ExampleButton(
+                      text: 'Show Loading Spinner (Auto-closes in 2s)',
+                      onTap: () {
+                        Browser.showLoading(
+                          context,
+                          child: Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1E293B),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '⏳',
+                                  style: TextStyle(fontSize: 32),
+                                  textDirection: TextDirection.ltr,
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  'Loading async task...',
+                                  style: TextStyle(
+                                    color: Color(0xFFFFFFFF),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textDirection: TextDirection.ltr,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                        Future.delayed(const Duration(seconds: 2), () {
+                          if (context.mounted) {
+                            Browser.dismissLoading(context);
+                          }
+                        });
+                      },
+                    ),
                     _ExampleButton(
                       text: 'Enqueue Banner (Auto-dismiss 5s)',
                       onTap: () =>
@@ -326,6 +394,55 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }, topPadding: 0),
+                    ),
+                    _ExampleButton(
+                      text:
+                          'Constrained Banner (maxWidth 400 + Desktop Margin)',
+                      onTap: () => Browser.enqueueBanner(
+                        context,
+                        (removableCallback) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF10B981),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              const Text('✅ ', style: TextStyle(fontSize: 16)),
+                              const Expanded(
+                                child: Text(
+                                  'Constrained Desktop Banner',
+                                  style: TextStyle(
+                                    color: Color(0xFFFFFFFF),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textDirection: TextDirection.ltr,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: removableCallback,
+                                child: const Text(
+                                  '✕',
+                                  style: TextStyle(
+                                    color: Color(0xFFFFFFFF),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textDirection: TextDirection.ltr,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        maxWidth: 400,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        topPadding: 0,
+                      ),
                     ),
                     _ExampleButton(
                       text: 'Enqueue Interactive Banner (Duration 0 + Close Button)',

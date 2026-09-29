@@ -8,7 +8,7 @@ import 'package:browser_example/push_args_screen.dart';
 import 'package:browser_example/to_set_pop_args_screen.dart';
 import 'package:browser_router/browser.dart';
 
-final routes = [
+final List<BrowserRoute> routes = [
   BrowserRoute(
     path: AppPath.home.path,
     page: const HomeScreen(),
@@ -37,4 +37,5 @@ final routes = [
     page: const IntermediateScreen(),
   ),
   BrowserRoute(path: AppPath.deep.path, page: const DeepScreen()),
+  Sheet.route,
 ];

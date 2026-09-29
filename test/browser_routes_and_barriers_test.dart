@@ -4,7 +4,6 @@ import 'package:browser_router/browser.dart';
 import 'package:browser_router/modal_route/browser_page_route.dart';
 import 'package:browser_router/modal_route/browser_popup_route.dart';
 import 'package:browser_router/modal_route/browser_swipe_popup_route.dart';
-import 'package:browser_router/overlay/overlay_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Banner;
 import 'package:flutter_test/flutter_test.dart';

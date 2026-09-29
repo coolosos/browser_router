@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:browser_router/browser.dart';
-import 'package:browser_router/overlay/overlay_manager.dart';
 import 'package:flutter/material.dart' hide Banner;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -412,6 +411,87 @@ void main() {
         await tester.pump(const Duration(milliseconds: 350));
 
         expect(find.text('Loading Spinner...'), findsNothing);
+
+        // Calling dismissLoading again when no loading is shown is a safe no-op
+        expect(() => Browser.dismissLoading(savedContext), returnsNormally);
+      },
+    );
+
+    testWidgets(
+      'OverlayManager handles dismissModal when no modal is showing without error',
+      (tester) async {
+        late BuildContext savedContext;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OverlayManager(
+              child: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    savedContext = context;
+                    return const Text('Test Screen');
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        final manager = OverlayManager.of(savedContext);
+        expect(manager, isNotNull);
+
+        await manager!.dismissModal();
+        Browser.dismissLoading(savedContext);
+      },
+    );
+
+    testWidgets(
+      'Banner with custom margin and dismissDirection renders correctly',
+      (tester) async {
+        late BuildContext savedContext;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OverlayManager(
+              child: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    savedContext = context;
+                    return const Text('Test Screen');
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Browser.enqueueBanner(
+          savedContext,
+          (remove) => GestureDetector(
+            onTap: remove,
+            child: const Text('Custom Margin Banner'),
+          ),
+          margin: const EdgeInsets.all(24),
+          dismissDirection: DismissDirection.horizontal,
+          duration: const Duration(seconds: 2),
+        );
+
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Custom Margin Banner'), findsOneWidget);
+
+        final dismissibleFinder = find.byType(Dismissible);
+        expect(dismissibleFinder, findsOneWidget);
+        final dismissible = tester.widget<Dismissible>(dismissibleFinder);
+        expect(dismissible.direction, DismissDirection.horizontal);
+
+        // Dismiss banner
+        await tester.tap(find.text('Custom Margin Banner'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        expect(find.text('Custom Margin Banner'), findsNothing);
       },
     );
   });

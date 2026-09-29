@@ -17,6 +17,7 @@ import 'overlay/overlay_manager.dart';
 
 export 'modal_route/params/trace_route.dart';
 export 'modal_route/transitions/route_transition.dart';
+export 'overlay/overlay_manager.dart';
 export 'sheet/sheet.dart';
 
 part 'browser_config.dart';
