@@ -1,4 +1,4 @@
-## 0.3.3
+## 0.4.0
 
 *   **Feat (Concrete Sheets & Modals)**:
     *   Added [`BrowserBottomSheet`](lib/sheet/browser_bottom_sheet.dart) (aliased as `ModalBottomSheet`) with dynamic content size adjustment (`adjustSize`) and smooth clamping.
@@ -14,7 +14,7 @@
 *   **Feat (Overlays & Banners)**:
     *   Added `maxWidth`, `margin`, and `dismissDirection` configuration to `Banner` and `Browser.enqueueBanner`.
     *   Added `Browser.showLoading(...)` and `Browser.dismissLoading(...)` for managing non-dismissible loading overlays.
-*   **Test**: Expanded test coverage to 116 passing unit and widget tests covering all new concrete sheets, modal headers, responsive breakpoints, banner constraints, and overlay loading lifecycles.
+*   **Test**: Expanded test coverage to 92.5% across 125 passing unit and widget tests covering all new concrete sheets, modal headers, responsive breakpoints, banner constraints, and overlay loading lifecycles.
 
 ## 0.3.2
 
